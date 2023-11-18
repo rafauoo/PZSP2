@@ -1,2 +1,2 @@
-# PZSP2
-PZSP2
+#Cel Projektu
+Stworzenie nowoczesnej platformy, która usprawni proces rejestracji, zbierania zgłoszeń oraz oceniania konkursów fotograficznych, literackich i innych aktywności. Ma umożliwić łatwą integrację z istniejącą stroną internetową fundacji. Celem jest zwiększenie efektywności organizacyjnej, poprawa przejrzystości procesu oceniania oraz zwiększenie zaangażowania społeczności lokalnej poprzez uproszczenie i ułatwienie udziału w aktywnościach fundacji.
