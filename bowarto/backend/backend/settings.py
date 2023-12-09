@@ -27,12 +27,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-n4sce6x@2c7epuo!tmkorczwhozeut7xcp1vj02ycjo=tu3v5-"
 SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['20.108.53.69']
+ALLOWED_HOSTS = ['20.108.53.69', '10.1.1.4']
 
 
 # Application definition
@@ -93,7 +92,14 @@ DATABASES = {
         'PORT': env("DB_PORT"),
     }
 }
-
+JENKINS_TASKS = ( 
+    "django_jenkins.tasks.run_pylint",
+    "django_jenkins.tasks.run_pep8",
+)
+import os
+PYLINT_RCFILE = os.path.join(BASE_DIR, ".pylintrc")
+PEP8_RCFILE = os.path.join(BASE_DIR, "setup.cfg")
+PROJECT_APPS = ['user']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
