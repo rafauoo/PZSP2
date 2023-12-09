@@ -1,6 +1,4 @@
 from django.test import TestCase
-from Website.models import Teacher
-
 
 class AnimalTestCase(TestCase):
     def setUp(self):
