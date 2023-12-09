@@ -20,3 +20,6 @@ python-dotenv==1.0.0
 sqlparse==0.4.4
 tomlkit==0.12.2
 tzdata==2023.3
+django-storages==1.14.2
+azure-core==1.29.5
+azure-storage-blob==12.19.0
