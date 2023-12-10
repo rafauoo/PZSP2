@@ -6,6 +6,7 @@ from .views.file import FileList, FileDetail
 from .views.group import GroupList, GroupDetail
 from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
+from .views.permission import PermissionList, PermissionDetail
 
 urlpatterns = [
     path('', index, name="index"),
@@ -25,8 +26,8 @@ urlpatterns = [
     path('participants', ParticipantList.as_view(), name="participant-list"),
     path('participants/<int:id>', ParticipantDetail.as_view(), name="participant-detail"),
 
-    # path('permissions'),
-    # path('permissions/<int:id>'),
+    path('permissions', PermissionList.as_view(), name="permission-list"),
+    path('permissions/<int:id>', PermissionDetail.as_view(), name="permission-detail"),
 
     # path('schools'),
     # path('schools/<int:id>'),
