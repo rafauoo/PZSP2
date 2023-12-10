@@ -5,6 +5,7 @@ from .views.competition import CompetitionList, CompetitionDetail
 from .views.file import FileList, FileDetail
 from .views.group import GroupList, GroupDetail
 from .views.index import index
+from .views.participant import ParticipantList, ParticipantDetail
 
 urlpatterns = [
     path('', index, name="index"),
@@ -21,8 +22,8 @@ urlpatterns = [
     path('groups', GroupList.as_view(), name="group-list"),
     path('groups/<int:id>', GroupDetail.as_view(), name="group-detail"),
 
-    # path('participants'),
-    # path('participants/<int:id>'),
+    path('participants', ParticipantList.as_view(), name="participant-list"),
+    path('participants/<int:id>', ParticipantDetail.as_view(), name="participant-detail"),
 
     # path('permissions'),
     # path('permissions/<int:id>'),
