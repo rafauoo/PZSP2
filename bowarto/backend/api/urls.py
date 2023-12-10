@@ -3,6 +3,7 @@ from django.urls import path
 from .views.application import ApplicationList, ApplicationDetail
 from .views.competition import CompetitionList, CompetitionDetail
 from .views.file import FileList, FileDetail
+from .views.group import GroupList, GroupDetail
 from .views.index import index
 
 urlpatterns = [
@@ -17,8 +18,8 @@ urlpatterns = [
     path('files', FileList.as_view(), name="file-list"),
     path('files/<int:id>', FileDetail.as_view(), name="file-detail"),
 
-    # path('groups'),
-    # path('groups/<int:id>'),
+    path('groups', GroupList.as_view(), name="group-list"),
+    path('groups/<int:id>', GroupDetail.as_view(), name="group-detail"),
 
     # path('participants'),
     # path('participants/<int:id>'),
