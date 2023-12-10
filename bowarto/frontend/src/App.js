@@ -29,17 +29,4 @@ class App extends Component {
   }
 }
 
-//   render() {
-//     return (
-//       <div className="App">
-//         <NavbarExample />
-//         <BrowserRouter>
-//           <Route path="/" element={<Home />}></Route>
-//           <Route path="/konkursy" element={<Konkursy />}></Route>
-//         </BrowserRouter>
-//       </div>
-//     );
-//   }
-// }
-
 export default App;
