@@ -8,6 +8,7 @@ from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
 from .views.permission import PermissionList, PermissionDetail
 from .views.school import SchoolList, SchoolDetail
+from .views.user import UserList, UserDetail
 
 urlpatterns = [
     path('', index, name="index"),
@@ -33,7 +34,7 @@ urlpatterns = [
     path('schools', SchoolList.as_view(), name="school-list"),
     path('schools/<int:id>', SchoolDetail.as_view(), name="school-detail"),
 
-    # path('users'),
-    # path('users/<int:id>'),
+    path('users', UserList.as_view(), name="user-list"),
+    path('users/<int:id>', UserDetail.as_view(), name="user-detail"),
 
 ]
