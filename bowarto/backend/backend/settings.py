@@ -31,9 +31,9 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['20.108.53.69', '10.1.1.4', '127.0.0.1']
-
-
+ALLOWED_HOSTS = ['20.108.53.69', '10.1.1.4']
+if env('DEV') == 'true':
+    ALLOWED_HOSTS = ['20.108.53.69', '10.1.1.4', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "user",
+    'rest_framework',
+    "api",
     'storages',
 ]
 
@@ -142,13 +143,14 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
-STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
+if not env('DEV') == 'true':
+    DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
+    STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
 
-STATIC_LOCATION = "static"
-MEDIA_LOCATION = "media"
+    STATIC_LOCATION = "static"
+    MEDIA_LOCATION = "media"
 
-AZURE_ACCOUNT_NAME = "pzsp2storage"
-AZURE_CUSTOM_DOMAIN = f'pzsp2storage.blob.core.windows.net'
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+    AZURE_ACCOUNT_NAME = "pzsp2storage"
+    AZURE_CUSTOM_DOMAIN = f'pzsp2storage.blob.core.windows.net'
+    STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
