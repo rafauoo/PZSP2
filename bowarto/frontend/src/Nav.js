@@ -15,6 +15,7 @@ function NavbarExample() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto justify-content-between">
             <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/konkursy">konkursy</Nav.Link>
             <Nav.Link href="/register">Rejestracja</Nav.Link>
             <Nav.Link href="/login">Logowanie</Nav.Link>
             <Nav.Link href="/participants">Uczestnicy</Nav.Link>

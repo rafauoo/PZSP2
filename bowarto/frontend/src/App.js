@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login"
 import ParticipantsTable from "./pages/Paricipants";
+import Konkursy from "./pages/Konkursy";
 
 
 
@@ -19,6 +20,7 @@ class App extends Component {
           <Router>
             <Routes>
               <Route exact path="/" element={<Home />}></Route>
+              <Route exact path="/konkursy" element={<Konkursy />}></Route>
               <Route exact path="/register" element={<Register />}></Route>
               <Route exact path="/login" element={<Login />}></Route>
               <Route exact path="/participants" element={<ParticipantsTable />}></Route>
