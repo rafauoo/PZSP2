@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavbarExample from "./Nav";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -10,8 +9,19 @@ import Register from "./pages/Register";
 
 
 class App extends Component {
+  
+  refreshList = () => {
+    axios.get("http://127.0.0.1:8000/api/competitions")
+      .then((response) => {
+        console.log(response.json());
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
+  };
 
   render() {
+    this.refreshList();
     return (
       <div>
         <NavbarExample />
@@ -28,5 +38,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;

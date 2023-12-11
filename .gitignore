@@ -1,3 +1,5 @@
+bowarto/frontend/node_modules
+
 # Django #
 *.log
 *.pot
@@ -11,6 +13,7 @@ media
 
 # If you are using PyCharm # 
 # User-specific stuff
+.idea
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -97,7 +100,7 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
-.env 
+bowarto/backend/backend/.env
 .venv 
 env/ 
 venv/ 
