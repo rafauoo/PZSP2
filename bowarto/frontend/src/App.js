@@ -13,7 +13,7 @@ import axios from 'axios';
 class App extends Component {
 
   refreshList = () => {
-    axios.get("http://127.0.0.1:8000/api/competitions")
+    axios.get("http://20.108.53.69/api/competitions")
       .then((response) => {
         console.log(response.data);
       })
