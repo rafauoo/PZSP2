@@ -104,7 +104,7 @@ JENKINS_TASKS = (
 import os
 PYLINT_RCFILE = os.path.join(BASE_DIR, ".pylintrc")
 PEP8_RCFILE = os.path.join(BASE_DIR, "setup.cfg")
-PROJECT_APPS = ['user']
+PROJECT_APPS = ['api']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
