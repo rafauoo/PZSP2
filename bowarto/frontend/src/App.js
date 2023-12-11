@@ -6,14 +6,16 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Konkursy from "./pages/Konkursy";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import axios from 'axios';
+
 
 
 class App extends Component {
-  
+
   refreshList = () => {
     axios.get("http://127.0.0.1:8000/api/competitions")
       .then((response) => {
-        console.log(response.json());
+        console.log(response.data);
       })
       .catch((error) => {
         console.log("Error fetching data:", error);
