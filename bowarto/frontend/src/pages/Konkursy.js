@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 
@@ -78,7 +79,9 @@ class Konkursy extends Component {
                 <td style={centeredCellStyle}>{formatDate(competition.end_at)}</td>
                 <td style={centeredCellStyle}>
                   <button style={buttonStyle}>Regulamin</button>
-                  <button style={buttonStyle}>Weź udział</button>
+                  <Link to="/registerParticipant">
+                    <button style={buttonStyle}>Weź udział</button>
+                  </Link>
                 </td>
               </tr>
             ))}

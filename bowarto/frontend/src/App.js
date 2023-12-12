@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login"
 import ParticipantsTable from "./pages/Paricipants";
 import Konkursy from "./pages/Konkursy";
+import RegisterParticipantTable from "./pages/RegisterParicipant"
 
 
 
@@ -24,6 +25,7 @@ class App extends Component {
               <Route exact path="/register" element={<Register />}></Route>
               <Route exact path="/login" element={<Login />}></Route>
               <Route exact path="/participants" element={<ParticipantsTable />}></Route>
+              <Route exact path="/registerParticipant" element={<RegisterParticipantTable />}></Route>
             </Routes>
           </Router>
         </main>
