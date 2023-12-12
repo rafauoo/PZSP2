@@ -4,7 +4,7 @@ from ..models import Competition
 from ..serializers.competition import CompetitionSerializer
 
 
-class CompetitionList(generics.ListAPIView):
+class CompetitionList(generics.ListCreateAPIView):
     lookup_field = 'id'
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer

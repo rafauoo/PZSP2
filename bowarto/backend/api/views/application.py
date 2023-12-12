@@ -4,7 +4,7 @@ from ..models import Application
 from ..serializers.application import ApplicationSerializer
 
 
-class ApplicationList(generics.ListAPIView):
+class ApplicationList(generics.ListCreateAPIView):
     lookup_field = 'id'
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
