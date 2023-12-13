@@ -30,7 +30,7 @@ function ParticipantsTable() {
             <tr key={participant.id}>
               <td hidden >{participant.id}</td>
               <td >{participant.first_name}</td>
-              <td >{participant.first_name}</td>
+              <td >{participant.last_name}</td>
               <td >{participant.email}</td>
               <td>
                 <a href='#'>Pokaż konkursy</a>
