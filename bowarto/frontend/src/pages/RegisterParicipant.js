@@ -43,12 +43,6 @@ class RegisterParticipantTable extends Component {
     // formData.append('phone_number', this.state.phoneNumber);
     // formData.append('agreement', this.state.agreement);
     // formData.append('attachment', this.state.attachment);
-    console.log('firstName:', this.state.firstName);
-    console.log('lastName:', this.state.lastName);
-    console.log('email:', this.state.email);
-    console.log('phoneNumber:', this.state.phoneNumber);
-    console.log('agreement:', this.state.agreement);
-    console.log('attachment:', this.state.attachment);
   
     fetch('http://20.108.53.69/api/participants', {
       method: 'POST',
@@ -57,6 +51,15 @@ class RegisterParticipantTable extends Component {
     .then(response => response.json())
     .then(data => {
       console.log(data);
+
+      this.setState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        agreement: false,
+        attachment: null
+      });
     })
     .catch(error => {
       console.error('Error:', error);
