@@ -84,7 +84,7 @@ class RegisterParticipantTable extends Component {
             <div className="d-flex justify-content-start vh-100">
               <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Imię</Form.Label>
+                  <Form.Label>Imię*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj imię" 
@@ -93,7 +93,7 @@ class RegisterParticipantTable extends Component {
                     onChange={this.handleInputChange}
                   />
       
-                  <Form.Label>Nazwisko</Form.Label>
+                  <Form.Label>Nazwisko*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj nazwisko" 
@@ -102,7 +102,7 @@ class RegisterParticipantTable extends Component {
                     onChange={this.handleInputChange}
                   />
       
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>E-mail*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj email" 
