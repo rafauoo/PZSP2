@@ -8,7 +8,7 @@ function NavbarExample() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/">
           <Image src="./images/logo.png" alt="Description" width={200} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
