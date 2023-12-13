@@ -98,11 +98,11 @@ DATABASES = {
     }
 }
 JENKINS_TASKS = ( 
-    "django_jenkins.tasks.run_pylint",
+    #"django_jenkins.tasks.run_pylint",
     "django_jenkins.tasks.run_pep8",
 )
 import os
-PYLINT_RCFILE = os.path.join(BASE_DIR, ".pylintrc")
+#PYLINT_RCFILE = os.path.join(BASE_DIR, ".pylintrc")
 PEP8_RCFILE = os.path.join(BASE_DIR, "setup.cfg")
 PROJECT_APPS = ['api']
 

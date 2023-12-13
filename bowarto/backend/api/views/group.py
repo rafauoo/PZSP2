@@ -1,16 +1,16 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework import generics
 
 from ..models import Group
 from ..serializers.group import GroupSerializer
 
 
-class GroupList(ListAPIView):
+class GroupList(generics.ListCreateAPIView):
     lookup_field = 'id'
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
 
-class GroupDetail(RetrieveUpdateDestroyAPIView):
+class GroupDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
