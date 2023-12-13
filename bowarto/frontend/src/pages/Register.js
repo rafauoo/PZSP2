@@ -3,26 +3,57 @@ import Form from 'react-bootstrap/Form';
 
 function Register() {
   return (
-    <Form>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+    <>
+      <div className="d-flex justify-content-center">
+        <h1>Witamy na platformie konkursowej BoWarto!</h1>
+      </div>
+      <div className="d-flex justify-content-center vh-100">
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Imię</Form.Label>
+            <Form.Control type="text" placeholder="Podaj imię" style={{ width: '300px' }} />
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+            <Form.Label>Nazwisko</Form.Label>
+            <Form.Control type="text" placeholder="Podaj nazwisko" />
+
+
+            <Form.Label>Etap nauczania</Form.Label>
+            <Form.Select aria-label="Etap nauczania">
+              <option value="" disable selected hidden></option>
+              <option value="1">Podstawowy</option>
+              <option value="2">Ponadpodstawowy</option>
+              <option value="3">Wyższy</option>
+            </Form.Select>
+
+            <Form.Label>Miasto</Form.Label>
+            <Form.Control type="text" placeholder="Podaj miasto" />
+
+            <Form.Label>Pełna nazwa jednoski</Form.Label>
+            <Form.Control type="text" placeholder="Podaj pełną nazwę jednoski" />
+
+            <Form.Label>Telefon</Form.Label>
+            <Form.Control type="text" placeholder="Podaj telefon" />
+
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" placeholder="Podaj email" />
+
+            <Form.Label>Nazwa użytkownika</Form.Label>
+            <Form.Control type="text" placeholder="Podaj nazwę użytkownika" />
+          </Form.Group>
+
+
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Hasło</Form.Label>
+            <Form.Control type="password" placeholder="Podaj hasło" />
+          </Form.Group>
+          <div className="d-flex justify-content-center">
+            <Button variant="success" type="submit">
+              Rejestruj
+            </Button>
+          </div>
+        </Form>
+      </div>
+    </>
   );
 }
 
