@@ -7,6 +7,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from .custom_azure import AzureMediaStorage
+
 
 class Application(models.Model):
     competition = models.ForeignKey('Competition', models.DO_NOTHING, blank=True, null=True)
@@ -161,7 +163,7 @@ class DjangoSession(models.Model):
 
 
 class File(models.Model):
-    path = models.CharField(blank=True, null=True)
+    path = models.FileField(storage=AzureMediaStorage())
     type = models.ForeignKey(CompetitionFileType, models.DO_NOTHING, blank=True, null=True)
     competition = models.ForeignKey(Competition, models.DO_NOTHING, blank=True, null=True)
     participant = models.ForeignKey('Participant', models.DO_NOTHING, blank=True, null=True)

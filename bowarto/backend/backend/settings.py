@@ -141,24 +141,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-if not env('DEV') == 'true':
-    DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
-    STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
+DEFAULT_FILE_STORAGE = 'backend.custom_azure.AzureMediaStorage'
+STATICFILES_STORAGE = 'backend.custom_azure.AzureStaticStorage'
 
-    STATIC_LOCATION = "static"
-    MEDIA_LOCATION = "media"
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
 
-    AZURE_ACCOUNT_NAME = "pzsp2storage"
-    AZURE_CUSTOM_DOMAIN = f'pzsp2storage.blob.core.windows.net'
-    STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-    MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+AZURE_ACCOUNT_NAME = "pzsp2storage"
+AZURE_CUSTOM_DOMAIN = f'pzsp2storage.blob.core.windows.net'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
