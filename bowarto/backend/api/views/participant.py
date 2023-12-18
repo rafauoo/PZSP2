@@ -6,7 +6,6 @@ from ..serializers.participant import ParticipantSerializer
 
 class ParticipantList(generics.ListCreateAPIView):
     lookup_field = 'id'
-    queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
     def get_queryset(self):
