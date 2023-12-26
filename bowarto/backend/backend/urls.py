@@ -16,11 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-from api.views import competition
-
-router = routers.DefaultRouter()
-router.register(r'competitions', competition.CompetitionList, 'competitions')
 
 urlpatterns = [
     path("api/", include("api.urls")),
