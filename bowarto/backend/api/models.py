@@ -110,3 +110,15 @@ class User(AbstractBaseUser):
 
     class Meta:
         db_table = 'user'
+
+    @property
+    def is_admin(self):
+        return self.group.name == 'admin'
+
+    @property
+    def is_editor(self):
+        return self.group.name == 'editor'
+
+    @property
+    def is_user(self):
+        return self.group.name == 'user'
