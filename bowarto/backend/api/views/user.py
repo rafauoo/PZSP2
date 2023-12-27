@@ -1,13 +1,17 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from ..models import User
 from ..serializers.user import UserSerializer
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class UserList(generics.ListAPIView):
     lookup_field = 'id'
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
+
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -23,6 +27,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

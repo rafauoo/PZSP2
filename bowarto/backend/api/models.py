@@ -101,20 +101,24 @@ class School(models.Model):
 
 
 class User(AbstractBaseUser):
+    @staticmethod
+    def get_default_group():
+        default_group, created = Group.objects.get_or_create(name='user')
+        return default_group
+
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     school = models.ForeignKey(School, models.DO_NOTHING, blank=True, null=True)
-    group = models.ForeignKey(Group, models.DO_NOTHING, blank=True, null=False)
+    group = models.ForeignKey(Group, models.DO_NOTHING, blank=True, null=False, default=get_default_group)
 
     last_login = None
     USERNAME_FIELD = "email"
+    DEFAULT_GROUP_NAME = 'user'
 
     from .manager import CustomUserManager
     objects = CustomUserManager()
-
-    # REQUIRED_FIELDS = []
 
     class Meta:
         db_table = 'user'
@@ -130,9 +134,3 @@ class User(AbstractBaseUser):
     @property
     def is_user(self):
         return self.group.name == 'user'
-
-    def save(self, *args, **kwargs):
-        if self.group.name == 'user' and not self.school:
-            raise ValidationError("User with group 'user' must have a school.")
-
-        super().save(*args, **kwargs)
