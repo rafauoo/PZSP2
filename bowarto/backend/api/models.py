@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from .custom_azure import AzureMediaStorage
+from django.core.exceptions import ValidationError
 
 
 class Application(models.Model):
@@ -52,6 +53,9 @@ class Group(models.Model):
 
     class Meta:
         db_table = 'group'
+
+    def __str__(self):
+        return f"Group: {self.name}"
 
 
 class Participant(models.Model):
@@ -106,7 +110,11 @@ class User(AbstractBaseUser):
 
     last_login = None
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+
+    from .manager import CustomUserManager
+    objects = CustomUserManager()
+
+    # REQUIRED_FIELDS = []
 
     class Meta:
         db_table = 'user'
@@ -122,3 +130,9 @@ class User(AbstractBaseUser):
     @property
     def is_user(self):
         return self.group.name == 'user'
+
+    def save(self, *args, **kwargs):
+        if self.group.name == 'user' and not self.school:
+            raise ValidationError("User with group 'user' must have a school.")
+
+        super().save(*args, **kwargs)
