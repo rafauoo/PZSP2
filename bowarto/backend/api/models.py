@@ -12,6 +12,9 @@ class Application(models.Model):
     class Meta:
         db_table = 'application'
 
+    def __str__(self):
+        return f"{self.competition.title} - {self.user}"
+
 
 class Competition(models.Model):
     title = models.CharField(max_length=255)
@@ -23,6 +26,9 @@ class Competition(models.Model):
     class Meta:
         db_table = 'competition'
 
+    def __str__(self):
+        return self.title
+
 
 class FileType(models.Model):
     name = models.CharField(max_length=255)
@@ -30,12 +36,18 @@ class FileType(models.Model):
     class Meta:
         db_table = 'file_type'
 
+    def __str__(self):
+        return self.name
+
 
 class CompetitionType(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'competition_type'
+
+    def __str__(self):
+        return self.name
 
 
 class File(models.Model):
@@ -47,6 +59,15 @@ class File(models.Model):
     class Meta:
         db_table = 'file'
 
+    def delete(self, *args, **kwargs):
+        # Usuń plik z magazynu przed usunięciem obiektu
+        if self.path:
+            storage = self.path.storage
+            storage.delete(self.path.name)
+
+        # Wywołaj oryginalną funkcję delete
+        super().delete(*args, **kwargs)
+
 
 class Group(models.Model):
     name = models.CharField(max_length=255)
@@ -55,7 +76,7 @@ class Group(models.Model):
         db_table = 'group'
 
     def __str__(self):
-        return f"Group: {self.name}"
+        return self.name
 
 
 class Participant(models.Model):
@@ -66,6 +87,9 @@ class Participant(models.Model):
 
     class Meta:
         db_table = 'participant'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
 
 
 class Permission(models.Model):
@@ -99,6 +123,9 @@ class School(models.Model):
     class Meta:
         db_table = 'school'
 
+    def __str__(self):
+        return self.name
+
 
 class User(AbstractBaseUser):
     @staticmethod
@@ -115,7 +142,6 @@ class User(AbstractBaseUser):
 
     last_login = None
     USERNAME_FIELD = "email"
-    DEFAULT_GROUP_NAME = 'user'
 
     from .manager import CustomUserManager
     objects = CustomUserManager()
