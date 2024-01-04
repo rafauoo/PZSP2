@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from .competition_type import CompetitionTypeSerializer
 from ..models import Competition
 
 
