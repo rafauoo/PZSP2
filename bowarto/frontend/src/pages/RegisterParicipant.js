@@ -43,12 +43,6 @@ class RegisterParticipantTable extends Component {
     // formData.append('phone_number', this.state.phoneNumber);
     // formData.append('agreement', this.state.agreement);
     // formData.append('attachment', this.state.attachment);
-    console.log('firstName:', this.state.firstName);
-    console.log('lastName:', this.state.lastName);
-    console.log('email:', this.state.email);
-    console.log('phoneNumber:', this.state.phoneNumber);
-    console.log('agreement:', this.state.agreement);
-    console.log('attachment:', this.state.attachment);
   
     fetch('http://20.108.53.69/api/participants', {
       method: 'POST',
@@ -57,6 +51,15 @@ class RegisterParticipantTable extends Component {
     .then(response => response.json())
     .then(data => {
       console.log(data);
+
+      this.setState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        agreement: false,
+        attachment: null
+      });
     })
     .catch(error => {
       console.error('Error:', error);
@@ -81,7 +84,7 @@ class RegisterParticipantTable extends Component {
             <div className="d-flex justify-content-start vh-100">
               <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Imię</Form.Label>
+                  <Form.Label>Imię*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj imię" 
@@ -90,7 +93,7 @@ class RegisterParticipantTable extends Component {
                     onChange={this.handleInputChange}
                   />
       
-                  <Form.Label>Nazwisko</Form.Label>
+                  <Form.Label>Nazwisko*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj nazwisko" 
@@ -99,7 +102,7 @@ class RegisterParticipantTable extends Component {
                     onChange={this.handleInputChange}
                   />
       
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>E-mail*</Form.Label>
                   <Form.Control 
                     type="text" 
                     placeholder="Podaj email" 

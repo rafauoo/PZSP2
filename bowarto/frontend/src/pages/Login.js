@@ -20,7 +20,7 @@ function Login() {
           </Form.Group>
           <div className="d-flex justify-content-center">
             <Button variant="success" type="submit">
-              Rejestruj
+              Zaloguj
             </Button>
           </div>
         </Form>
