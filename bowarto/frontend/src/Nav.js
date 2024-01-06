@@ -16,6 +16,7 @@ function NavbarExample() {
           <Nav className="me-auto justify-content-between">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/konkursy">Konkursy</Nav.Link>
+            <Nav.Link href="/createCompetition">Stwórz konkurs</Nav.Link>
             <Nav.Link href="/register">Rejestracja</Nav.Link>
             <Nav.Link href="/login">Logowanie</Nav.Link>
             <Nav.Link href="/participants">Uczestnicy</Nav.Link>
