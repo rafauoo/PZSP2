@@ -47,13 +47,13 @@ class CreateCompetition extends Component {
 
   handleStartDateChange = (event) => {
     this.setState({
-      "startDate": event
+      startDate: event
     })
   }
 
   handleEndDateChange = (event) => {
     this.setState({
-      "endDate": event
+      endDate: event
     })
   }
 
@@ -71,15 +71,17 @@ class CreateCompetition extends Component {
     formData.append('title', this.state.competitionName);
     formData.append('description', this.state.description);
     formData.append('type', this.state.category);
-    formData.append('created_at', this.state.startDate);
-    formData.append('end_at', this.state.endDate);
-    // formData.append('phone_number', this.state.phoneNumber);
-    // formData.append('agreement', this.state.agreement);
-    // formData.append('attachment', this.state.attachment);
+    formData.append('created_at', this.state.startDate.toISOString());
+    formData.append('end_at', this.state.endDate.toISOString());
 
-    fetch('http://20.108.53.69/api/competitions', {
+    console.log(formData)
+    const token = sessionStorage.getItem('access');
+    fetch('http://20.108.53.69/api/competitions/', {
       method: 'POST',
-      body: formData
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then(response => response.json())
       .then(data => {
@@ -114,6 +116,7 @@ class CreateCompetition extends Component {
     };
 
     return (
+
       <div className="d-flex justify-content-center">
         <div style={{ width: '60%' }}>
           <h1 className="text-left">Formularz Konkursowy</h1>
@@ -137,7 +140,12 @@ class CreateCompetition extends Component {
                       name="startDate"
                       selected={this.state.startDate}
                       onChange={this.handleStartDateChange}
-                      dateFormat="yyyy-MM-dd"
+                      dateFormat="yyyy-MM-dd HH:mm:ss"
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      timeCaption="Time"
+
                     />
                   </div>
 
@@ -147,7 +155,11 @@ class CreateCompetition extends Component {
                       name="endDate"
                       selected={this.state.endDate}
                       onChange={this.handleEndDateChange}
-                      dateFormat="yyyy-MM-dd"
+                      dateFormat="yyyy-MM-dd HH:mm:ss"
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      timeCaption="Time"
                     />
                   </div>
                 </div>
