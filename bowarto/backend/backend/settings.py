@@ -99,18 +99,6 @@ DATABASES = {
     }
 }
 
-if env('DEV') == 'true':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'docker_db',
-            'USER': 'user',
-            'PASSWORD': '123456',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
-
 JENKINS_TASKS = (
     # "django_jenkins.tasks.run_pylint",
     "django_jenkins.tasks.run_pep8",

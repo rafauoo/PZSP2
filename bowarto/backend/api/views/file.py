@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core.files.storage import default_storage
-from ..models import File
+from ..models import File, FileType, User
 from ..serializers.file import FileSerializer
 
 
@@ -14,9 +14,38 @@ class FileList(generics.ListCreateAPIView):
     queryset = File.objects.all()
     serializer_class = FileSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = FileSerializer(data=request.data)
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.is_admin:
+                return super().get(request, *args, **kwargs)
+            if request.user.is_user:
+                files = File.objects.filter(participant__application__user=request.user)
+                serializer = FileSerializer(files)
+                serialised_data = serializer.data
+                return Response(serialised_data, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
 
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            serializer = FileSerializer(data=request.data)
+            if request.user.is_admin:
+                # zapisz plik o dowolnym typie otrzymanym w requescie
+                self._post(request, serializer, *args, **kwargs)
+            if request.user.is_user:
+                file = self.get_object()
+                application = file.participant.application
+                if application.user == request.user:
+                    # zapisz plik o typie "praca konkursowa"
+                    file_type = FileType.objects.get(name="praca konkursowa")
+                    serializer.data['type'] = file_type
+                    self._post(request, serializer, *args, **kwargs)
+            return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def _post(self, request, serializer, *args, **kwargs):
         if serializer.is_valid():
             allowed_types = ['application/pdf', 'application/msword',
                              'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -25,7 +54,6 @@ class FileList(generics.ListCreateAPIView):
             file_content = request.data['path'].read()
 
             file_type = mime.from_buffer(file_content)
-            print(file_type)
 
             if file_type not in allowed_types:
                 return Response({'error': 'Only PDF and DOCX files are allowed.'}, status=status.HTTP_400_BAD_REQUEST)

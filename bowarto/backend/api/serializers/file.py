@@ -8,9 +8,8 @@ class FileSerializer(serializers.ModelSerializer):
         model = File
         fields = "__all__"
 
-
-class FileUploadSerializer(serializers.Serializer):
-    file = serializers.FileField()
-    type = serializers.PrimaryKeyRelatedField(queryset=FileType.objects.all(), allow_null=True)
-    competition = serializers.PrimaryKeyRelatedField(queryset=Competition.objects.all(), allow_null=True)
-    participant = serializers.PrimaryKeyRelatedField(queryset=Participant.objects.all(), allow_null=True)
+# class FileUploadSerializer(serializers.Serializer):
+#     file = serializers.FileField()
+#     type = serializers.PrimaryKeyRelatedField(queryset=FileType.objects.all(), allow_null=True)
+#     competition = serializers.PrimaryKeyRelatedField(queryset=Competition.objects.all(), allow_null=True)
+#     participant = serializers.PrimaryKeyRelatedField(queryset=Participant.objects.all(), allow_null=True)
