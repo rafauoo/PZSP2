@@ -64,8 +64,20 @@ class FileList(generics.ListCreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class FileDetail(APIView):
-    def get(self, request, id):
+class FileDetail(generics.RetrieveDestroyAPIView):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            id = request.query_params.get('id')
+            if request.user.is_admin:
+                return self._get(request, id)
+            if request.user.is_user:
+                file = self.get_object()
+                if file.participant.application.user == request.user:
+                    return self._get(request, id)
+            return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def _get(self, request, id):
         file_instance = get_object_or_404(File, id=id)
         file_content = file_instance.path.read()
 
@@ -73,7 +85,19 @@ class FileDetail(APIView):
         response['Content-Disposition'] = f'inline; filename="{file_instance.path.name}"'
         return response
 
-    def delete(self, request, id):
+    def delete(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            id = request.query_params.get('id')
+            if request.user.is_admin:
+                return self._delete(request, id)
+            if request.user.is_user:
+                file = self.get_object()
+                if file.participant.application.user == request.user:
+                    return self._delete(request, id)
+            return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def _delete(self, request, id):
         file_instance = get_object_or_404(File, id=id)
 
         # Usuń plik z storage
@@ -82,5 +106,4 @@ class FileDetail(APIView):
 
         # Usuń obiekt File
         file_instance.delete()
-
         return Response({'message': 'File deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)

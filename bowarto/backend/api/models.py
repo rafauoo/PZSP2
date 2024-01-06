@@ -20,7 +20,7 @@ class Competition(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     type = models.ForeignKey('CompetitionType', models.SET_NULL, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(blank=True, null=True)
     end_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:

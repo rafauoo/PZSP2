@@ -6,10 +6,8 @@ from .views.auth import RegisterView
 from .views.competition import CompetitionList, CompetitionDetail
 from .views.competition_type import CompetitionTypeList
 from .views.file import FileList, FileDetail
-from .views.group import GroupList, GroupDetail
 from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
-from .views.permission import PermissionList, PermissionDetail
 from .views.school import SchoolList, SchoolDetail
 from .views.user import UserList, UserDetail
 
