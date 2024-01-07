@@ -1,69 +1,43 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from ..models import User
-from ..serializers.user import UserSerializer
+from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from ..models import User
+from ..permissions import allow_admin, allow_admin_or_this_user
+from ..serializers.user import UserSerializer
 
+
+@authentication_classes([JWTAuthentication])
 class UserList(generics.ListAPIView):
     lookup_field = 'id'
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    authentication_classes = [JWTAuthentication]
 
-    # permission_classes = [permissions.IsAuthenticated]
-
+    @allow_admin
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            if request.user.is_admin:
-                return super().get(request, *args, **kwargs)
-            else:
-                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().get(request, *args, **kwargs)
 
 
+@authentication_classes([JWTAuthentication])
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
 
+    @allow_admin_or_this_user
     def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            user_instance = self.get_object()
-            if hasattr(request.user, 'is_admin') and request.user.is_admin:
-                return super().get(request, *args, **kwargs)
-            elif request.user == user_instance:
-                return super().get(request, *args, **kwargs)
-            else:
-                return Response({'message': 'You do not have the necessary permissions'},
-                                status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'You are not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().get(request, *args, **kwargs)
 
+    @allow_admin_or_this_user
     def put(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            user_instance = self.get_object()
-            if hasattr(request.user, 'is_admin') and request.user.is_admin:
-                return super().put(request, *args, **kwargs)
-            elif request.user == user_instance:
-                return super().put(request, *args, **kwargs)
-            else:
-                return Response({'message': 'You do not have the necessary permissions'},
-                                status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'You are not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().put(request, *args, **kwargs)
 
+    @allow_admin_or_this_user
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+    @allow_admin
     def delete(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            user_instance = self.get_object()
-            if hasattr(request.user, 'is_admin') and request.user.is_admin:
-                return super().delete(request, *args, **kwargs)
-            elif request.user == user_instance:
-                return super().delete(request, *args, **kwargs)
-            else:
-                return Response({'message': 'You do not have the necessary permissions'},
-                                status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'You are not authenticated'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().delete(request, *args, **kwargs)

@@ -1,5 +1,4 @@
-from django.utils.decorators import method_decorator
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
