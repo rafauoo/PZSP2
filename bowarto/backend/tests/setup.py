@@ -1,4 +1,4 @@
-from api.models import User, Group
+from api.models import User, Group, File
 from tests.utils import perform_register
 
 

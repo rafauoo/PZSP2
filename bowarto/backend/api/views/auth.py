@@ -1,10 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken, BlacklistedToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import authentication_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from ..models import User
-from ..serializers.user import UserRegistrationSerializer
+from ..permissions import allow_authenticated
+from ..serializers.user import UserRegistrationSerializer, UserSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -26,3 +28,16 @@ class RegisterView(generics.CreateAPIView):
 
         headers = self.get_success_headers(data)
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+@authentication_classes([JWTAuthentication])
+class ProfileView(APIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'id'
+
+    @allow_authenticated
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

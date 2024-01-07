@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
-from .custom_azure import AzureMediaStorage
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
+from django.conf import settings
 
 
 class Application(models.Model):
@@ -51,7 +52,8 @@ class CompetitionType(models.Model):
 
 
 class File(models.Model):
-    path = models.FileField(storage=AzureMediaStorage())
+    # path = models.FileField(storage=AzureMediaStorage if not settings.TEST else MockAzureMediaStorage())
+    path = models.FileField(storage=default_storage)
     type = models.ForeignKey(FileType, models.SET_NULL, blank=True, null=True)
     competition = models.ForeignKey(Competition, models.SET_NULL, blank=True, null=True)
     participant = models.ForeignKey('Participant', models.SET_NULL, blank=True, null=True)
@@ -63,6 +65,8 @@ class File(models.Model):
         # Usuń plik z magazynu przed usunięciem obiektu
         if self.path:
             storage = self.path.storage
+            print(storage)
+            print(self.path.name)
             storage.delete(self.path.name)
 
         # Wywołaj oryginalną funkcję delete

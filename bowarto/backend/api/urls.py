@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
 
 from .views.application import ApplicationList, ApplicationDetail
-from .views.auth import RegisterView
+from .views.auth import RegisterView, ProfileView
 from .views.competition import CompetitionList, CompetitionDetail
 from .views.competition_type import CompetitionTypeList
 from .views.file import FileList, FileDetail
@@ -44,4 +44,5 @@ urlpatterns = [
     path('refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('logout/', TokenBlacklistView.as_view(), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
+    path('me/', ProfileView.as_view(), name='me')
 ]
