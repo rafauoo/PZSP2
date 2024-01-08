@@ -1,6 +1,16 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
+
+const buttonStyle = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+  margin: '5px'
+};
 function Register() {
   return (
     <>
@@ -47,9 +57,9 @@ function Register() {
             <Form.Control type="password" placeholder="Podaj hasło" />
           </Form.Group>
           <div className="d-flex justify-content-center">
-            <Button variant="success" type="submit">
+            <button style={buttonStyle} variant="success" type="submit">
               Rejestruj
-            </Button>
+            </button>
           </div>
         </Form>
       </div>
