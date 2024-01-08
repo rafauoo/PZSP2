@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
+import RegulaminModal from "./RegulaminModal";
 
 class Konkursy extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Konkursy extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://20.108.53.69/api/competitions")
+    axios.get("http://20.108.53.69/api/competitions/")
       .then((response) => {
         const competitions = response.data;
         const now = new Date();
@@ -59,6 +60,7 @@ class Konkursy extends Component {
       verticalAlign: 'middle'
     };
 
+    const token = sessionStorage.getItem('access');
     return (
       <div>
         <Table striped bordered={false} hover>
@@ -71,15 +73,17 @@ class Konkursy extends Component {
           </thead>
           <tbody>
             {ongoingCompetitions.map((competition, index) => (
-              <tr key={index}>
+              <tr key={competition.id}>
                 <td>
                   <h4>{competition.title}</h4>
                   <p>{competition.description}</p>
                 </td>
                 <td style={centeredCellStyle}>{formatDate(competition.end_at)}</td>
                 <td style={centeredCellStyle}>
-                  <button style={buttonStyle}>Regulamin</button>
-                  <Link to="/registerParticipant">
+                  {/* <button style={buttonStyle}>Regulamin</button> */}
+                  <RegulaminModal title={competition.title} description={competition.description} />
+                  {/* TODO: should register participant to the picked competition */}
+                  <Link to="/registerParticipant/">
                     <button style={buttonStyle}>Weź udział</button>
                   </Link>
                 </td>
@@ -111,6 +115,11 @@ class Konkursy extends Component {
             ))}
           </tbody>
         </Table>
+        {token ? (
+          <Link to="/createCompetition">
+            <button style={buttonStyle}>Stwórz nowy konkurs</button>
+          </Link>
+        ) : null}
       </div>
     );
   }
