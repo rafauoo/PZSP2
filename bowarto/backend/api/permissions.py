@@ -71,12 +71,16 @@ def allow_admin_or_application_creator(func):
 def allow_admin_or_participant_creator(func):
     @allow_authenticated
     def wrapper(self, request, *args, **kwargs):
-        if request.user.is_admin:
-            return func(self, request, *args, **kwargs)
-        if request.user.is_user:
+        try:
             participant = self.get_object()
-            if participant.competition.user == request.user:
-                return func(self, request, *args, **kwargs)
+            competition_user = participant.application.user
+        except AttributeError:
+            return Response({'message': 'Invalid participant or missing attributes'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user.is_admin or competition_user == request.user:
+            return func(self, request, *args, **kwargs)
+
         return Response({'message': 'You do not have the necessary permissions'},
                         status=status.HTTP_403_FORBIDDEN)
 

@@ -33,7 +33,8 @@ class ApplicationList(generics.ListCreateAPIView):
 
     @allow_authenticated
     def post(self, request, *args, **kwargs):
-        request.data['user'] = request.user.id
+        if request.user.is_user:
+            request.data['user'] = request.user.id
         return super().post(request, *args, **kwargs)
 
 

@@ -29,11 +29,11 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_admin_or_this_user
+    @allow_admin
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-    @allow_admin_or_this_user
+    @allow_admin
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
