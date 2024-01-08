@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import default_storage
 from functools import wraps
-
+from django.http import HttpResponse, FileResponse
 from ..models import File, FileType, User, Participant
 from ..permissions import allow_authenticated
 from ..serializers.file import FileSerializer
@@ -65,29 +65,26 @@ class FileList(generics.ListCreateAPIView):
         return self._create_file(request, serializer)
 
     def _create_file(self, request, serializer):
-        print(request.data)
         if serializer.is_valid():
             file_content = request.data['path'].read()
             if not is_allowed_file_type(file_content):
-                print('not_allowed')
                 return Response({'error': 'Only PDF and DOCX files are allowed.'}, status=status.HTTP_400_BAD_REQUEST)
 
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@authentication_classes([JWTAuthentication])
 class FileDetail(generics.RetrieveDestroyAPIView):
+    queryset = File.objects.all()
+    lookup_field = 'id'
+
     @allow_authenticated
     def get(self, request, *args, **kwargs):
-        id = request.query_params.get('id')
-        if request.user.is_admin:
+        id = self.kwargs.get('id')
+        if request.user.is_admin or self._is_user_permitted(request.user, id):
             return self._get_file_by_id(id)
-        if request.user.is_user:
-            file = self.get_object()
-            if file.participant.application.user == request.user:
-                return self._get_file_by_id(id)
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _get_file_by_id(self, id):
@@ -95,19 +92,25 @@ class FileDetail(generics.RetrieveDestroyAPIView):
         file_content = file_instance.path.read()
 
         response = HttpResponse(file_content, content_type='application/octet-stream')
+        # response = FileResponse(file_instance.path.open('rb'), content_type='application/octet-stream')
         response['Content-Disposition'] = f'inline; filename="{file_instance.path.name}"'
         return response
 
     @allow_authenticated
     def delete(self, request, *args, **kwargs):
-        id = request.query_params.get('id')
-        if request.user.is_admin:
+        id = self.kwargs.get('id')
+        if request.user.is_admin or self._is_user_permitted(request.user, id):
             return self._delete_file_by_id(id)
-        if request.user.is_user:
-            file = self.get_object()
-            if file.participant.application.user == request.user:
-                return self._delete_file_by_id(id)
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+
+    def _is_user_permitted(self, user, file_id):
+        try:
+            file_instance = File.objects.get(id=file_id)
+            participant = Participant.objects.get(file=file_instance)
+
+            return user.is_user and participant.application.user == user
+        except (File.DoesNotExist, Participant.DoesNotExist):
+            return False
 
     def _delete_file_by_id(self, id):
         file_instance = get_object_or_404(File, id=id)

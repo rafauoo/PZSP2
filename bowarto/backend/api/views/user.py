@@ -24,7 +24,6 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    authentication_classes = [JWTAuthentication]
 
     @allow_admin_or_this_user
     def get(self, request, *args, **kwargs):
