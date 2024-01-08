@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, AbstractUser
-from .custom_azure import AzureMediaStorage
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
+from django.conf import settings
 
 
 class Application(models.Model):
@@ -20,7 +21,7 @@ class Competition(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     type = models.ForeignKey('CompetitionType', models.SET_NULL, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(blank=True, null=True)
     end_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -51,7 +52,8 @@ class CompetitionType(models.Model):
 
 
 class File(models.Model):
-    path = models.FileField(storage=AzureMediaStorage())
+    # path = models.FileField(storage=AzureMediaStorage if not settings.TEST else MockAzureMediaStorage())
+    path = models.FileField(storage=default_storage)
     type = models.ForeignKey(FileType, models.SET_NULL, blank=True, null=True)
     competition = models.ForeignKey(Competition, models.SET_NULL, blank=True, null=True)
     participant = models.ForeignKey('Participant', models.SET_NULL, blank=True, null=True)
