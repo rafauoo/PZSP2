@@ -65,8 +65,6 @@ class File(models.Model):
         # Usuń plik z magazynu przed usunięciem obiektu
         if self.path:
             storage = self.path.storage
-            print(storage)
-            print(self.path.name)
             storage.delete(self.path.name)
 
         # Wywołaj oryginalną funkcję delete
