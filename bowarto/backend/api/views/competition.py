@@ -1,56 +1,45 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
+from rest_framework import generics
+from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from ..models import Competition
+from ..permissions import allow_any, allow_admin
 from ..serializers.competition import CompetitionSerializer
 
 
+@authentication_classes([JWTAuthentication])
 class CompetitionList(generics.ListCreateAPIView):
     lookup_field = 'id'
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-    authentication_classes = [JWTAuthentication]
 
+    @allow_any
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @allow_admin
     def post(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            if self.request.user.is_admin:
-                return super().post(request, *args, **kwargs)
-            else:
-                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().post(request, *args, **kwargs)
 
 
+@authentication_classes([JWTAuthentication])
 class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-    authentication_classes = [JWTAuthentication]
 
+    @allow_any
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @allow_admin
     def put(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            if self.request.user.is_admin:
-                return super().put(request, args, kwargs)
-            else:
-                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().put(request, *args, **kwargs)
 
+    @allow_admin
     def patch(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            if self.request.user.is_admin:
-                return super().patch(request, args, kwargs)
-            else:
-                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().patch(request, *args, **kwargs)
 
+    @allow_admin
     def delete(self, request, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            if self.request.user.is_admin:
-                return super().delete(request, args, kwargs)
-            else:
-                return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-        else:
-            return Response({'message': 'Not authorised'}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().delete(request, *args, **kwargs)

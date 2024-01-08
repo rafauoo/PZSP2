@@ -1,10 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken, BlacklistedToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import authentication_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from ..models import User
-from ..serializers.user import UserRegistrationSerializer
+from ..permissions import allow_authenticated
+from ..serializers.user import UserRegistrationSerializer, UserSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -21,25 +23,21 @@ class RegisterView(generics.CreateAPIView):
         refresh_token = str(refresh)
 
         data = serializer.data
-        data['refresh_token'] = access_token
-        data['refresh_token'] = refresh_token
+        data['access'] = access_token
+        data['refresh'] = refresh_token
 
         headers = self.get_success_headers(data)
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class LogoutView(APIView):
-    def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data.get("refresh_token")
-            access_token = request.data.get("access_token")
+@authentication_classes([JWTAuthentication])
+class ProfileView(APIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'id'
 
-            if not refresh_token or not access_token:
-                return Response({"detail": "Both access token and refresh token are required."},
-                                status=status.HTTP_400_BAD_REQUEST)
-
-            refresh_token_instance = RefreshToken(refresh_token)
-            refresh_token_instance.blacklist()
-            return Response({"detail": "Tokens successfully invalidated."}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    @allow_authenticated
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
