@@ -73,6 +73,7 @@ class CreateCompetition extends Component {
     formData.append('type', this.state.category);
     formData.append('created_at', this.state.startDate.toISOString());
     formData.append('end_at', this.state.endDate.toISOString());
+    // WARNING: right now there is no attachment sent
 
     console.log(formData)
     const token = sessionStorage.getItem('access');
