@@ -36,6 +36,16 @@ function Login() {
   };
   const handleBack = () => { navigate("/"); };
 
+  const buttonStyle = {
+    backgroundColor: 'rgb(131, 203, 83)',
+    borderRadius: '5px',
+    color: 'black',
+    padding: '5px 10px',
+    border: 'none',
+    cursor: 'pointer',
+    margin: '5px'
+  };
+
   return (
     <>
       <div className="d-flex justify-content-center">
@@ -55,10 +65,10 @@ function Login() {
           <div className="d-flex justify-content-center">
 
             {/* NOTE: this console.log("ERROR") should be changed */}
-            <Button variant="success" type="submit" >
+            <button style={buttonStyle} variant="success" type="submit" >
               {/* <Button variant="success" type="submit" onClick={loginError ? console.log("ERROR") : () => handleBack()}> */}
               Zaloguj
-            </Button>
+            </button>
           </div>
         </Form>
       </div >

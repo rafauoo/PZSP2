@@ -60,6 +60,7 @@ class Konkursy extends Component {
       verticalAlign: 'middle'
     };
 
+    const token = sessionStorage.getItem('access');
     return (
       <div>
         <Table striped bordered={false} hover>
@@ -72,7 +73,7 @@ class Konkursy extends Component {
           </thead>
           <tbody>
             {ongoingCompetitions.map((competition, index) => (
-              <tr key={index}>
+              <tr key={competition.id}>
                 <td>
                   <h4>{competition.title}</h4>
                   <p>{competition.description}</p>
@@ -81,7 +82,8 @@ class Konkursy extends Component {
                 <td style={centeredCellStyle}>
                   {/* <button style={buttonStyle}>Regulamin</button> */}
                   <RegulaminModal title={competition.title} description={competition.description} />
-                  <Link to="/registerParticipant">
+                  {/* TODO: should register participant to the picked competition */}
+                  <Link to="/registerParticipant/">
                     <button style={buttonStyle}>Weź udział</button>
                   </Link>
                 </td>
@@ -113,6 +115,11 @@ class Konkursy extends Component {
             ))}
           </tbody>
         </Table>
+        {token ? (
+          <Link to="/createCompetition">
+            <button style={buttonStyle}>Stwórz nowy konkurs</button>
+          </Link>
+        ) : null}
       </div>
     );
   }
