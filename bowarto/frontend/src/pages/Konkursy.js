@@ -3,18 +3,22 @@ import { Link } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
 import RegulaminModal from "./RegulaminModal";
+import ErrorModal from "./ErrorModal";
 
 class Konkursy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       ongoingCompetitions: [],
-      otherCompetitions: []
+      otherCompetitions: [],
+      role: undefined,
+      token: undefined
     };
   }
 
   componentDidMount() {
     axios.get("http://20.108.53.69/api/competitions/")
+
       .then((response) => {
         const competitions = response.data;
         const now = new Date();
@@ -36,6 +40,7 @@ class Konkursy extends Component {
         console.log("Error fetching data:", error);
       });
   }
+
 
   render() {
     const { ongoingCompetitions, otherCompetitions } = this.state;
@@ -60,9 +65,11 @@ class Konkursy extends Component {
       verticalAlign: 'middle'
     };
 
-    const token = sessionStorage.getItem('access');
+    this.role = sessionStorage.getItem('role')
     return (
       <div>
+        <ErrorModal title="Nie jesteś zalogowany" description="Musisz się zalogować aby móc przeglądać tę stronę" link="login" link_title="Zaloguj" />
+
         <Table striped bordered={false} hover>
           <thead>
             <tr>
@@ -115,7 +122,7 @@ class Konkursy extends Component {
             ))}
           </tbody>
         </Table>
-        {token ? (
+        {this.role === 'admin' ? (
           <Link to="/createCompetition">
             <button style={buttonStyle}>Stwórz nowy konkurs</button>
           </Link>
