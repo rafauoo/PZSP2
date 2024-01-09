@@ -7,7 +7,18 @@ export const fetchData = async (url, options) => {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
-  return response.json();
+  try {
+    // Sprawdź, czy odpowiedź zawiera ciało (nie jest typu No Content)
+    if (response.status !== 204) {
+      return await response.json();
+    } else {
+      // Jeśli odpowiedź jest typu No Content, zwróć pusty obiekt
+      return {};
+    }
+  } catch (error) {
+    console.error('Error parsing JSON:', error);
+    throw new Error('Error parsing JSON');
+  }
 };
 
 export const fetchResourceData = async (resourceIds, token, resourceType, mapKey) => {
@@ -34,26 +45,38 @@ export const fetchParticipantsData = async (applications, token) => {
   }, {});
 };
 
-export const handleDeleteResource = async (resourceId, resourceType, token, setResourceData) => {
+export const handleDeleteResource = async (resourceId, resourceType, setResourceData) => {
   try {
     await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
     const url = `http://20.108.53.69/api/${resourceType}/${resourceId}/`;
     const options = {method: 'DELETE', headers: {'Authorization': `Bearer ${token}`}};
     const response = await fetchData(url, options);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    console.log(response);
 
-    const updatedResourceData = {...setResourceData};
-    for (const key in updatedResourceData) {
-      updatedResourceData[key] = updatedResourceData[key].filter(item => item.id !== resourceId);
-    }
-    setResourceData(updatedResourceData);
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! Status: ${response.status}`);
+    // }
+
+    // Uaktualnij stan usuwając zasób z danych lokalnych
+    setResourceData((prevData) => {
+      console.log(prevData);
+      const updatedData = {...prevData};
+
+      // Usuń zasób z lokalnych danych
+      updatedData[resourceType] = updatedData[resourceType].filter(item => item.id !== resourceId);
+
+      console.log(`Deleted ${resourceType} with id ${resourceId}`);
+      console.log('Updated Data:', updatedData);
+
+      return updatedData;
+    });
   } catch (error) {
     console.error(`Error deleting ${resourceType}:`, error);
   }
 };
+
 
 export const handleAddParticipant = async (applicationId, newParticipant, participantsData, setParticipantsData) => {
   try {

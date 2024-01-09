@@ -43,19 +43,47 @@ function UserPanel() {
     fetchDataAndPopulateState();
   }, []);
 
-  const handleDeleteParticipant = (participantId) => {
-    const confirmation = window.confirm(`Czy na pewno chcesz usunąć tego uczestnika?`);
+  const handleDeleteParticipant = async (participantId) => {
+    try {
+      const confirmation = window.confirm(`Czy na pewno chcesz usunąć tego uczestnika?`);
 
-    if (confirmation) {
-      handleDeleteResource(participantId, 'participants', sessionStorage.getItem('access'), setParticipantsData);
+      if (confirmation) {
+        // Wywołaj zapytanie do API w celu usunięcia uczestnika
+        const token = sessionStorage.getItem('access');
+        const deleteParticipantUrl = `http://20.108.53.69/api/participants/${participantId}/`;
+        const deleteParticipantOptions = {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        };
+
+        await fetch(deleteParticipantUrl, deleteParticipantOptions);
+
+        // Uaktualnij participantsData lokalnie po usunięciu uczestnika
+        setParticipantsData(prevParticipantsData => {
+          const updatedParticipantsData = {...prevParticipantsData};
+
+          for (const applicationId in updatedParticipantsData) {
+            if (Object.prototype.hasOwnProperty.call(updatedParticipantsData, applicationId)) {
+              updatedParticipantsData[applicationId] = updatedParticipantsData[applicationId].filter(participant => participant.id !== participantId);
+            }
+          }
+
+          return updatedParticipantsData;
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting participant:', error);
     }
   };
 
-  const handleDeleteApplication = (applicationId) => {
+  const handleDeleteApplication = async (applicationId) => {
     const confirmation = window.confirm(`Czy na pewno chcesz usunąć to zgłoszenie?`);
 
     if (confirmation) {
-      handleDeleteResource(applicationId, 'applications', sessionStorage.getItem('access'), setApplicationsData);
+      await handleDeleteResource(applicationId, 'applications', setApplicationsData);
     }
   };
 

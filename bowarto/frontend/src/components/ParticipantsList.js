@@ -19,7 +19,7 @@ function ParticipantsList({participants, onDeleteParticipant}) {
         <ParticipantItem
           key={participant.id}
           participant={participant}
-          onDelete={() => onDeleteParticipant(participant.id)}
+          onDelete={onDeleteParticipant}
         />
       ))}
       </tbody>
