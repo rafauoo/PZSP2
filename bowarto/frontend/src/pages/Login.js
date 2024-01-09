@@ -31,10 +31,10 @@ function Login() {
         sessionStorage.setItem('refresh', refreshToken);
 
         const headers = {
-          'Authorization': 'Bearer ' + token, // Add any authorization token if needed
+          'Authorization': 'Bearer ' + accessToken, // Add any authorization token if needed
         };
         // NOTE: store role of logged in user in the sessionStorage
-        axios.get(`http://20.108.53.69/api/me/`, { headers })
+        axios.get(`http://20.108.53.69/api/me/`, {headers})
           .then(res => {
             const userData = res.data;
             setLoginError(false);
