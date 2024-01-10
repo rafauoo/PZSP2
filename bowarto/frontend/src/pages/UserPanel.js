@@ -5,8 +5,8 @@ import UserPanelHeader from '../components/UserPanelHeader';
 import UserApplicationsTable from '../components/UserApplicationsTable';
 import {Link} from "react-router-dom";
 import {
-  deleteApplication,
-  deleteParticipantAndCheckApplication,
+  deleteApplication, deleteFile,
+  deleteParticipantAndCheckApplication, downloadFile,
   fetchDataFromApi,
   submitForm, updateParticipant, uploadAttachment
 } from "../requests/user_panel";
@@ -217,6 +217,44 @@ function UserPanel() {
     }
   };
 
+
+  const handleRemoveFile = async (attachmentId) => {
+    try {
+      // Wywołaj funkcję do usunięcia załącznika
+      await deleteFile(attachmentId);
+
+      // Zaktualizuj applicationData, usuwając plik z odpowiedniego uczestnika
+      setApplicationsData(prevApplications => {
+        // Mapuj po poprzednim stanie i zaktualizuj uczestnika w odpowiedniej aplikacji
+        const updatedApplications = prevApplications.map(application => {
+          const updatedParticipants = application.participants.map(participant => {
+            // Znajdź uczestnika o tym samym ID co przekazane attachmentId
+            if (participant.file === attachmentId) {
+              // Usuń plik z uczestnika
+              return {...participant, file: null};
+            }
+            return participant;
+          });
+
+          // Zwróć zaktualizowaną aplikację z zaktualizowanymi uczestnikami
+          return {...application, participants: updatedParticipants};
+        });
+
+        // Log the updated applications
+        console.log('Updated Applications:', updatedApplications);
+
+        return updatedApplications;
+      });
+
+      console.log('File removed successfully');
+    } catch (error) {
+      console.error('Error removing file:', error);
+    }
+  };
+
+  const handleDownloadFile = async (attachmentId) => {
+    await downloadFile(attachmentId);
+  }
   return (
     <div className="user-panel">
       <Link to="/konkursy">
@@ -232,6 +270,8 @@ function UserPanel() {
               onAddParticipant={handleAddParticipant}
               onEditParticipant={handleEditParticipant}
               onAddAttachment={handleAddAttachment}
+              onDownloadFile={handleDownloadFile}
+              onRemoveFile={handleRemoveFile}
             />
           </>
         ) :

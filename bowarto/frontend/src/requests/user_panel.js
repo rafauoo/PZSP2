@@ -200,7 +200,7 @@ export async function uploadAttachment(participantId, newAttachment) {
 
     // Utwórz adres URL do wysłania załącznika
     // const apiUrl = 'http://20.108.53.69/api/files/';
-    const apiUrl = 'http://127.0.0.1:8000/api/files/';
+    const apiUrl = 'http://http://20.108.53.69/api/files/';
 
     // Wyślij żądanie POST do wysłania załącznika
     const response = await fetch(apiUrl, {
@@ -222,3 +222,71 @@ export async function uploadAttachment(participantId, newAttachment) {
     console.error('Error uploading attachment:', error);
   }
 }
+
+
+export const downloadFile = async (attachmentId) => {
+  try {
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+
+    // Pobierz plik z serwera
+    const response = await fetch({
+      url: `http://http://20.108.53.69/api/files/${attachmentId}/`,
+      method: 'GET',
+      responseType: 'arraybuffer',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const contentDisposition = response.headers['content-disposition'];
+    const filename = parseFilenameFromContentDisposition(contentDisposition);
+
+    console.log(filename);
+    saveFile(response.data, filename);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    throw error;
+  }
+}
+
+const parseFilenameFromContentDisposition = (contentDisposition) => {
+  const match = /filename\*=utf-8''(.+)/.exec(contentDisposition);
+  return match ? decodeURIComponent(match[1]) : 'downloaded_file';
+};
+
+const saveFile = (data, filename) => {
+  const blob = new Blob([data], {type: 'application/octet-stream'});
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+export const deleteFile = async (attachmentId) => {
+  try {
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+
+    // Usuń plik z serwera
+    const response = await fetch(`http://http://20.108.53.69/api/files/${attachmentId}/`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Error deleting file');
+    }
+
+    console.log('File deleted successfully');
+    // Implementuj dodatkową logikę po poprawnym usunięciu pliku
+  } catch (error) {
+    console.error('Error deleting file:', error);
+    throw error;
+  }
+};

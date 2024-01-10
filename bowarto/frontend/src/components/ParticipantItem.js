@@ -29,7 +29,9 @@ function ParticipantItem({
                            participant,
                            onDelete,
                            onEditParticipant,
-                           onAddAttachment
+                           onAddAttachment,
+                           onDownloadFile,
+                           onRemoveFile
                          }) {
   const [showAttachmentForm, setShowAttachmentForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -64,7 +66,9 @@ function ParticipantItem({
         <td>{participant.email}</td>
         <td style={buttonContainerStyle}>
           {participant.file && (
-            <AttachmentDisplay attachment={participant.file}/>
+            <AttachmentDisplay attachment={participant.file}
+                               onDownload={onDownloadFile}
+                               onRemove={onRemoveFile}/>
           )}
         </td>
         <td>

@@ -9,7 +9,9 @@ function UserApplicationsTable({
                                  onDeleteParticipant,
                                  onEditParticipant,
                                  onDeleteApplication,
-                                 onAddAttachment
+                                 onAddAttachment,
+                                 onDownloadFile,
+                                 onRemoveFile
                                }) {
   const [expandedApplication, setExpandedApplication] = useState(null);
 
@@ -40,6 +42,8 @@ function UserApplicationsTable({
             onAddParticipant={onAddParticipant}
             onEditParticipant={onEditParticipant}
             onAddAttachment={onAddAttachment}
+            onDownloadFile={onDownloadFile}
+            onRemoveFile={onRemoveFile}
           />
         ))}
         </tbody>

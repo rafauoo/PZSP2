@@ -27,7 +27,9 @@ function ApplicationRow({
                           onDeleteParticipant,
                           onAddParticipant,
                           onEditParticipant,
-                          onAddAttachment
+                          onAddAttachment,
+                          onDownloadFile,
+                          onRemoveFile
                         }) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
@@ -67,6 +69,8 @@ function ApplicationRow({
               onDeleteParticipant={onDeleteParticipant}
               onEditParticipant={onEditParticipant}
               onAddAttachment={onAddAttachment}
+              onDownloadFile={onDownloadFile}
+              onRemoveFile={onRemoveFile}
             />
           </td>
         </tr>

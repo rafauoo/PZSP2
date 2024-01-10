@@ -7,8 +7,9 @@ function ParticipantsList({
                             participants,
                             onDeleteParticipant,
                             onEditParticipant,
-                            onAddAttachment
-
+                            onAddAttachment,
+                            onDownloadFile,
+                            onRemoveFile
                           }) {
   return (
     <Table bordered striped hover responsive className="participants-list mt-3">
@@ -27,6 +28,8 @@ function ParticipantsList({
           onDelete={onDeleteParticipant}
           onEditParticipant={onEditParticipant}
           onAddAttachment={onAddAttachment}
+          onDownloadFile={onDownloadFile}
+          onRemoveFile={onRemoveFile}
         />
       ))}
       </tbody>
