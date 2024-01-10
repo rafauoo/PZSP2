@@ -26,7 +26,11 @@ class ApplicationList(generics.ListCreateAPIView):
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _get_applications_created_by_user(self, user):
-        user_applications = Application.objects.filter(user=user)
+        if self.request.query_params.get('competition'):
+            competition_id = self.request.query_params.get('competition')
+            user_applications = Application.objects.filter(competition=competition_id, user=user)
+        else:
+            user_applications = Application.objects.filter(user=user)
         serializer = ApplicationSerializer(user_applications, many=True)
         serialized_data = serializer.data
         return Response(data=serialized_data, status=status.HTTP_200_OK)

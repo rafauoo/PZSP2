@@ -26,8 +26,12 @@ class ParticipantList(generics.ListCreateAPIView):
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _get_participants_created_by_user(self, user):
-        participants = Participant.objects.filter(application__user=user)
-        participant_serializer = ParticipantSerializer(participants, many=True)
+        if self.request.query_params.get('application'):
+            user_application = self.request.query_params.get('application')
+            user_participants = Participant.objects.filter(application=user_application, application__user=user)
+        else:
+            user_participants = Participant.objects.filter(application__user=user)
+        participant_serializer = ParticipantSerializer(user_participants, many=True)
         serialised_data = participant_serializer.data
         return Response(serialised_data, status=status.HTTP_200_OK)
 
