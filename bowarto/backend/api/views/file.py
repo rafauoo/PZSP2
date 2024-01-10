@@ -54,6 +54,14 @@ class FileList(generics.ListCreateAPIView):
         application_user = participant.application.user
 
         if application_user == request.user:
+            # Sprawdź, czy uczestnik już posiada plik
+            existing_file = File.objects.filter(participant=participant).first()
+
+            if existing_file:
+                # Jeśli uczestnik już posiada plik, możesz zwrócić odpowiedź z odpowiednim komunikatem
+                return Response({'message': 'Participant already has file.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Jeśli uczestnik nie posiada pliku, kontynuuj z procesem dodawania nowego pliku
             file_type = FileType.objects.get(name="praca konkursowa")
             serializer.initial_data['competition'] = None
             serializer.initial_data['type'] = file_type.id
@@ -88,12 +96,15 @@ class FileDetail(generics.RetrieveDestroyAPIView):
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _get_file_by_id(self, id):
+        from django.utils.http import content_disposition_header
         file_instance = get_object_or_404(File, id=id)
         file_content = file_instance.path.read()
 
         response = HttpResponse(file_content, content_type='application/octet-stream')
-        # response = FileResponse(file_instance.path.open('rb'), content_type='application/octet-stream')
-        response['Content-Disposition'] = f'inline; filename="{file_instance.path.name}"'
+
+        # Ustaw nagłówek Content-Disposition używając funkcji content_disposition_header
+        response['Content-Disposition'] = content_disposition_header(False, file_instance.path.name)
+        print(response.headers)
         return response
 
     @allow_authenticated
