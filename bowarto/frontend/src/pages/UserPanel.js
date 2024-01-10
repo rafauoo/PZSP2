@@ -8,7 +8,7 @@ import {
   deleteApplication,
   deleteParticipantAndCheckApplication,
   fetchDataFromApi,
-  submitForm
+  submitForm, updateParticipant
 } from "../requests/user_panel";
 
 const buttonStyle = {
@@ -132,9 +132,40 @@ function UserPanel() {
     handleCloseAddParticipantModal();
   };
 
-  const handleEditParticipant = async (participantId) => {
+  const handleEditParticipant = async (participantId, editedData) => {
+    try {
+      // Wywołaj funkcję do aktualizacji uczestnika
+      const updatedParticipant = await updateParticipant(participantId, editedData);
 
-  }
+      // Zaktualizuj stan applications
+      setApplicationsData(prevApplications => {
+        // Mapuj po poprzednim stanie i zaktualizuj uczestnika w odpowiedniej aplikacji
+        const updatedApplications = prevApplications.map(application => {
+          const updatedParticipants = application.participants.map(participant => {
+            // Znajdź uczestnika o tym samym ID co zaktualizowany uczestnik
+            if (participant.id === participantId) {
+              // Zaktualizuj uczestnika
+              return updatedParticipant;
+            }
+            return participant;
+          });
+
+          // Zwróć zaktualizowaną aplikację z zaktualizowanymi uczestnikami
+          return {...application, participants: updatedParticipants};
+        });
+
+        // Log the updated applications
+        console.log('Updated Applications:', updatedApplications);
+
+        return updatedApplications;
+      });
+
+      console.log('Updated participant:', updatedParticipant);
+    } catch (error) {
+      console.error('Error updating participant:', error);
+    }
+  };
+  
   return (
     <div className="user-panel">
       <Link to="/konkursy">
@@ -148,6 +179,7 @@ function UserPanel() {
               onDeleteParticipant={handleDeleteParticipant}
               onDeleteApplication={handleDeleteApplication}
               onAddParticipant={handleAddParticipant}
+              onEditParticipant={handleEditParticipant}
             />
           </>
         ) :

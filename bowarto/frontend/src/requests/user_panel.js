@@ -154,3 +154,35 @@ export const deleteApplication = async (applicationId) => {
     console.error('Error deleting application:', error)
   }
 }
+
+
+export async function updateParticipant(participantId, formData) {
+  try {
+    // Pobierz token dostępu
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+
+    // Utwórz adres URL do aktualizacji uczestnika
+    const apiUrl = `http://20.108.53.69/api/participants/${participantId}/`;
+
+    // Wyślij żądanie PATCH do aktualizacji uczestnika
+    const response = await fetch(apiUrl, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    // Pobierz dane odpowiedzi
+    const result = await response.json();
+
+    // Wyświetl wynik w konsoli (możesz dostosować to do swoich potrzeb)
+    console.log('Update result:', result);
+
+    return result;
+  } catch (error) {
+    console.error('Error updating participant:', error);
+  }
+}

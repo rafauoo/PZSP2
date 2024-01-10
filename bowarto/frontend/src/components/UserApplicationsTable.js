@@ -7,6 +7,7 @@ function UserApplicationsTable({
                                  applications,
                                  onAddParticipant,
                                  onDeleteParticipant,
+                                 onEditParticipant,
                                  onDeleteApplication,
                                }) {
   const [expandedApplication, setExpandedApplication] = useState(null);
@@ -15,7 +16,7 @@ function UserApplicationsTable({
     setExpandedApplication((prevExpanded) => (prevExpanded === applicationId ? null : applicationId));
   };
 
-  
+
   return (
     <div className="user-applications-table">
 
@@ -36,6 +37,7 @@ function UserApplicationsTable({
             onDeleteApplication={onDeleteApplication}
             onDeleteParticipant={onDeleteParticipant}
             onAddParticipant={onAddParticipant}
+            onEditParticipant={onEditParticipant}
           />
         ))}
         </tbody>

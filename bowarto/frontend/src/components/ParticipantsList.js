@@ -5,12 +5,9 @@ import ParticipantItem from './ParticipantItem';
 
 function ParticipantsList({
                             participants,
-                            onDeleteParticipant
+                            onDeleteParticipant,
+                            onEditParticipant
                           }) {
-  const handleDeleteParticipant = async (participantId) => {
-    console.log(participantId)
-    onDeleteParticipant(participantId);
-  }
   return (
     <Table bordered striped hover responsive className="participants-list mt-3">
       <thead>
@@ -25,7 +22,8 @@ function ParticipantsList({
       {participants.map((participant) => (
         <ParticipantItem
           participant={participant}
-          onDelete={handleDeleteParticipant}
+          onDelete={onDeleteParticipant}
+          onEditParticipant={onEditParticipant}
         />
       ))}
       </tbody>

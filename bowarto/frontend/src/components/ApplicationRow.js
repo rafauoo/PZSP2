@@ -25,7 +25,8 @@ function ApplicationRow({
                           onToggleExpand,
                           onDeleteApplication,
                           onDeleteParticipant,
-                          onAddParticipant
+                          onAddParticipant,
+                          onEditParticipant
                         }) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
@@ -63,6 +64,7 @@ function ApplicationRow({
             <ParticipantsList
               participants={application.participants || []}
               onDeleteParticipant={onDeleteParticipant}
+              onEditParticipant={onEditParticipant}
             />
           </td>
         </tr>
@@ -73,7 +75,7 @@ function ApplicationRow({
         handleClose={handleCloseAddParticipantModal}
         onAddParticipant={onAddParticipant}
       />
-      
+
     </>
   );
 }
