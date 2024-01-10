@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
   const [username, setUsername] = useState()
   const [password, setPassword] = useState()
-  const [loginError, setLoginError] = useState('');
+  const [userData, setUserData] = useState()
+  const [loginError, setLoginError] = useState(true);
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
   // const [postData, setPostData] = useState()
   const navigate = useNavigate();
@@ -20,21 +21,43 @@ function Login() {
       email: username,
       password: password,
     };
-    axios.post("http://20.108.53.69/api/login/", postData, {
-    })
+    axios.post("http://20.108.53.69/api/login/", postData, {})
       .then(response => {
         setLoginError(false);
         const responseData = response.data;
-        const token = responseData.access;
-        sessionStorage.setItem('access', token);
+        const accessToken = responseData.access;
+        const refreshToken = responseData.refresh;
+        sessionStorage.setItem('access', accessToken);
+        sessionStorage.setItem('refresh', refreshToken);
+
+        const headers = {
+          'Authorization': 'Bearer ' + accessToken, // Add any authorization token if needed
+        };
+        // NOTE: store role of logged in user in the sessionStorage
+        axios.get(`http://20.108.53.69/api/me/`, {headers})
+          .then(res => {
+            const userData = res.data;
+            setLoginError(false);
+            setUserData(userData)
+            sessionStorage.setItem('role', userData.group.name);
+            console.log(sessionStorage.getItem('role'))
+            console.log(sessionStorage.getItem('access'))
+            navigate('/');
+          })
+          .catch((error) => {
+            setLoginError(true);
+            console.log("Error fetching data:", error);
+          });
       })
       .catch(error => {
         console.log('Login failed:', error.message);
         setLoginError(true);
         setLoginErrorMessage(JSON.stringify(error.response.data, null, 2));
+        alert('Niepoprawne dane logowania');
       });
   };
   const handleBack = () => { navigate("/"); };
+
 
   const buttonStyle = {
     backgroundColor: 'rgb(131, 203, 83)',

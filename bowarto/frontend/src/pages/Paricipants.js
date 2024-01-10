@@ -1,6 +1,6 @@
 import axios from 'axios';
-import Table from 'react-bootstrap/Table';
 import { useState, useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
 
 function ParticipantsTable() {
   const [participants, setParticipants] = useState([]);
