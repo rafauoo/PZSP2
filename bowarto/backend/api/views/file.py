@@ -1,20 +1,26 @@
-import magic
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.core.files.storage import default_storage
-from functools import wraps
-from django.http import HttpResponse, FileResponse
-from ..models import File, FileType, User, Participant
+from django.http import HttpResponse
+from django.utils.http import content_disposition_header
+import magic
+from ..models import File, FileType, Participant
 from ..permissions import allow_authenticated
 from ..serializers.file import FileSerializer
 
 
 def is_allowed_file_type(file_content):
-    allowed_types = ['application/pdf', 'application/msword',
-                     'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    allowed_types = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'image/jpeg',
+        'image/png',
+    ]
+
     mime = magic.Magic(mime=True)
     file_type = mime.from_buffer(file_content)
     return file_type in allowed_types
@@ -96,15 +102,10 @@ class FileDetail(generics.RetrieveDestroyAPIView):
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _get_file_by_id(self, id):
-        from django.utils.http import content_disposition_header
         file_instance = get_object_or_404(File, id=id)
         file_content = file_instance.path.read()
-
         response = HttpResponse(file_content, content_type='application/octet-stream')
-
-        # Ustaw nagłówek Content-Disposition używając funkcji content_disposition_header
         response['Content-Disposition'] = content_disposition_header(False, file_instance.path.name)
-        print(response.headers)
         return response
 
     @allow_authenticated
