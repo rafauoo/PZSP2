@@ -20,7 +20,6 @@ function Register() {
   const [town, setTown] = useState()
   const [school, setSchoolName] = useState()
   const [email, setEmail] = useState()
-  // const [username, setUsername] = useState()
   const [password, setPassword] = useState()
   const [schoolsData, setSchoolsData] = useState([])
 
