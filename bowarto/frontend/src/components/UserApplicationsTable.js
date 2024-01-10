@@ -2,15 +2,12 @@
 import React, {useState} from 'react';
 import Table from 'react-bootstrap/Table';
 import ApplicationRow from './ApplicationRow';
+import {deleteParticipantAndCheckApplication} from "../requests/user_panel";
 
 function UserApplicationsTable({
-                                 userApplications,
-                                 competitionNames,
-                                 participantsData,
-                                 loading,
+                                 applications,
                                  onDeleteParticipant,
-                                 onDeleteApplication,
-                                 onAddParticipant,
+                                 onAddParticipant
                                }) {
   const [expandedApplication, setExpandedApplication] = useState(null);
 
@@ -18,48 +15,48 @@ function UserApplicationsTable({
     setExpandedApplication((prevExpanded) => (prevExpanded === applicationId ? null : applicationId));
   };
 
-  const handleDeleteParticipantInTable = (participantId) => {
-    onDeleteParticipant(participantId);
-  };
+
+  // Remove the participant with the specified participantId from applicationData
+  // const updatedApplications = applicationsData.participants.filter(participant => participant.id !== participantId);
+
+  // Update applicationData with the new participants array
+  //   setApplicationsData({...updatedApplications});
+  //   // Call the function to delete the participant and check the application
+  //   await deleteParticipantAndCheckApplication(participantId);
+  // } catch
+  //   (error) {
+  //   console.error("Error removing participant:", error);
+
 
   const handleDeleteApplicationInTable = async (applicationId) => {
-    onDeleteApplication(applicationId);
+
   };
 
-  const handleAddParticipantInTable = (applicationId, newParticipant) => {
-    onAddParticipant(applicationId, newParticipant);
-  };
 
   return (
     <div className="user-applications-table">
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <Table striped bordered hover>
-          <thead>
-          <tr>
-            <th>Konkurs</th>
-            <th>Utworzenie aplikacji</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          {userApplications.map((application) => (
-            <ApplicationRow
-              key={application.id}
-              application={application}
-              competitionName={competitionNames[application.competition]}
-              expanded={expandedApplication === application.id}
-              participantsData={participantsData}
-              onToggleExpand={handleToggleExpand}
-              onDeleteApplication={handleDeleteApplicationInTable}
-              onDeleteParticipantInTable={handleDeleteParticipantInTable}
-              onAddParticipant={handleAddParticipantInTable}
-            />
-          ))}
-          </tbody>
-        </Table>
-      )}
+
+      <Table striped bordered hover>
+        <thead>
+        <tr>
+          <th>Konkurs</th>
+          <th>Utworzenie aplikacji</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {applications.map((application) => (
+          <ApplicationRow
+            application={application}
+            expanded={expandedApplication === application.id}
+            onToggleExpand={handleToggleExpand}
+            onDeleteApplication={handleDeleteApplicationInTable}
+            onDeleteParticipant={onDeleteParticipant}
+            onAddParticipant={onAddParticipant}
+          />
+        ))}
+        </tbody>
+      </Table>
     </div>
   );
 }

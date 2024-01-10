@@ -2,8 +2,9 @@
 import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import {submitForm} from "../requests/user_panel";
 
-function AddParticipantModal({show, handleClose, onAddParticipant, applicationId}) {
+function AddParticipantModal({show, handleClose, onAddParticipant, competitionId}) {
   const [newParticipant, setNewParticipant] = useState({
     first_name: '',
     last_name: '',
@@ -18,8 +19,9 @@ function AddParticipantModal({show, handleClose, onAddParticipant, applicationId
     }));
   };
 
-  const handleAddParticipant = () => {
-    onAddParticipant(applicationId, newParticipant);
+  const handleAddParticipant = async () => {
+    console.log(competitionId, newParticipant)
+    onAddParticipant(competitionId, newParticipant);
     handleClose();
   };
 

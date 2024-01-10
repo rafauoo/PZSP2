@@ -24,13 +24,17 @@ const buttonStyle = {
 };
 
 
-function ParticipantItem({participant, onDelete}) {
+function ParticipantItem({
+                           participant,
+                           applicationID,
+                           onDelete
+                         }) {
   const [attachment, setAttachment] = useState(null);
   const [showAttachmentForm, setShowAttachmentForm] = useState(false);
   const [newAttachment, setNewAttachment] = useState(null);
 
-  const handleDelete = async () => {
-    onDelete(participant.id);
+  const handleDelete = async (participantId) => {
+    onDelete(participantId);
   };
 
   const handleAttachmentChange = (e) => {
@@ -69,7 +73,7 @@ function ParticipantItem({participant, onDelete}) {
         <td style={buttonContainerStyle}>
           <button style={buttonStyle} onClick={handleShowAttachmentForm}>Załącz pracę</button>
           <button style={buttonStyle}>Edytuj</button>
-          <button style={buttonStyle} onClick={handleDelete}>Usuń</button>
+          <button style={buttonStyle} onClick={() => handleDelete(participant.id)}>Usuń</button>
         </td>
       </tr>
       <AttachmentModal
