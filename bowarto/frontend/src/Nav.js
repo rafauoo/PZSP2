@@ -4,9 +4,19 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Image from 'react-bootstrap/Image';
 import { useState, useEffect } from 'react';
+import logout from './requests/logout';
 
 function NavbarExample() {
   const [role, setRole] = useState(sessionStorage.getItem('role'))
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    // Check if 'access' item is in sessionStorage
+    const token = sessionStorage.getItem('access');
+
+    // Update isLoggedIn based on the presence of 'access' item
+    setIsLoggedIn(!!token);
+  }, []);
   return (
     <>
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -20,7 +30,6 @@ function NavbarExample() {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/konkursy">Konkursy</Nav.Link>
               <Nav.Link href="/register">Rejestracja</Nav.Link>
-              <Nav.Link href="/login">Logowanie</Nav.Link>
               {role === 'admin' ? (
                 <>
                   <Nav.Link href="/createCompetition">Stwórz konkurs</Nav.Link>
@@ -32,6 +41,13 @@ function NavbarExample() {
                   <Nav.Link href="/user_panel">Moje aplikacje</Nav.Link>
                 </>
               ) : null}
+
+              {isLoggedIn ? (
+                <Nav.Link onClick={logout}>Wyloguj</Nav.Link>
+              ) : (
+                <Nav.Link href="/login">Logowanie</Nav.Link>
+              )}
+
             </Nav>
           </Navbar.Collapse>
         </Container>
