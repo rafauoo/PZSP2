@@ -186,3 +186,39 @@ export async function updateParticipant(participantId, formData) {
     console.error('Error updating participant:', error);
   }
 }
+
+export async function uploadAttachment(participantId, newAttachment) {
+  try {
+    // Pobierz token dostępu
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+
+    // Utwórz formularz do przesyłania pliku
+    const formData = new FormData();
+    formData.append('participant', participantId);
+    formData.append('path', newAttachment);
+
+    // Utwórz adres URL do wysłania załącznika
+    // const apiUrl = 'http://20.108.53.69/api/files/';
+    const apiUrl = 'http://127.0.0.1:8000/api/files/';
+
+    // Wyślij żądanie POST do wysłania załącznika
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    // Pobierz dane odpowiedzi
+    const result = await response.json();
+
+    // Wyświetl wynik w konsoli (możesz dostosować to do swoich potrzeb)
+    console.log('Upload result:', result);
+
+    return result;
+  } catch (error) {
+    console.error('Error uploading attachment:', error);
+  }
+}

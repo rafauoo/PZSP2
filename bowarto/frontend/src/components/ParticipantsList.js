@@ -6,7 +6,9 @@ import ParticipantItem from './ParticipantItem';
 function ParticipantsList({
                             participants,
                             onDeleteParticipant,
-                            onEditParticipant
+                            onEditParticipant,
+                            onAddAttachment
+
                           }) {
   return (
     <Table bordered striped hover responsive className="participants-list mt-3">
@@ -24,6 +26,7 @@ function ParticipantsList({
           participant={participant}
           onDelete={onDeleteParticipant}
           onEditParticipant={onEditParticipant}
+          onAddAttachment={onAddAttachment}
         />
       ))}
       </tbody>

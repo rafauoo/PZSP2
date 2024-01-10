@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import EditParticipantModal from './EditParticipantModal';
 import AttachmentModal from './AttachmentModal';
 import Button from 'react-bootstrap/Button';
+import AttachmentDisplay from "./AttachmentDisplay";
 
 const tableRowStyle = {
   borderBottom: '1px solid #ddd',
@@ -28,8 +29,8 @@ function ParticipantItem({
                            participant,
                            onDelete,
                            onEditParticipant,
+                           onAddAttachment
                          }) {
-  const [attachment, setAttachment] = useState(null);
   const [showAttachmentForm, setShowAttachmentForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [newAttachment, setNewAttachment] = useState(null);
@@ -47,8 +48,7 @@ function ParticipantItem({
     setNewAttachment(file);
   };
 
-  const handleAttachmentUpload = () => {
-    console.log('File upload logic goes here:', newAttachment);
+  const handleAddAttachment = () => {
     setNewAttachment(null);
     setShowAttachmentForm(false);
   };
@@ -57,40 +57,36 @@ function ParticipantItem({
     setShowAttachmentForm(true);
   };
 
-
   return (
     <>
       <tr className="participant-item" style={tableRowStyle}>
         <td>{participant.first_name} {participant.last_name}</td>
         <td>{participant.email}</td>
-        <td></td>
         <td style={buttonContainerStyle}>
-          {attachment && (
-            <div>
-              Current Attachment: {attachment.name}
-            </div>
+          {participant.file && (
+            <AttachmentDisplay attachment={participant.file}/>
           )}
         </td>
-        <td style={buttonContainerStyle}>
-          <button style={buttonStyle} onClick={handleShowAttachmentForm}>
-            Załącz pracę
-          </button>
-          <button style={buttonStyle} onClick={handleShowEditModal}>
-            Edytuj
-          </button>
-          <button style={buttonStyle} onClick={() => handleDelete(participant.id)}>
-            Usuń
-          </button>
+        <td>
+          <div style={buttonContainerStyle}>
+            <button style={buttonStyle} onClick={handleShowAttachmentForm}>
+              Załącz pracę
+            </button>
+            <button style={buttonStyle} onClick={handleShowEditModal}>
+              Edytuj
+            </button>
+            <button style={buttonStyle} onClick={() => handleDelete(participant.id)}>
+              Usuń
+            </button>
+          </div>
         </td>
       </tr>
 
       <AttachmentModal
         show={showAttachmentForm}
         handleClose={() => setShowAttachmentForm(false)}
-        handleAttachmentUpload={(newAttachment) => {
-          console.log('File upload logic goes here:', newAttachment);
-          setAttachment(newAttachment);
-        }}
+        onAddAttachment={onAddAttachment}
+        participantId={participant.id}
       />
 
       <EditParticipantModal

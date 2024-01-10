@@ -26,7 +26,8 @@ function ApplicationRow({
                           onDeleteApplication,
                           onDeleteParticipant,
                           onAddParticipant,
-                          onEditParticipant
+                          onEditParticipant,
+                          onAddAttachment
                         }) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
@@ -65,6 +66,7 @@ function ApplicationRow({
               participants={application.participants || []}
               onDeleteParticipant={onDeleteParticipant}
               onEditParticipant={onEditParticipant}
+              onAddAttachment={onAddAttachment}
             />
           </td>
         </tr>
