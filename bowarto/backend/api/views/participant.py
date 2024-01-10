@@ -28,9 +28,9 @@ class ParticipantList(generics.ListCreateAPIView):
     def _get_participants_created_by_user(self, user):
         if self.request.query_params.get('application'):
             user_application = self.request.query_params.get('application')
-            user_participants = Participant.objects.filter(application_id=user_application, user=user)
+            user_participants = Participant.objects.filter(application=user_application, application__user=user)
         else:
-            user_participants = Participant.objects.filter(user=user)
+            user_participants = Participant.objects.filter(application__user=user)
         participant_serializer = ParticipantSerializer(user_participants, many=True)
         serialised_data = participant_serializer.data
         return Response(serialised_data, status=status.HTTP_200_OK)
