@@ -15,7 +15,6 @@ async function refreshAccessToken() {
     }
     const data = await response.json();
     sessionStorage.setItem('access', data.access);
-    // console.log('Access token refreshed successfully:', data.access);
   } catch (error) {
     console.error('Error refreshing access token:', error);
   }
