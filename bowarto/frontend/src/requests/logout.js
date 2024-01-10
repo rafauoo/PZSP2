@@ -1,5 +1,3 @@
-import MyToast from "../components/Toast";
-
 async function logout() {
   const updateSession = () => {
     sessionStorage.removeItem('access');
@@ -7,6 +5,7 @@ async function logout() {
     window.location.href = '/'
     alert("Wylogowano")
   }
+
   try {
     const refreshToken = sessionStorage.getItem('refresh');
 
@@ -18,10 +17,10 @@ async function logout() {
       }),
     });
 
-    updateSession();
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    updateSession();
   } catch (error) {
     console.error('Error loggin out :', error);
   }
