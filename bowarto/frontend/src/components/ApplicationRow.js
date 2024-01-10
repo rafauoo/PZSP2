@@ -28,12 +28,10 @@ function ApplicationRow({
                           onAddParticipant
                         }) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
-  // const [selectedCompetitionId, setSelectedCompetitionId] = useState(application.competition.id);
 
 
   const handleShowAddParticipantModal = () => {
     setShowAddParticipantModal(true);
-    // console.log(selectedCompetitionId)
 
   };
 
@@ -75,6 +73,7 @@ function ApplicationRow({
         handleClose={handleCloseAddParticipantModal}
         onAddParticipant={onAddParticipant}
       />
+      
     </>
   );
 }

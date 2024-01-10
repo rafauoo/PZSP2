@@ -4,7 +4,12 @@ import refreshAccessToken from '../requests/refresh';
 import UserPanelHeader from '../components/UserPanelHeader';
 import UserApplicationsTable from '../components/UserApplicationsTable';
 import {Link} from "react-router-dom";
-import {deleteParticipantAndCheckApplication, fetchDataFromApi, submitForm} from "../requests/user_panel";
+import {
+  deleteApplication,
+  deleteParticipantAndCheckApplication,
+  fetchDataFromApi,
+  submitForm
+} from "../requests/user_panel";
 
 const buttonStyle = {
   backgroundColor: 'rgb(131, 203, 83)',
@@ -48,45 +53,55 @@ function UserPanel() {
   }, []);
 
   const handleDeleteParticipant = async (participantId) => {
-    try {
-      await deleteParticipantAndCheckApplication(participantId);
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć tego uczestnika?');
+    if (isConfirmed) {
+      try {
+        await deleteParticipantAndCheckApplication(participantId);
 
-      setApplicationsData(prevApplications => {
-        const updatedApplications = prevApplications.map(application => {
-          const updatedParticipants = application.participants.filter(participant => participant.id !== participantId);
+        setApplicationsData(prevApplications => {
+          const updatedApplications = prevApplications.map(application => {
+            const updatedParticipants = application.participants.filter(participant => participant.id !== participantId);
 
-          // Log information to understand the process
-          console.log('Application ID:', application.id);
-          console.log('Updated Participants:', updatedParticipants);
+            // Log information to understand the process
+            console.log('Application ID:', application.id);
+            console.log('Updated Participants:', updatedParticipants);
 
-          return updatedParticipants.length !== 0 ? {...application, participants: updatedParticipants} : null;
+            return updatedParticipants.length !== 0 ? {...application, participants: updatedParticipants} : null;
+          });
+
+          // Log the updated applications
+          console.log('Updated Applications:', updatedApplications);
+
+          const filteredApplications = updatedApplications.filter(Boolean);
+
+          // Log the filtered applications
+          console.log('Filtered Applications:', filteredApplications);
+
+          return filteredApplications;
         });
-
-        // Log the updated applications
-        console.log('Updated Applications:', updatedApplications);
-
-        const filteredApplications = updatedApplications.filter(Boolean);
-
-        // Log the filtered applications
-        console.log('Filtered Applications:', filteredApplications);
-
-        return filteredApplications;
-      });
-    } catch (error) {
-      console.error("Error deleting participant:", error);
+      } catch (error) {
+        console.error("Error deleting participant:", error);
+      }
     }
   };
 
 
-  const handleDeleteApplication = (applicationId) => {
-    // Pusta funkcja handleDeleteApplication
-    console.log('Deleting application with ID:', applicationId);
+  const handleDeleteApplication = async (applicationId) => {
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć to zgłoszenie?');
+
+    if (isConfirmed) {
+      console.log('Deleting application with ID:', applicationId);
+
+      // Wywołanie funkcji do usunięcia aplikacji (jeśli to konieczne)
+      await deleteApplication(applicationId);
+
+      // Aktualizacja stanu, usuwając aplikację o zadanym ID
+      setApplicationsData(prevApplicationsData =>
+        prevApplicationsData.filter(application => application.id !== applicationId)
+      );
+    }
   };
 
-  const handleShowAddParticipantModal = (competitionId) => {
-    console.log(competitionId)
-    setShowAddParticipantModal(true);
-  };
 
   const handleCloseAddParticipantModal = () => {
     setShowAddParticipantModal(false);
@@ -117,7 +132,9 @@ function UserPanel() {
     handleCloseAddParticipantModal();
   };
 
+  const handleEditParticipant = async (participantId) => {
 
+  }
   return (
     <div className="user-panel">
       <Link to="/konkursy">

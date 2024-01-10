@@ -138,3 +138,19 @@ export async function deleteParticipantAndCheckApplication(participant_id) {
     console.error('Error deleting participant:', error);
   }
 }
+
+export const deleteApplication = async (applicationId) => {
+  try {
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+    await fetch(`http://20.108.53.69/api/applications/${applicationId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+  } catch (error) {
+    console.error('Error deleting application:', error)
+  }
+}
