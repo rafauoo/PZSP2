@@ -3,7 +3,11 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import ParticipantItem from './ParticipantItem';
 
-function ParticipantsList({participants, onDeleteParticipant}) {
+function ParticipantsList({
+                            participants,
+                            onDeleteParticipant,
+                            onEditParticipant
+                          }) {
   return (
     <Table bordered striped hover responsive className="participants-list mt-3">
       <thead>
@@ -17,9 +21,9 @@ function ParticipantsList({participants, onDeleteParticipant}) {
       <tbody>
       {participants.map((participant) => (
         <ParticipantItem
-          key={participant.id}
           participant={participant}
           onDelete={onDeleteParticipant}
+          onEditParticipant={onEditParticipant}
         />
       ))}
       </tbody>

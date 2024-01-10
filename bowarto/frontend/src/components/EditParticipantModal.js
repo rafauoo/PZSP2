@@ -1,34 +1,47 @@
-// AddParticipantModal.js
-import React, {useState} from 'react';
+// EditParticipantModal.js
+import React, {useState, useEffect} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import {submitForm} from "../requests/user_panel";
 
-function AddParticipantModal({show, handleClose, onAddParticipant, competitionId}) {
-  const [newParticipant, setNewParticipant] = useState({
+function EditParticipantModal({
+                                show,
+                                handleClose,
+                                onEditParticipant,
+                                editedParticipant,
+                              }) {
+  const [editedData, setEditedData] = useState({
     first_name: '',
     last_name: '',
-    email: ''
+    email: '',
   });
+
+  useEffect(() => {
+    // Aktualizacja stanu po zmianie edytowanego uczestnika
+    setEditedData({
+      first_name: editedParticipant.first_name,
+      last_name: editedParticipant.last_name,
+      email: editedParticipant.email,
+    });
+  }, [editedParticipant]);
 
   const handleInputChange = (e) => {
     const {name, value} = e.target;
-    setNewParticipant((prevParticipant) => ({
-      ...prevParticipant,
-      [name]: value
+    setEditedData((prevData) => ({
+      ...prevData,
+      [name]: value,
     }));
   };
 
-  const handleAddParticipant = async () => {
-    console.log(competitionId, newParticipant)
-    onAddParticipant(competitionId, newParticipant);
+  const handleEditParticipant = async () => {
+    console.log(editedData);
+    onEditParticipant(editedParticipant.id, editedData);
     handleClose();
   };
 
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Dodaj uczestnika</Modal.Title>
+        <Modal.Title>Edytuj uczestnika</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -41,7 +54,7 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
               className="form-control"
               id="first_name"
               name="first_name"
-              value={newParticipant.first_name}
+              value={editedData.first_name}
               onChange={handleInputChange}
             />
           </div>
@@ -54,7 +67,7 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
               className="form-control"
               id="last_name"
               name="last_name"
-              value={newParticipant.last_name}
+              value={editedData.last_name}
               onChange={handleInputChange}
             />
           </div>
@@ -67,7 +80,7 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
               className="form-control"
               id="email"
               name="email"
-              value={newParticipant.email}
+              value={editedData.email}
               onChange={handleInputChange}
             />
           </div>
@@ -77,12 +90,12 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
         <Button variant="secondary" onClick={handleClose}>
           Zamknij
         </Button>
-        <Button variant="primary" onClick={handleAddParticipant}>
-          Dodaj uczestnika
+        <Button variant="primary" onClick={handleEditParticipant}>
+          Zapisz zmiany
         </Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
-export default AddParticipantModal;
+export default EditParticipantModal;

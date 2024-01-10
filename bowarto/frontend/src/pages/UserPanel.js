@@ -3,106 +3,191 @@ import React, {useState, useEffect} from 'react';
 import refreshAccessToken from '../requests/refresh';
 import UserPanelHeader from '../components/UserPanelHeader';
 import UserApplicationsTable from '../components/UserApplicationsTable';
+import {Link} from "react-router-dom";
 import {
-  fetchData,
-  fetchResourceData,
-  fetchParticipantsData,
-  handleDeleteResource,
-  handleAddParticipant
-} from '../requests/api';
+  deleteApplication,
+  deleteParticipantAndCheckApplication,
+  fetchDataFromApi,
+  submitForm, updateParticipant
+} from "../requests/user_panel";
+
+const buttonStyle = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+};
+
 
 function UserPanel() {
   const [applicationsData, setApplicationsData] = useState([]);
-  const [competitionNames, setCompetitionNames] = useState({});
-  const [participantsData, setParticipantsData] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
   useEffect(() => {
-    const fetchDataAndPopulateState = async () => {
+    const fetchData = async () => {
       try {
-        await refreshAccessToken();
-        const token = sessionStorage.getItem('access');
-        const userApplicationsUrl = 'http://20.108.53.69/api/applications/';
-        const userApplicationsOptions = {method: 'GET', headers: {'Authorization': `Bearer ${token}`}};
-        const userData = await fetchData(userApplicationsUrl, userApplicationsOptions);
+        const applications = await fetchDataFromApi('http://20.108.53.69/api/applications/');
+        const participants = await fetchDataFromApi('http://20.108.53.69/api/participants/')
+        const competitions = await fetchDataFromApi('http://20.108.53.69/api/competitions/');
 
-        const competitionIds = userData.map(application => application.competition);
-        const competitionData = await fetchResourceData(competitionIds, token, 'competitions', 'title');
-        const participantsData = await fetchParticipantsData(userData, token);
+        // Przyporządkuj uczestników do odpowiednich aplikacji
+        const applicationsWithParticipants = applications.map(application => {
+          const applicationParticipants = participants.filter(participant => participant.application === application.id);
+          return {...application, participants: applicationParticipants};
+        });
 
-        setApplicationsData(userData);
-        setCompetitionNames(competitionData);
-        setParticipantsData(participantsData);
-        setLoading(false);
+        // Przyporządkuj konkursy do odpowiednich aplikacji
+        const applicationsWithCompetitions = applicationsWithParticipants.map(application => {
+          const competition = competitions.find(comp => comp.id === application.competition);
+          return {...application, competition};
+        });
+        setApplicationsData(applicationsWithCompetitions);
+
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false);
       }
     };
-
-    fetchDataAndPopulateState();
+    fetchData();
   }, []);
 
   const handleDeleteParticipant = async (participantId) => {
-    try {
-      const confirmation = window.confirm(`Czy na pewno chcesz usunąć tego uczestnika?`);
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć tego uczestnika?');
+    if (isConfirmed) {
+      try {
+        await deleteParticipantAndCheckApplication(participantId);
 
-      if (confirmation) {
-        // Wywołaj zapytanie do API w celu usunięcia uczestnika
-        const token = sessionStorage.getItem('access');
-        const deleteParticipantUrl = `http://20.108.53.69/api/participants/${participantId}/`;
-        const deleteParticipantOptions = {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        };
+        setApplicationsData(prevApplications => {
+          const updatedApplications = prevApplications.map(application => {
+            const updatedParticipants = application.participants.filter(participant => participant.id !== participantId);
 
-        await fetch(deleteParticipantUrl, deleteParticipantOptions);
+            // Log information to understand the process
+            console.log('Application ID:', application.id);
+            console.log('Updated Participants:', updatedParticipants);
 
-        // Uaktualnij participantsData lokalnie po usunięciu uczestnika
-        setParticipantsData(prevParticipantsData => {
-          const updatedParticipantsData = {...prevParticipantsData};
+            return updatedParticipants.length !== 0 ? {...application, participants: updatedParticipants} : null;
+          });
 
-          for (const applicationId in updatedParticipantsData) {
-            if (Object.prototype.hasOwnProperty.call(updatedParticipantsData, applicationId)) {
-              updatedParticipantsData[applicationId] = updatedParticipantsData[applicationId].filter(participant => participant.id !== participantId);
-            }
-          }
+          // Log the updated applications
+          console.log('Updated Applications:', updatedApplications);
 
-          return updatedParticipantsData;
+          const filteredApplications = updatedApplications.filter(Boolean);
+
+          // Log the filtered applications
+          console.log('Filtered Applications:', filteredApplications);
+
+          return filteredApplications;
         });
+      } catch (error) {
+        console.error("Error deleting participant:", error);
       }
-    } catch (error) {
-      console.error('Error deleting participant:', error);
     }
   };
+
 
   const handleDeleteApplication = async (applicationId) => {
-    const confirmation = window.confirm(`Czy na pewno chcesz usunąć to zgłoszenie?`);
+    const isConfirmed = window.confirm('Czy na pewno chcesz usunąć to zgłoszenie?');
 
-    if (confirmation) {
-      await handleDeleteResource(applicationId, 'applications', setApplicationsData);
+    if (isConfirmed) {
+      console.log('Deleting application with ID:', applicationId);
+
+      // Wywołanie funkcji do usunięcia aplikacji (jeśli to konieczne)
+      await deleteApplication(applicationId);
+
+      // Aktualizacja stanu, usuwając aplikację o zadanym ID
+      setApplicationsData(prevApplicationsData =>
+        prevApplicationsData.filter(application => application.id !== applicationId)
+      );
     }
   };
 
-  const handleAddParticipantWrapper = async (applicationId, newParticipant) => {
-    await handleAddParticipant(applicationId, newParticipant, participantsData, setParticipantsData);
+
+  const handleCloseAddParticipantModal = () => {
+    setShowAddParticipantModal(false);
   };
 
+  const handleAddParticipant = async (competitionId, newParticipant) => {
+    // Call the submitForm function with formData and competitionId
+    const createdParticipant = await submitForm(competitionId, newParticipant);
+    setApplicationsData(prevApplications => {
+      // Find the application to which the participant is added
+      const updatedApplications = prevApplications.map(application => {
+        if (application.competition.id === competitionId) {
+          // Add the created participant to the application
+          return {
+            ...application,
+            participants: [...application.participants, createdParticipant]
+          };
+        }
+        return application;
+      });
+
+      // Log the updated applications
+      console.log('Updated Applications:', updatedApplications);
+
+      return updatedApplications;
+    });
+    // Close the modal after adding the participant
+    handleCloseAddParticipantModal();
+  };
+
+  const handleEditParticipant = async (participantId, editedData) => {
+    try {
+      // Wywołaj funkcję do aktualizacji uczestnika
+      const updatedParticipant = await updateParticipant(participantId, editedData);
+
+      // Zaktualizuj stan applications
+      setApplicationsData(prevApplications => {
+        // Mapuj po poprzednim stanie i zaktualizuj uczestnika w odpowiedniej aplikacji
+        const updatedApplications = prevApplications.map(application => {
+          const updatedParticipants = application.participants.map(participant => {
+            // Znajdź uczestnika o tym samym ID co zaktualizowany uczestnik
+            if (participant.id === participantId) {
+              // Zaktualizuj uczestnika
+              return updatedParticipant;
+            }
+            return participant;
+          });
+
+          // Zwróć zaktualizowaną aplikację z zaktualizowanymi uczestnikami
+          return {...application, participants: updatedParticipants};
+        });
+
+        // Log the updated applications
+        console.log('Updated Applications:', updatedApplications);
+
+        return updatedApplications;
+      });
+
+      console.log('Updated participant:', updatedParticipant);
+    } catch (error) {
+      console.error('Error updating participant:', error);
+    }
+  };
+  
   return (
     <div className="user-panel">
-      <UserPanelHeader/>
-      <UserApplicationsTable
-        userApplications={applicationsData}
-        competitionNames={competitionNames}
-        participantsData={participantsData}
-        loading={loading}
-        onDeleteParticipant={handleDeleteParticipant}
-        onDeleteApplication={handleDeleteApplication}
-        onAddParticipant={handleAddParticipantWrapper}
-      />
+      <Link to="/konkursy">
+        <button style={buttonStyle}>Przejdź do konkursów</button>
+      </Link>
+      {applicationsData.length !== 0 ? (
+          <>
+            <UserPanelHeader/>
+            <UserApplicationsTable
+              applications={applicationsData}
+              onDeleteParticipant={handleDeleteParticipant}
+              onDeleteApplication={handleDeleteApplication}
+              onAddParticipant={handleAddParticipant}
+              onEditParticipant={handleEditParticipant}
+            />
+          </>
+        ) :
+        (
+          <>
+            <p>Nie posiadasz obecnie żadnych zgłoszeń.</p>
+          </>
+        )}
     </div>
   );
 }
