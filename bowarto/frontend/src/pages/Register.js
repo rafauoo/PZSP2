@@ -60,12 +60,12 @@ function Register() {
         },
         body: JSON.stringify(formData)
       })
+      console.log(JSON.stringify(formData))
       console.log(createUserResponse.json())
     } catch (error) {
       console.error("Error something went wrong: ", error);
     }
   }
-  console.log(JSON.stringify(formData))
 
   return (
     <>
@@ -86,7 +86,7 @@ function Register() {
             <Form.Select aria-label="Szkoła" onChange={(e) => setSchoolName(e.target.value)}>
               <option value="" disable selected hidden></option>
               {schoolsData.map((school) => (
-                <option value={school.name}>{school.name}</option>
+                <option value={school.id}>{school.name}</option>
               ))}
             </Form.Select>
 
