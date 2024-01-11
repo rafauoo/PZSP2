@@ -292,3 +292,4 @@ export const deleteFile = async (attachmentId) => {
     throw error;
   }
 };
+
