@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
+import refreshAccessToken from "../requests/refresh";
 
 class CreateCompetition extends Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class CreateCompetition extends Component {
     });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
     // Create form data
@@ -75,8 +76,10 @@ class CreateCompetition extends Component {
     formData.append('end_at', this.state.endDate.toISOString());
     // WARNING: right now there is no attachment sent
 
-    console.log(formData)
+    // console.log(formData)
     const token = sessionStorage.getItem('access');
+    await refreshAccessToken();
+
     fetch('http://20.108.53.69/api/competitions/', {
       method: 'POST',
       body: formData,

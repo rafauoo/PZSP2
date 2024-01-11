@@ -52,11 +52,10 @@ class CompetitionType(models.Model):
 
 
 class File(models.Model):
-    # path = models.FileField(storage=AzureMediaStorage if not settings.TEST else MockAzureMediaStorage())
     path = models.FileField(storage=default_storage)
     type = models.ForeignKey(FileType, models.SET_NULL, blank=True, null=True)
     competition = models.ForeignKey(Competition, models.SET_NULL, blank=True, null=True)
-    participant = models.ForeignKey('Participant', models.SET_NULL, blank=True, null=True)
+    participant = models.ForeignKey('Participant', models.CASCADE, blank=True, null=True)
 
     class Meta:
         db_table = 'file'
@@ -67,7 +66,6 @@ class File(models.Model):
             storage = self.path.storage
             storage.delete(self.path.name)
 
-        # Wywołaj oryginalną funkcję delete
         super().delete(*args, **kwargs)
 
 

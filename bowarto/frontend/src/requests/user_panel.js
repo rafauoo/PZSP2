@@ -200,7 +200,7 @@ export async function uploadAttachment(participantId, newAttachment) {
 
     // Utwórz adres URL do wysłania załącznika
     // const apiUrl = 'http://20.108.53.69/api/files/';
-    const apiUrl = 'http://http://20.108.53.69/api/files/';
+    const apiUrl = 'http://20.108.53.69/api/files/';
 
     // Wyślij żądanie POST do wysłania załącznika
     const response = await fetch(apiUrl, {
@@ -230,20 +230,22 @@ export const downloadFile = async (attachmentId) => {
     const token = sessionStorage.getItem('access');
 
     // Pobierz plik z serwera
-    const response = await fetch({
-      url: `http://http://20.108.53.69/api/files/${attachmentId}/`,
+    const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
       method: 'GET',
-      responseType: 'arraybuffer',
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      responseType: 'arraybuffer', // Set responseType here
     });
 
-    const contentDisposition = response.headers['content-disposition'];
+    const contentDisposition = response.headers.get('content-disposition');
     const filename = parseFilenameFromContentDisposition(contentDisposition);
 
-    console.log(filename);
-    saveFile(response.data, filename);
+    // Access response data using arrayBuffer() method
+    const responseData = await response.arrayBuffer();
+
+    // Save file with correct data
+    saveFile(responseData, filename);
   } catch (error) {
     console.error('Error downloading file:', error);
     throw error;
@@ -272,7 +274,7 @@ export const deleteFile = async (attachmentId) => {
     const token = sessionStorage.getItem('access');
 
     // Usuń plik z serwera
-    const response = await fetch(`http://http://20.108.53.69/api/files/${attachmentId}/`, {
+    const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -290,3 +292,4 @@ export const deleteFile = async (attachmentId) => {
     throw error;
   }
 };
+
