@@ -200,7 +200,7 @@ export async function uploadAttachment(participantId, newAttachment) {
 
     // Utwórz adres URL do wysłania załącznika
     // const apiUrl = 'http://20.108.53.69/api/files/';
-    const apiUrl = 'http://http://20.108.53.69/api/files/';
+    const apiUrl = 'http://20.108.53.69/api/files/';
 
     // Wyślij żądanie POST do wysłania załącznika
     const response = await fetch(apiUrl, {
@@ -231,7 +231,7 @@ export const downloadFile = async (attachmentId) => {
 
     // Pobierz plik z serwera
     const response = await fetch({
-      url: `http://http://20.108.53.69/api/files/${attachmentId}/`,
+      url: `http://20.108.53.69/api/files/${attachmentId}/`,
       method: 'GET',
       responseType: 'arraybuffer',
       headers: {
@@ -272,7 +272,7 @@ export const deleteFile = async (attachmentId) => {
     const token = sessionStorage.getItem('access');
 
     // Usuń plik z serwera
-    const response = await fetch(`http://http://20.108.53.69/api/files/${attachmentId}/`, {
+    const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
