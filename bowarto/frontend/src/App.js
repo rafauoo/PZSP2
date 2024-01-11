@@ -11,6 +11,7 @@ import Konkursy from "./pages/Konkursy";
 import RegisterParticipantTable from "./pages/RegisterParicipant"
 import CreateCompetition from "./pages/CreateCompetition";
 import UserPanel from "./pages/UserPanel";
+import UserProfile from "./pages/UserProfile";
 
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
               <Route exact path="/user_panel" element={<UserPanel/>}></Route>
               <Route exact path="/participants" element={<ParticipantsTable/>}></Route>
               <Route exact path="/registerParticipant" element={<RegisterParticipantTable/>}></Route>
+              <Route exact path="/userProfile" element={<UserProfile/>}></Route>
             </Routes>
           </Router>
         </main>
