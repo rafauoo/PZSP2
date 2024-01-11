@@ -107,10 +107,12 @@ class UserProfile extends Component {
         },
         body: JSON.stringify(userInfo),
       });
-      if(!responseSchool.ok) {
-        console.log("failed to patch user");
+      if (responseSchool.ok) {
+        console.log(await responseSchool.json());
+        window.alert('Dane zostały pomyślnie zaktualizowane!');
+      } else {
+        console.log('Failed to update user data');
       }
-      console.log(await responseSchool.json())
     }
   
     render() {
@@ -143,7 +145,7 @@ class UserProfile extends Component {
                 <Form.Label>Szkoła</Form.Label>
                 <div className="d-flex">
                   <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleChange}>
-                    <option value="" disabled hidden></option>
+                    <option value="" disabled hidden selected={schoolID == null}></option>
                     {schools.map((school) => (
                       <option key={school.id} value={school.id} selected={school.id === schoolID}>
                         {school.name}

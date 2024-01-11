@@ -30,7 +30,7 @@ class App extends Component {
               <Route exact path="/user_panel" element={<UserPanel/>}></Route>
               <Route exact path="/participants" element={<ParticipantsTable/>}></Route>
               <Route exact path="/registerParticipant" element={<RegisterParticipantTable/>}></Route>
-              <Route exact path="/userProfile" element={<UserProfile/>}></Route>
+              <Route exact path="/profile" element={<UserProfile/>}></Route>
             </Routes>
           </Router>
         </main>
