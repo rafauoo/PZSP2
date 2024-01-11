@@ -1,6 +1,8 @@
-import Button from 'react-bootstrap/Button';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-
+import refreshAccessToken from '../requests/refresh';
+import { fetchDataFromApi } from '../requests/user_panel';
 
 const buttonStyle = {
   backgroundColor: 'rgb(131, 203, 83)',
@@ -11,53 +13,96 @@ const buttonStyle = {
   cursor: 'pointer',
   margin: '5px'
 };
+
 function Register() {
+  const [first_name, setFirstName] = useState()
+  const [last_name, setLastname] = useState()
+  const [town, setTown] = useState()
+  const [school, setSchoolName] = useState()
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
+  const [schoolsData, setSchoolsData] = useState([])
+
+  const formData = {
+    email,
+    password,
+    first_name,
+    last_name,
+    school,
+  }
+
+  useEffect(() => {
+    const getSchools = async () => {
+      try {
+        const apiUrl = 'http://20.108.53.69/api/schools/';
+        const schoolsData = await fetchDataFromApi(apiUrl);
+        console.log(schoolsData)
+        setSchoolsData(schoolsData);
+      } catch (error) {
+        console.log(error)
+      }
+    };
+    getSchools();
+  }, [])
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await refreshAccessToken();
+      const token = sessionStorage.getItem('access')
+      const apiUrl = 'http://20.108.53.69/api/register/'
+      const createUserResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData)
+      })
+      console.log(JSON.stringify(formData))
+      console.log(createUserResponse.json())
+    } catch (error) {
+      console.error("Error something went wrong: ", error);
+    }
+  }
+
   return (
     <>
       <div className="d-flex justify-content-center">
-        <h1>Witamy na platformie konkursowej BoWarto!</h1>
+        <h1>Rejestracja użytkownika</h1>
       </div>
       <div className="d-flex justify-content-center vh-100">
-        <Form>
+        <Form style={{ width: '50%' }} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
+
             <Form.Label>Imię</Form.Label>
-            <Form.Control type="text" placeholder="Podaj imię" style={{ width: '300px' }} />
+            <Form.Control type="text" value={first_name} onChange={(e) => setFirstName(e.target.value)} placeholder="Podaj imię" />
 
             <Form.Label>Nazwisko</Form.Label>
-            <Form.Control type="text" placeholder="Podaj nazwisko" />
+            <Form.Control type="text" placeholder="Podaj nazwisko" value={last_name} onChange={(e) => setLastname(e.target.value)} />
 
-
-            <Form.Label>Etap nauczania</Form.Label>
-            <Form.Select aria-label="Etap nauczania">
+            <Form.Label>Szkoła</Form.Label>
+            <Form.Select aria-label="Szkoła" onChange={(e) => setSchoolName(e.target.value)}>
               <option value="" disable selected hidden></option>
-              <option value="1">Podstawowy</option>
-              <option value="2">Ponadpodstawowy</option>
-              <option value="3">Wyższy</option>
+              {schoolsData.map((school) => (
+                <option value={school.id}>{school.name}</option>
+              ))}
             </Form.Select>
 
             <Form.Label>Miasto</Form.Label>
-            <Form.Control type="text" placeholder="Podaj miasto" />
-
-            <Form.Label>Pełna nazwa jednoski</Form.Label>
-            <Form.Control type="text" placeholder="Podaj pełną nazwę jednoski" />
-
-            <Form.Label>Telefon</Form.Label>
-            <Form.Control type="text" placeholder="Podaj telefon" />
+            <Form.Control type="text" placeholder="Podaj miasto" value={town} onChange={(e) => setTown(e.target.value)} />
 
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Podaj email" />
+            <Form.Control type="email" placeholder="Podaj email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-            <Form.Label>Nazwa użytkownika</Form.Label>
-            <Form.Control type="text" placeholder="Podaj nazwę użytkownika" />
           </Form.Group>
-
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Hasło</Form.Label>
-            <Form.Control type="password" placeholder="Podaj hasło" />
+            <Form.Control type="password" placeholder="Podaj hasło" value={password} onChange={(e) => setPassword(e.target.value)} />
           </Form.Group>
           <div className="d-flex justify-content-center">
-            <button style={buttonStyle} variant="success" type="submit">
+            <button style={buttonStyle} variant="success" type="submit" >
               Rejestruj
             </button>
           </div>

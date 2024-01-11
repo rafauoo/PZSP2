@@ -33,16 +33,14 @@ function Login() {
         const headers = {
           'Authorization': 'Bearer ' + accessToken, // Add any authorization token if needed
         };
-        // NOTE: store role of logged in user in the sessionStorage
-        axios.get(`http://20.108.53.69/api/me/`, {headers})
+        axios.get(`http://20.108.53.69/api/me/`, { headers })
           .then(res => {
             const userData = res.data;
             setLoginError(false);
             setUserData(userData)
             sessionStorage.setItem('role', userData.group.name);
-            console.log(sessionStorage.getItem('role'))
-            console.log(sessionStorage.getItem('access'))
-            navigate('/');
+            // NOTE: Using window.location becasue navigate didnt refresh the page, therefore navbar wasnt being updated
+            window.location.href = '/'
           })
           .catch((error) => {
             setLoginError(true);
