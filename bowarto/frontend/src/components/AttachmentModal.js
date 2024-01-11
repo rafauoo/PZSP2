@@ -1,9 +1,8 @@
-// AttachmentModal.js
-import {useState} from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-function AttachmentModal({show, handleClose, handleAttachmentUpload}) {
+function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
   const [newAttachment, setNewAttachment] = useState(null);
 
   const handleAttachmentChange = (e) => {
@@ -12,9 +11,9 @@ function AttachmentModal({show, handleClose, handleAttachmentUpload}) {
     setNewAttachment(file);
   };
 
-  const handleUploadClick = () => {
-    // Implement file upload logic here
-    handleAttachmentUpload(newAttachment);
+  const handleUploadClick = async () => {
+    console.log(participantId, newAttachment);
+    onAddAttachment(participantId, newAttachment);
     // Reset new attachment and close the modal after upload
     setNewAttachment(null);
     handleClose();
@@ -23,22 +22,22 @@ function AttachmentModal({show, handleClose, handleAttachmentUpload}) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Attachment Form</Modal.Title>
+        <Modal.Title>Załącz prace</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
           <div>
-            <label>Select New Attachment:</label>
+            <label>Wybierz załącznik:</label>
             <input type="file" onChange={handleAttachmentChange}/>
           </div>
         </form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Close
+          Zamknij
         </Button>
         <Button variant="primary" onClick={handleUploadClick}>
-          Upload
+          Prześlij plik
         </Button>
       </Modal.Footer>
     </Modal>

@@ -5,10 +5,10 @@ import UserPanelHeader from '../components/UserPanelHeader';
 import UserApplicationsTable from '../components/UserApplicationsTable';
 import {Link} from "react-router-dom";
 import {
-  deleteApplication,
-  deleteParticipantAndCheckApplication,
+  deleteApplication, deleteFile,
+  deleteParticipantAndCheckApplication, downloadFile,
   fetchDataFromApi,
-  submitForm, updateParticipant
+  submitForm, updateParticipant, uploadAttachment
 } from "../requests/user_panel";
 
 const buttonStyle = {
@@ -29,8 +29,9 @@ function UserPanel() {
     const fetchData = async () => {
       try {
         const applications = await fetchDataFromApi('http://20.108.53.69/api/applications/');
-        const participants = await fetchDataFromApi('http://20.108.53.69/api/participants/')
+        const participants = await fetchDataFromApi('http://20.108.53.69/api/participants/');
         const competitions = await fetchDataFromApi('http://20.108.53.69/api/competitions/');
+        const files = await fetchDataFromApi('http://20.108.53.69/api/files/');
 
         // Przyporządkuj uczestników do odpowiednich aplikacji
         const applicationsWithParticipants = applications.map(application => {
@@ -38,11 +39,24 @@ function UserPanel() {
           return {...application, participants: applicationParticipants};
         });
 
+        // Przyporządkuj pliki do odpowiednich uczestników
+        const applicationsWithParticipantsAndFiles = applicationsWithParticipants.map(application => {
+          const applicationParticipantsWithFiles = application.participants.map(participant => {
+            const participantFiles = files.filter(file => file.participant === participant.id);
+            // Jeśli uczestnik ma przypisany plik, zwróć jego id, w przeciwnym razie null
+            const participantFile = participantFiles.length > 0 ? participantFiles[0].id : null;
+            return {...participant, file: participantFile};
+          });
+
+          return {...application, participants: applicationParticipantsWithFiles};
+        });
+
         // Przyporządkuj konkursy do odpowiednich aplikacji
-        const applicationsWithCompetitions = applicationsWithParticipants.map(application => {
+        const applicationsWithCompetitions = applicationsWithParticipantsAndFiles.map(application => {
           const competition = competitions.find(comp => comp.id === application.competition);
           return {...application, competition};
         });
+
         setApplicationsData(applicationsWithCompetitions);
 
       } catch (error) {
@@ -51,6 +65,7 @@ function UserPanel() {
     };
     fetchData();
   }, []);
+
 
   const handleDeleteParticipant = async (participantId) => {
     const isConfirmed = window.confirm('Czy na pewno chcesz usunąć tego uczestnika?');
@@ -165,7 +180,81 @@ function UserPanel() {
       console.error('Error updating participant:', error);
     }
   };
-  
+  const handleAddAttachment = async (participantId, newAttachment) => {
+    console.log(participantId, newAttachment);
+
+    try {
+      // Wywołaj funkcję do przesłania załącznika
+      const uploadedFile = await uploadAttachment(participantId, newAttachment);
+
+      // Zaktualizuj applicationData, dodając nowy plik do odpowiedniego uczestnika
+      setApplicationsData(prevApplications => {
+        // Mapuj po poprzednim stanie i zaktualizuj uczestnika w odpowiedniej aplikacji
+        const updatedApplications = prevApplications.map(application => {
+          const updatedParticipants = application.participants.map(participant => {
+            // Znajdź uczestnika o tym samym ID co przekazane participantId
+            if (participant.id === participantId) {
+              // Dodaj nowy plik do uczestnika (jeśli nie ma jeszcze przypisanego pliku)
+              const updatedFile = participant.file ? participant.file : uploadedFile.id;
+              return {...participant, file: updatedFile};
+            }
+            return participant;
+          });
+
+          // Zwróć zaktualizowaną aplikację z zaktualizowanymi uczestnikami
+          return {...application, participants: updatedParticipants};
+        });
+
+        // Log the updated applications
+        console.log('Updated Applications:', updatedApplications);
+
+        return updatedApplications;
+      });
+
+      console.log('Uploaded file:', uploadedFile);
+    } catch (error) {
+      console.error('Error uploading attachment:', error);
+    }
+  };
+
+
+  const handleRemoveFile = async (attachmentId) => {
+    try {
+      // Wywołaj funkcję do usunięcia załącznika
+      await deleteFile(attachmentId);
+
+      // Zaktualizuj applicationData, usuwając plik z odpowiedniego uczestnika
+      setApplicationsData(prevApplications => {
+        // Mapuj po poprzednim stanie i zaktualizuj uczestnika w odpowiedniej aplikacji
+        const updatedApplications = prevApplications.map(application => {
+          const updatedParticipants = application.participants.map(participant => {
+            // Znajdź uczestnika o tym samym ID co przekazane attachmentId
+            if (participant.file === attachmentId) {
+              // Usuń plik z uczestnika
+              return {...participant, file: null};
+            }
+            return participant;
+          });
+
+          // Zwróć zaktualizowaną aplikację z zaktualizowanymi uczestnikami
+          return {...application, participants: updatedParticipants};
+        });
+
+        // Log the updated applications
+        console.log('Updated Applications:', updatedApplications);
+
+        return updatedApplications;
+      });
+
+      console.log('File removed successfully');
+    } catch (error) {
+      console.error('Error removing file:', error);
+    }
+  };
+
+  const handleDownloadFile = async (attachmentId) => {
+    await downloadFile(attachmentId);
+  }
   return (
     <div className="user-panel">
       <Link to="/konkursy">
@@ -180,6 +269,9 @@ function UserPanel() {
               onDeleteApplication={handleDeleteApplication}
               onAddParticipant={handleAddParticipant}
               onEditParticipant={handleEditParticipant}
+              onAddAttachment={handleAddAttachment}
+              onDownloadFile={handleDownloadFile}
+              onRemoveFile={handleRemoveFile}
             />
           </>
         ) :
