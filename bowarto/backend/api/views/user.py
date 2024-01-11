@@ -33,7 +33,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-    @allow_admin
+    @allow_admin_or_this_user
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
