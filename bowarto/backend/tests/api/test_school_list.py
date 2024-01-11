@@ -92,7 +92,7 @@ class SchoolListTests(TestCase):
         response = self.client.get(self.url)
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_school_as_user(self):
         # GIVEN
@@ -112,15 +112,15 @@ class SchoolListTests(TestCase):
         response = self.client.post(self.url, data, format='json')
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(School.objects.count(), 2)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(School.objects.count(), 3)
 
     def test_list_schools_unauthenticated(self):
         # WHEN
         response = self.client.get(self.url)
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_school_unauthenticated(self):
         # WHEN

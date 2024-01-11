@@ -1,7 +1,7 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from rest_framework.response import Response
 from ..models import School
 from ..permissions import allow_admin, allow_admin_or_school_user, allow_authenticated, allow_any
 from ..serializers.school import SchoolSerializer
@@ -19,11 +19,20 @@ class SchoolList(generics.ListCreateAPIView):
 
     @allow_authenticated
     def post(self, request, *args, **kwargs):
-        # TODO Przy tworzeniu szkoły sprawdź czy istnieje, jeśli nie to utwórz
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data.get('email')
+
+        existing_school = School.objects.filter(email=email).first()
+        if existing_school:
+            return Response({'message': 'School with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-# @method_decorator(allow_admin_or_school_user
 @authentication_classes([JWTAuthentication])
 class SchoolDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'

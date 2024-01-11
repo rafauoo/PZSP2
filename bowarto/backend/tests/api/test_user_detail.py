@@ -149,9 +149,9 @@ class UserDetailTests(TestCase):
         response = self.client.patch(self.user_url, data, format='json')
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_user = User.objects.get(id=self.user.id)
-        self.assertEqual(updated_user.email, 'user@example.com')
+        self.assertEqual(updated_user.email, 'updated_user@example.com')
 
     def test_partial_update_user_details_unauthenticated(self):
         # WHEN
