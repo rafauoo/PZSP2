@@ -29,7 +29,6 @@ function NavbarExample() {
             <Nav className="me-auto justify-content-between">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/konkursy">Konkursy</Nav.Link>
-              
               {role === 'admin' ? (
                 <>
                   <Nav.Link href="/createCompetition">Stwórz konkurs</Nav.Link>
