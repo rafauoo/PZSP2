@@ -10,6 +10,7 @@ from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
 from .views.school import SchoolList, SchoolDetail
 from .views.user import UserList, UserDetail
+from .views.pending_approval import PendingApprovalList, PendingApprovalDetail
 
 urlpatterns = [
     path('', index, name="index"),
@@ -20,7 +21,7 @@ urlpatterns = [
     path('competitions/', CompetitionList.as_view(), name='competition-list'),
     path('competitions/<int:id>/', CompetitionDetail.as_view(), name='competition-detail'),
 
-    path('competition_types/', CompetitionTypeList.as_view(), name='competition_type-list'),
+    path('competition_types/', CompetitionTypeList.as_view(), name='competition-type-list'),
 
     path('files/', FileList.as_view(), name="file-list"),
     path('files/<int:id>/', FileDetail.as_view(), name="file-detail"),
@@ -30,6 +31,9 @@ urlpatterns = [
 
     path('schools/', SchoolList.as_view(), name="school-list"),
     path('schools/<int:id>/', SchoolDetail.as_view(), name="school-detail"),
+
+    path('approvals/', PendingApprovalList.as_view(), name="approval-list"),
+    path('approvals/<int:id>/', PendingApprovalDetail.as_view(), name="approval-detail"),
 
     path('users/', UserList.as_view(), name="user-list"),
     path('users/<int:id>/', UserDetail.as_view(), name="user-detail"),

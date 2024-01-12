@@ -14,7 +14,7 @@ class CompetitionType(models.TextChoices):
     @classmethod
     def from_str(cls, value):
         for key in cls:
-            if value.lower() == key.value.lower():
+            if value == key.value.lower():
                 return key
         return None
 
@@ -62,13 +62,20 @@ class Competition(models.Model):
     type = models.CharField(max_length=50, choices=CompetitionType.choices, default=CompetitionType.OTHER)
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
-    poster = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True,
+    poster = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
                                   related_name='poster_competition')
-    regulation = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True,
-                                      related_name='regulaton_competition')
+    regulation = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
+                                      related_name='regulation_competition')
 
     class Meta:
         db_table = 'competition'
+
+    def delete(self, *args, **kwargs):
+        if self.poster:
+            self.poster.delete()
+        if self.regulation:
+            self.regulation.delete()
+        super().delete()
 
     def __str__(self):
         return self.title
@@ -82,8 +89,23 @@ class Competition(models.Model):
         if self.type and self.type not in valid_competition_types:
             raise ValidationError("Invalid competition type.")
 
+    def delete_previous_attachments(self):
+        if self.poster:
+            self.poster.delete()
+        if self.regulation:
+            self.regulation.delete()
+
     def save(self, *args, **kwargs):
         self.full_clean()
+
+        # Delete previous attachments before setting new ones
+        if self.id:  # Check if it's an existing instance (not a new one)
+            original = Competition.objects.get(pk=self.id)
+            if original.poster != self.poster:
+                original.poster.delete()
+            if original.regulation != self.regulation:
+                original.regulation.delete()
+
         super().save(*args, **kwargs)
 
 
@@ -93,7 +115,7 @@ class Participant(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
-    attachment = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True,
+    attachment = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
                                       related_name='attachment_participant')
 
     class Meta:
@@ -102,9 +124,24 @@ class Participant(models.Model):
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
+    def delete_previous_attachment(self):
+        if self.attachment:
+            self.attachment.delete()
+
     def save(self, *args, **kwargs):
         self.full_clean()
+
+        # Delete previous attachment before setting a new one
+        if self.id:  # Check if it's an existing instance (not a new one)
+            original = Participant.objects.get(pk=self.id)
+            if original.attachment != self.attachment:
+                original.delete_previous_attachment()
+
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        self.delete_previous_attachment()
+        super().delete(*args, **kwargs)
 
 
 class School(models.Model):
@@ -162,5 +199,21 @@ class User(AbstractBaseUser):
             raise ValidationError("Only users with type 'USER' can have a school.")
 
     def save(self, *args, **kwargs):
+        if self.id:  # Check if the instance is already saved (updating)
+            original_user = User.objects.get(id=self.id)
+            if self.user_type != original_user.user_type:
+                raise ValidationError("Cannot update user_type field.")
+
         self.full_clean()
         super().save(*args, **kwargs)
+
+
+class PendingApproval(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Pending Approval: user: {self.user}, school: {self.school}"
+
+    class Meta:
+        db_table = 'pending_approval'

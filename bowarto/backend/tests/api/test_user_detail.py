@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from api.models import User, School, Group
+from api.models import User, School
 from api.serializers.user import UserSerializer
 
 from tests.setup import create_admin, create_user
@@ -36,7 +36,6 @@ class UserDetailTests(TestCase):
             'postcode': '12345',
         }
         self.school = School.objects.create(**self.school_data)
-        self.group = Group.objects.create(user='user')
 
     def test_get_user_details_as_admin(self):
         # GIVEN
@@ -86,8 +85,8 @@ class UserDetailTests(TestCase):
             'email': 'updated_user@example.com',
             'first_name': 'Updated First Name',
             'last_name': 'Updated Last Name',
-            'school': self.school.id,  # Replace with the actual ID of the school
-            'group': self.group.id,  # Replace with the actual ID of the group
+            'school': None,  # Replace with the actual ID of the school
+            'user_type': 'user',  # Replace with the actual ID of the group
             # Add more fields as needed
         }
         response = self.client.put(self.user_url, data, format='json')

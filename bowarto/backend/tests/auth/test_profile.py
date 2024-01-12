@@ -14,8 +14,6 @@ from tests.utils import perform_register, perform_login, perform_logout, perform
 from tests.setup import create_user, create_admin
 from django.urls import reverse
 
-from api.serializers.group import GroupSerializer
-
 
 class TestProfile(TestCase):
     def setUp(self):
@@ -43,7 +41,7 @@ class TestProfile(TestCase):
             'email': self.user.email,
             'first_name': self.user.first_name,
             'last_name': self.user.last_name,
-            'group': OrderedDict(GroupSerializer(self.user.group).data)
+            'user_type': 'user'
         }
 
         for key, value in expected_data.items():
