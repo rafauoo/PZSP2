@@ -31,6 +31,18 @@ def allow_admin(func):
     return inner_wrapper
 
 
+def allow_user(func):
+    @allow_authenticated
+    def inner_wrapper(self, request, *args, **kwargs):
+        if request.user.is_user:
+            return func(self, request, *args, **kwargs)
+        else:
+            return Response({'message': 'You do not have the necessary permissions'},
+                            status=status.HTTP_403_FORBIDDEN)
+
+    return inner_wrapper
+
+
 def allow_admin_or_school_user(func):
     @allow_authenticated
     def inner_wrapper(self, request, *args, **kwargs):

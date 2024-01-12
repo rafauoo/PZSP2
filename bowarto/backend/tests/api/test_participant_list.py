@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
@@ -17,11 +19,13 @@ class ParticipantListTests(TestCase):
         self.competition = Competition.objects.create(
             title='Test Competition',
             description='Description for Competition',
+            start_at=datetime.now(),
+            end_at=datetime.now() + timedelta(days=7)
         )
 
-        self.admin = create_admin('admin@example.com', '123')
-        self.user_1 = create_user('user_1@example.com', '123')
-        self.user_2 = create_user('user_2@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.user_1 = create_user('user_1@example.com', 'verylongandsecurepassword')
+        self.user_2 = create_user('user_2@example.com', 'verylongandsecurepassword')
 
         self.application = Application.objects.create(
             competition=self.competition,
@@ -37,7 +41,7 @@ class ParticipantListTests(TestCase):
 
     def test_list_participants_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -54,7 +58,7 @@ class ParticipantListTests(TestCase):
 
     def test_list_participants_as_user(self):
         # GIVEN
-        login_data = {'email': 'user_1@example.com', 'password': '123'}
+        login_data = {'email': 'user_1@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -78,7 +82,7 @@ class ParticipantListTests(TestCase):
 
     def test_create_participant_as_user(self):
         # GIVEN
-        login_data = {'email': 'user_1@example.com', 'password': '123'}
+        login_data = {'email': 'user_1@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -100,7 +104,7 @@ class ParticipantListTests(TestCase):
 
     def test_create_participant_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -134,7 +138,7 @@ class ParticipantListTests(TestCase):
 
     def test_create_participant_not_existing_application(self):
         # GIVEN
-        login_data = {'email': 'user_1@example.com', 'password': '123'}
+        login_data = {'email': 'user_1@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')

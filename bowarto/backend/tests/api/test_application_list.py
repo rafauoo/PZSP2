@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
@@ -17,14 +19,16 @@ class ApplicationListTests(TestCase):
         self.competition = Competition.objects.create(
             title='Test Competition',
             description='Description for Competition',
+            start_at=datetime.now(),
+            end_at=datetime.now() + timedelta(days=7)
         )
 
-        self.admin = create_admin('admin@example.com', '123')
-        self.user = create_user('user@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
     def test_list_applications_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -41,7 +45,7 @@ class ApplicationListTests(TestCase):
 
     def test_list_applications_as_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -65,7 +69,7 @@ class ApplicationListTests(TestCase):
 
     def test_create_application_as_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -85,7 +89,7 @@ class ApplicationListTests(TestCase):
 
     def test_create_application_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -117,7 +121,7 @@ class ApplicationListTests(TestCase):
 
     def test_create_application_not_existing_competition(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -126,6 +130,22 @@ class ApplicationListTests(TestCase):
         data = {
             'competition': 2137,
         }
+
+        response = self.client.post(self.url, data, format='json')
+
+        # THEN
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(Application.objects.count(), 0)
+
+    def test_create_application_empty_data(self):
+        # GIVEN
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_response = perform_login(login_data)
+        access_token = login_response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+
+        # WHEN
+        data = {}
 
         response = self.client.post(self.url, data, format='json')
 

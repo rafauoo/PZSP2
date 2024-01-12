@@ -15,13 +15,13 @@ class TestToken(TestCase):
         self.factory = APIRequestFactory()
         self.register_data = {
             'email': 'test@example.com',
-            'password': 'testpassword',
+            'password': 'verylongandsecurepassword',
             'first_name': 'first',
             'last_name': 'last',
         }
         self.login_data = {
             'email': 'test@example.com',
-            'password': 'testpassword'
+            'password': 'verylongandsecurepassword'
         }
         perform_register(self.register_data)
         self.user = User.objects.get(email='test@example.com')

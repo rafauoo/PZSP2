@@ -5,7 +5,7 @@ from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from ..models import Participant, Application
-from ..permissions import allow_authenticated, allow_admin_or_participant_creator
+from ..permissions import allow_authenticated, allow_admin_or_participant_creator, allow_any, allow_admin
 from ..serializers.participant import ParticipantSerializer
 
 
@@ -19,6 +19,7 @@ class ParticipantList(generics.ListCreateAPIView):
 
     @allow_authenticated
     def get(self, request, *args, **kwargs):
+        # return super().get(request, *args, **kwargs)
         if request.user.is_admin:
             return super().get(request, *args, **kwargs)
         if request.user.is_user:
@@ -45,12 +46,31 @@ class ParticipantList(generics.ListCreateAPIView):
 
     def _create_participant(self, request, *args, **kwargs):
         application_id = request.data.get('application')
+        attachment_file = request.data.get('attachment')  # Assuming 'attachment' is the key for the file field
+
         try:
             application = Application.objects.get(id=application_id)
         except Application.DoesNotExist:
             return Response({'message': 'Application not found'}, status=status.HTTP_404_NOT_FOUND)
+
         if application.user == request.user:
-            return super().post(request, *args, **kwargs)
+            # Create a dictionary with your data including the file
+            participant_data = {
+                'email': request.data.get('email'),
+                'application': application_id,
+                'first_name': request.data.get('first_name'),
+                'last_name': request.data.get('last_name'),
+                'attachment': attachment_file,
+            }
+            participant_serializer = ParticipantSerializer(data=participant_data)
+
+            if participant_serializer.is_valid():
+                participant_serializer.save()
+                return Response(participant_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(participant_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
 
 @authentication_classes([JWTAuthentication])

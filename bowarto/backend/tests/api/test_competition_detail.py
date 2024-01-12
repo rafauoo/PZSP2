@@ -18,23 +18,23 @@ class CompetitionDetailTests(TestCase):
         self.competition = Competition.objects.create(
             title='Test Competition',
             description='Description for Test Competition',
-            created_at=datetime.now(),
+            start_at=datetime.now(),
             end_at=datetime.now() + timedelta(days=7)
         )
 
         # Utwórz użytkownika do testowania
-        self.user = create_user('user@example.com', '123')
-        self.admin = create_admin('admin@example.com', '123')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
         # Ustaw URL dla widoku CompetitionDetail z użyciem id utworzonego konkursu
         self.url = reverse('competition-detail', kwargs={'id': self.competition.id})
 
     def perform_user_login(self):
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         return login_response.data['access']
 
     def perform_admin_login(self):
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         return login_response.data['access']
 
@@ -95,7 +95,7 @@ class CompetitionDetailTests(TestCase):
         updated_data = {
             'title': 'Updated Test Competition',
             'description': 'Updated Description for Test Competition',
-            'created_at': datetime.now().isoformat(),
+            'start_at': datetime.now().isoformat(),
             'end_at': (datetime.now() + timedelta(days=14)).isoformat()
         }
 
@@ -113,7 +113,7 @@ class CompetitionDetailTests(TestCase):
         updated_data = {
             'title': 'Updated Test Competition',
             'description': 'Updated Description for Test Competition',
-            'created_at': datetime.now().isoformat(),
+            'start_at': datetime.now().isoformat(),
             'end_at': (datetime.now() + timedelta(days=14)).isoformat()
         }
 

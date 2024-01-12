@@ -15,14 +15,14 @@ class UserListTests(TestCase):
         self.url = reverse('user-list')
 
         # Create an admin user
-        self.admin = create_admin('admin@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
 
         # Create a regular user
-        self.user = create_user('user@example.com', '123')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
     def test_list_users_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -40,7 +40,7 @@ class UserListTests(TestCase):
 
     def test_list_users_as_regular_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')

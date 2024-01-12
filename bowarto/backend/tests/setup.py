@@ -1,16 +1,14 @@
-from api.models import User, Group, File
+from api.models import User, UserType
 from tests.utils import perform_register
 
 
 def create_admin(email, password):
-    admin_group, _ = Group.objects.get_or_create(name='admin')
     User.objects.create_user(
         email=email,
         password=password,
         first_name='Admin',
         last_name='User',
-        group=admin_group
-    )
+        user_type=UserType.ADMIN)
     return User.objects.get(email=email)
 
 
