@@ -9,10 +9,11 @@ from ..permissions import allow_any
 
 @authentication_classes([JWTAuthentication])
 class CompetitionTypeList(generics.ListAPIView):
-    lookup_field = 'id'
-    queryset = CompetitionType.objects.all()
     serializer_class = CompetitionTypeSerializer
 
+    def get_queryset(self):
+        return list(CompetitionType)
+    
     @allow_any
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)

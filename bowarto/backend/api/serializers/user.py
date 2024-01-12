@@ -1,16 +1,15 @@
 from rest_framework import serializers
+from django.core import exceptions
+import django.contrib.auth.password_validation as validators
 
-from .group import GroupSerializer
 from ..models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    group = GroupSerializer(read_only=True)
-
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'created_at',
-                  'school', 'group', ]
+                  'school', 'user_type', ]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -25,3 +24,26 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+    def validate(self, data):
+        # here data has all the fields which have validated values
+        # so we can create a User instance out of it
+        user = User(**data)
+
+        # get the password from the data
+        password = data.get('password')
+        print(password)
+        errors = dict()
+        try:
+            # validate the password and catch the exception
+            validators.validate_password(password=password, user=user)
+
+        # the exception raised here is different than serializers.ValidationError
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            print(errors)
+            raise serializers.ValidationError(errors)
+
+        return super(UserRegistrationSerializer, self).validate(data)

@@ -28,7 +28,7 @@ class RegisterViewTest(TestCase):
         self.school = School.objects.create(**self.school_data)
         self.valid_user_data = {
             'email': 'test@example.com',
-            'password': 'testpassword',
+            'password': 'verylongandsecurepassword',
             'first_name': 'first',
             'last_name': 'last',
             'school': self.school.id

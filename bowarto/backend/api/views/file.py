@@ -6,28 +6,13 @@ from django.shortcuts import get_object_or_404
 from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.utils.http import content_disposition_header
-import magic
-from ..models import File, FileType, Participant
-from ..permissions import allow_authenticated
+from ..models import File, Participant
+from ..permissions import allow_authenticated, allow_any
 from ..serializers.file import FileSerializer
 
 
-def is_allowed_file_type(file_content):
-    allowed_types = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'image/jpeg',
-        'image/png',
-    ]
-
-    mime = magic.Magic(mime=True)
-    file_type = mime.from_buffer(file_content)
-    return file_type in allowed_types
-
-
 @authentication_classes([JWTAuthentication])
-class FileList(generics.ListCreateAPIView):
+class FileList(generics.ListAPIView):
     lookup_field = 'id'
     queryset = File.objects.all()
     serializer_class = FileSerializer
@@ -41,52 +26,9 @@ class FileList(generics.ListCreateAPIView):
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def get_files_for_user(self, request):
-        files = File.objects.filter(participant__application__user=request.user)
+        files = File.objects.filter(attachment_participant__application__user=request.user)
         serializer = FileSerializer(files, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @allow_authenticated
-    def post(self, request, *args, **kwargs):
-        serializer = FileSerializer(data=request.data)
-        if request.user.is_admin:
-            return self.create_file_by_admin(request, serializer)
-        if request.user.is_user:
-            return self.create_file_by_user(request, serializer)
-        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-
-    def create_file_by_user(self, request, serializer):
-        participant_id = request.data.get('participant')
-        participant = get_object_or_404(Participant, id=participant_id)
-        application_user = participant.application.user
-
-        if application_user == request.user:
-            # Sprawdź, czy uczestnik już posiada plik
-            existing_file = File.objects.filter(participant=participant).first()
-
-            if existing_file:
-                # Jeśli uczestnik już posiada plik, możesz zwrócić odpowiedź z odpowiednim komunikatem
-                return Response({'message': 'Participant already has file.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            # Jeśli uczestnik nie posiada pliku, kontynuuj z procesem dodawania nowego pliku
-            file_type = FileType.objects.get(name="praca konkursowa")
-            serializer.initial_data['competition'] = None
-            serializer.initial_data['type'] = file_type.id
-            return self._create_file(request, serializer)
-
-        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
-
-    def create_file_by_admin(self, request, serializer):
-        return self._create_file(request, serializer)
-
-    def _create_file(self, request, serializer):
-        if serializer.is_valid():
-            file_content = request.data['path'].read()
-            if not is_allowed_file_type(file_content):
-                return Response({'error': 'Only PDF and DOCX files are allowed.'}, status=status.HTTP_400_BAD_REQUEST)
-
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @authentication_classes([JWTAuthentication])
@@ -94,12 +36,10 @@ class FileDetail(generics.RetrieveDestroyAPIView):
     queryset = File.objects.all()
     lookup_field = 'id'
 
-    @allow_authenticated
+    @allow_any
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
-        if request.user.is_admin or self._is_user_permitted(request.user, id):
-            return self._get_file_by_id(id)
-        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return self._get_file_by_id(id)
 
     def _get_file_by_id(self, id):
         file_instance = get_object_or_404(File, id=id)
@@ -111,15 +51,14 @@ class FileDetail(generics.RetrieveDestroyAPIView):
     @allow_authenticated
     def delete(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
-        if request.user.is_admin or self._is_user_permitted(request.user, id):
+        if request.user.is_admin:
             return self._delete_file_by_id(id)
         return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
 
     def _is_user_permitted(self, user, file_id):
         try:
             file_instance = File.objects.get(id=file_id)
-            participant = Participant.objects.get(file=file_instance)
-
+            participant = file_instance.attachment_participant
             return user.is_user and participant.application.user == user
         except (File.DoesNotExist, Participant.DoesNotExist):
             return False

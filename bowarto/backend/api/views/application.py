@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import authentication_classes
-
-from ..models import Application
+from django.shortcuts import get_object_or_404
+from ..models import Application, Competition
 from ..permissions import allow_admin_or_application_creator, allow_authenticated
 from ..serializers.application import ApplicationSerializer
 
@@ -39,6 +39,10 @@ class ApplicationList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         if request.user.is_user:
             request.data['user'] = request.user.id
+        competition_id = request.data.get('competition')
+        if not competition_id:
+            return Response({'message': 'No competition id provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        get_object_or_404(Competition, id=competition_id)
         return super().post(request, *args, **kwargs)
 
 
