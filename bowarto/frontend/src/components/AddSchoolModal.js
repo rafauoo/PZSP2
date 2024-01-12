@@ -34,7 +34,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Dodaj uczestnika</Modal.Title>
+        <Modal.Title>Dodaj szkołę</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
