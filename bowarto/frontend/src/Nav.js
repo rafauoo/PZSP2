@@ -43,7 +43,6 @@ function NavbarExample() {
               {isLoggedIn ? (
                 <>
                   <Nav.Link href="/profile">Profil</Nav.Link>
-                  <Nav.Link onClick={logout}  className="ms-auto">Wyloguj</Nav.Link>
                 </>
               ) : (
                 <>
@@ -52,6 +51,12 @@ function NavbarExample() {
                 </>
               )}
 
+            </Nav>
+
+            <Nav className="ml-auto">
+              {isLoggedIn && (
+              <Nav.Link onClick={logout}>Wyloguj</Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
