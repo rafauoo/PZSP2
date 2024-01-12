@@ -1,6 +1,6 @@
 from django.contrib.auth.models import BaseUserManager
 
-from .models import Group
+from .models import UserType
 
 
 class CustomUserManager(BaseUserManager):
@@ -14,6 +14,5 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        group = Group.objects.get(name="admin")
-        extra_fields.setdefault("group", group)
+        extra_fields.setdefault("user_type", UserType.ADMIN.value)
         return self.create_user(email, password, **extra_fields)

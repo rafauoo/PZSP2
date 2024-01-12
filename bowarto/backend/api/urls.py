@@ -25,14 +25,8 @@ urlpatterns = [
     path('files/', FileList.as_view(), name="file-list"),
     path('files/<int:id>/', FileDetail.as_view(), name="file-detail"),
 
-    # path('groups/', GroupList.as_view(), name="group-list"),
-    # path('groups/<int:id>/', GroupDetail.as_view(), name="group-detail"),
-
     path('participants/', ParticipantList.as_view(), name="participant-list"),
     path('participants/<int:id>/', ParticipantDetail.as_view(), name="participant-detail"),
-
-    # path('permissions/', PermissionList.as_view(), name="permission-list"),
-    # path('permissions/<int:id>/', PermissionDetail.as_view(), name="permission-detail"),
 
     path('schools/', SchoolList.as_view(), name="school-list"),
     path('schools/<int:id>/', SchoolDetail.as_view(), name="school-detail"),

@@ -32,7 +32,7 @@ CORS_EXPOSE_HEADERS = ['Content-Disposition']
 
 INSTALLED_APPS = [
     'django_jenkins',
-    "django.contrib.admin",
+    # "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -177,3 +177,4 @@ if TEST:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase'
     }
+ADMIN_ENABLED = False
