@@ -13,17 +13,17 @@ class TestPendingApprovalDetail(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.admin = create_admin('admin@example.com', '123')
-        self.user = create_user('user@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
         self.school = School.objects.create(
             name='School',
-            phone_number='123456789',
+            phone_number='verylongandsecurepassword456789',
             email='school1@example.com',
             city='City 1',
             street='Street 1',
             building_number='1',
-            postcode='12345'
+            postcode='verylongandsecurepassword45'
         )
 
         # Utwórz zgłoszenie
@@ -35,7 +35,7 @@ class TestPendingApprovalDetail(TestCase):
 
     def test_get_pending_approval_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
@@ -48,7 +48,7 @@ class TestPendingApprovalDetail(TestCase):
 
     def test_delete_pending_approval_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
@@ -65,7 +65,7 @@ class TestPendingApprovalDetail(TestCase):
 
     def test_get_pending_approval_as_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
@@ -78,7 +78,7 @@ class TestPendingApprovalDetail(TestCase):
 
     def test_delete_pending_approval_as_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')

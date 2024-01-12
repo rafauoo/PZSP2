@@ -89,12 +89,6 @@ class Competition(models.Model):
         if self.type and self.type not in valid_competition_types:
             raise ValidationError("Invalid competition type.")
 
-    def delete_previous_attachments(self):
-        if self.poster:
-            self.poster.delete()
-        if self.regulation:
-            self.regulation.delete()
-
     def save(self, *args, **kwargs):
         self.full_clean()
 
@@ -114,7 +108,6 @@ class Participant(models.Model):
     application = models.ForeignKey(Application, models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
     attachment = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
                                       related_name='attachment_participant')
 

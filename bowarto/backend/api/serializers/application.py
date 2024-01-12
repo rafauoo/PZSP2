@@ -7,7 +7,7 @@ from ..models import Application, Participant
 
 class ApplicationSerializer(serializers.ModelSerializer):
     participants = ParticipantSerializer(many=True, read_only=True)
-    competition = CompetitionSerializer()
+    competition = CompetitionSerializer(read_only=True)
 
     class Meta:
         model = Application

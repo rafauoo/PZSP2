@@ -19,13 +19,13 @@ class TestProfile(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.user = create_user('user@example.com', '123')
-        self.admin = create_admin('admin@example.com', '123')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
         self.url = reverse('me')
 
     def test_profile_view_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')

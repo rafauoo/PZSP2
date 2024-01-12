@@ -62,7 +62,6 @@ class ParticipantList(generics.ListCreateAPIView):
                 'last_name': request.data.get('last_name'),
                 'attachment': attachment_file,
             }
-
             participant_serializer = ParticipantSerializer(data=participant_data)
 
             if participant_serializer.is_valid():
@@ -80,18 +79,18 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-    @allow_any
+    @allow_admin_or_participant_creator
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin_or_participant_creator
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin_or_participant_creator
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin_or_participant_creator
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)

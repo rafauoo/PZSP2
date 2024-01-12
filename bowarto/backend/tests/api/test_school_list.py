@@ -17,12 +17,12 @@ class SchoolListTests(TestCase):
 
         self.school1 = School.objects.create(
             name='School 1',
-            phone_number='123456789',
+            phone_number='verylongandsecurepassword456789',
             email='school1@example.com',
             city='City 1',
             street='Street 1',
             building_number='1',
-            postcode='12345'
+            postcode='verylongandsecurepassword45'
         )
         self.school2 = School.objects.create(
             name='School 2',
@@ -34,17 +34,17 @@ class SchoolListTests(TestCase):
             postcode='54321'
         )
 
-        self.admin = create_admin('admin@example.com', '123')
-        self.user = create_user('user@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
     def perform_admin_login(self):
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         return access_token
 
     def perform_user_login(self):
-        login_data = {'email': 'user@example.com', 'password': '123'}
+        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         return access_token

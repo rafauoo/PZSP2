@@ -7,11 +7,13 @@ from ..utils import is_allowed_file_type
 class CompetitionSerializer(serializers.ModelSerializer):
     poster = serializers.PrimaryKeyRelatedField(
         queryset=File.objects.all(),
-        required=False
+        required=False,
+        allow_null=True
     )
     regulation = serializers.PrimaryKeyRelatedField(
         queryset=File.objects.all(),
-        required=False
+        required=False,
+        allow_null=True
     )
 
     class Meta:

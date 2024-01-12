@@ -8,17 +8,16 @@ from ..utils import is_allowed_file_type
 class ParticipantSerializer(serializers.ModelSerializer):
     attachment = serializers.PrimaryKeyRelatedField(
         queryset=File.objects.all(),
-        write_only=True,
-        required=False
+        required=False,
+        allow_null=True
     )
 
     class Meta:
         model = Participant
-        fields = ['id', 'first_name', 'last_name', 'email', 'attachment', 'application', 'created_at']
+        fields = ['id', 'first_name', 'last_name', 'email', 'attachment', 'application']
 
     def update(self, instance, validated_data):
         attachment_data = validated_data.pop('attachment', None)
-
         # Perform the regular update on the participant instance
         instance = super().update(instance, validated_data)
 

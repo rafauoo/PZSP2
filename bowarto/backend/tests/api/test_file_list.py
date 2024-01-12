@@ -16,9 +16,9 @@ class FileListTests(TestCase):
         self.client = APIClient()
         self.url = reverse('file-list')
 
-        self.admin = create_admin('admin@example.com', '123')
-        self.user_1 = create_user('user_1@example.com', '123')
-        self.user_2 = create_user('user_2@example.com', '123')
+        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.user_1 = create_user('user_1@example.com', 'verylongandsecurepassword')
+        self.user_2 = create_user('user_2@example.com', 'verylongandsecurepassword')
 
         self.competition = Competition.objects.create(
             title='Test Competition 1',
@@ -43,7 +43,7 @@ class FileListTests(TestCase):
 
     def test_get_files_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': '123'}
+        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -59,7 +59,7 @@ class FileListTests(TestCase):
 
     def test_get_files_as_user(self):
         # GIVEN
-        login_data = {'email': 'user_1@example.com', 'password': '123'}
+        login_data = {'email': 'user_1@example.com', 'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
