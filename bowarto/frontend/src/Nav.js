@@ -42,13 +42,13 @@ function NavbarExample() {
 
               {isLoggedIn ? (
                 <>
-                <Nav.Link onClick={logout}>Wyloguj</Nav.Link>
-                 <Nav.Link href="/profile">Profil</Nav.Link>
+                  <Nav.Link href="/profile">Profil</Nav.Link>
+                  <Nav.Link onClick={logout}  className="ms-auto">Wyloguj</Nav.Link>
                 </>
               ) : (
                 <>
-                <Nav.Link href="/login">Logowanie</Nav.Link>
-                <Nav.Link href="/register">Rejestracja</Nav.Link>
+                  <Nav.Link href="/login">Logowanie</Nav.Link>
+                  <Nav.Link href="/register">Rejestracja</Nav.Link>
                 </>
               )}
 
