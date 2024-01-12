@@ -27,7 +27,6 @@ function NavbarExample() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto justify-content-between">
-              <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/konkursy">Konkursy</Nav.Link>
               {role === 'admin' ? (
                 <>
