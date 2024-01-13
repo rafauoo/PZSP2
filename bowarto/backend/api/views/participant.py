@@ -93,18 +93,18 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    # @allow_admin
+    @allow_admin_or_participant_creator
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)

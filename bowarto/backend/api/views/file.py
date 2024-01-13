@@ -52,7 +52,7 @@ class FileDetail(generics.RetrieveDestroyAPIView):
                                                                      file_instance.path.name)
         return response
 
-    # @allow_authenticated
+    @allow_authenticated
     def delete(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
         if request.user.is_admin or self._is_user_permitted(request.user, id):

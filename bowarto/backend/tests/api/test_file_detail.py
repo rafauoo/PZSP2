@@ -15,7 +15,8 @@ class TestFileDetail(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.admin = create_admin('admin@example.com',
+                                  'verylongandsecurepassword')
         self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
         self.competition = Competition.objects.create(
@@ -40,12 +41,16 @@ class TestFileDetail(TestCase):
             first_name='John',
             last_name='Doe',
             attachment=File.objects.create(
-                path=SimpleUploadedFile("participant_file.pdf", b"file_content"))
+                path=SimpleUploadedFile("participant_file.pdf",
+                                        b"file_content"))
         )
 
-        self.participant_file_url = reverse('file-detail', kwargs={'id': self.participant.attachment.id})
-        self.poster_url = reverse('file-detail', kwargs={'id': self.competition.poster.id})
-        self.regulations_url = reverse('file-detail', kwargs={'id': self.competition.regulation.id})
+        self.participant_file_url = reverse('file-detail', kwargs={
+            'id': self.participant.attachment.id})
+        self.poster_url = reverse('file-detail',
+                                  kwargs={'id': self.competition.poster.id})
+        self.regulations_url = reverse('file-detail', kwargs={
+            'id': self.competition.regulation.id})
 
     def tearDown(self):
         for file in File.objects.all():
@@ -53,7 +58,8 @@ class TestFileDetail(TestCase):
 
     def test_get_file_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'admin@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -72,7 +78,8 @@ class TestFileDetail(TestCase):
 
     def test_get_file_as_user_with_permission(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'user@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -87,7 +94,8 @@ class TestFileDetail(TestCase):
 
     def test_get_file_as_user_without_permission(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'user@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -113,7 +121,8 @@ class TestFileDetail(TestCase):
 
     def test_delete_file_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'admin@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -123,13 +132,15 @@ class TestFileDetail(TestCase):
 
         # THEN
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(File.objects.filter(id=self.participant.attachment.id).exists())
+        self.assertFalse(
+            File.objects.filter(id=self.participant.attachment.id).exists())
 
         self.tearDown()
 
     def test_delete_file_as_user_with_permission(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'user@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -138,7 +149,7 @@ class TestFileDetail(TestCase):
         response = self.client.delete(self.participant_file_url)
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         self.tearDown()
 
