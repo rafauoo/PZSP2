@@ -26,6 +26,7 @@ const buttonStyle = {
 function UserPanel() {
   const [applicationsData, setApplicationsData] = useState([]);
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
+  const [loading, setLoading] = useState(true); // Dodajemy stan do obsługi ładowania strony
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,9 +35,10 @@ function UserPanel() {
         const applications = await getApplicationList();
         console.log(applications)
         setApplicationsData(applications);
-
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -236,26 +238,31 @@ function UserPanel() {
   }
   return (
     <div className="user-panel">
-      {applicationsData.length !== 0 ? (
-          <>
-            <UserPanelHeader/>
-            <UserApplicationsTable
-              applications={applicationsData}
-              onDeleteParticipant={handleDeleteParticipant}
-              onDeleteApplication={handleDeleteApplication}
-              onAddParticipant={handleAddParticipant}
-              onEditParticipant={handleEditParticipant}
-              onAddAttachment={handleAddAttachment}
-              onDownloadFile={handleDownloadFile}
-              onRemoveFile={handleRemoveFile}
-            />
-          </>
-        ) :
-        (
-          <>
-            <p>Nie posiadasz obecnie żadnych zgłoszeń.</p>
-          </>
-        )}
+      {loading ? ( // Sprawdzamy czy strona się ładowuje
+        <p>Trwa ładowanie...</p>
+      ) : (
+        <>
+          {applicationsData.length !== 0 ? (
+            <>
+              <UserPanelHeader/>
+              <UserApplicationsTable
+                applications={applicationsData}
+                onDeleteParticipant={handleDeleteParticipant}
+                onDeleteApplication={handleDeleteApplication}
+                onAddParticipant={handleAddParticipant}
+                onEditParticipant={handleEditParticipant}
+                onAddAttachment={handleAddAttachment}
+                onDownloadFile={handleDownloadFile}
+                onRemoveFile={handleRemoveFile}
+              />
+            </>
+          ) : (
+            <>
+              <p>Nie posiadasz obecnie żadnych zgłoszeń.</p>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }
