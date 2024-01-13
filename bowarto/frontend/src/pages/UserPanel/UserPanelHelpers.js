@@ -157,29 +157,29 @@ export const handleAddAttachmentLogic = async (participantId, newAttachment, pre
   }
 };
 
-export const removeFileFromParticipant = (participant, attachmentId) => {
-  if (participant.file === attachmentId) {
-    return {...participant, file: null};
+export const removeFileFromParticipant = (participant, participantId) => {
+  if (participant.id === participantId) {
+    return {...participant, attachment: null};
   }
   return participant;
 };
 
-export const removeFileFromApplications = (applications, attachmentId) => {
+export const removeFileFromApplications = (applications, participantId) => {
   return applications.map(application => {
     const updatedParticipants = application.participants.map(participant => {
-      return removeFileFromParticipant(participant, attachmentId);
+      return removeFileFromParticipant(participant, participantId);
     });
     return {...application, participants: updatedParticipants};
   });
 };
 
-export const handleRemoveFileLogic = async (attachmentId, prevApplications) => {
+export const handleRemoveFileLogic = async (participantId, prevApplications) => {
   try {
     // Wywołaj funkcję do usunięcia załącznika
-    await deleteFile(attachmentId);
+    await deleteFile(participantId);
 
     // Zaktualizuj applicationData, usuwając plik z odpowiedniego uczestnika
-    const updatedApplications = removeFileFromApplications(prevApplications, attachmentId);
+    const updatedApplications = removeFileFromApplications(prevApplications, participantId);
 
     return {
       updatedApplications,

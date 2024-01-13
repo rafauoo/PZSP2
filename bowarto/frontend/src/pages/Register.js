@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
+import {useEffect} from 'react';
+import {useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import refreshAccessToken from '../requests/refresh';
-import { fetchDataFromApi } from '../requests/user_panel';
+import {fetchDataFromApi} from '../requests/user_panel';
+import {getSchoolList} from "../api/requests/school";
 
 const buttonStyle = {
   backgroundColor: 'rgb(131, 203, 83)',
@@ -34,8 +35,7 @@ function Register() {
   useEffect(() => {
     const getSchools = async () => {
       try {
-        const apiUrl = 'http://20.108.53.69/api/schools/';
-        const schoolsData = await fetchDataFromApi(apiUrl);
+        const schoolsData = await getSchoolList();
         console.log(schoolsData)
         setSchoolsData(schoolsData);
       } catch (error) {
@@ -72,17 +72,22 @@ function Register() {
         <h1>Rejestracja użytkownika</h1>
       </div>
       <div className="d-flex justify-content-center vh-100">
-        <Form style={{ width: '50%' }} onSubmit={handleSubmit}>
+        <Form style={{width: '50%'}} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
 
             <Form.Label>Imię</Form.Label>
-            <Form.Control type="text" value={first_name} onChange={(e) => setFirstName(e.target.value)} placeholder="Podaj imię" />
+            <Form.Control type="text" value={first_name}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder="Podaj imię"/>
 
             <Form.Label>Nazwisko</Form.Label>
-            <Form.Control type="text" placeholder="Podaj nazwisko" value={last_name} onChange={(e) => setLastname(e.target.value)} />
+            <Form.Control type="text" placeholder="Podaj nazwisko"
+                          value={last_name}
+                          onChange={(e) => setLastname(e.target.value)}/>
 
             <Form.Label>Szkoła</Form.Label>
-            <Form.Select aria-label="Szkoła" onChange={(e) => setSchoolName(e.target.value)}>
+            <Form.Select aria-label="Szkoła"
+                         onChange={(e) => setSchoolName(e.target.value)}>
               <option value="" disable selected hidden></option>
               {schoolsData.map((school) => (
                 <option value={school.id}>{school.name}</option>
@@ -90,19 +95,23 @@ function Register() {
             </Form.Select>
 
             <Form.Label>Miasto</Form.Label>
-            <Form.Control type="text" placeholder="Podaj miasto" value={town} onChange={(e) => setTown(e.target.value)} />
+            <Form.Control type="text" placeholder="Podaj miasto" value={town}
+                          onChange={(e) => setTown(e.target.value)}/>
 
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Podaj email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Form.Control type="email" placeholder="Podaj email" value={email}
+                          onChange={(e) => setEmail(e.target.value)}/>
 
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Hasło</Form.Label>
-            <Form.Control type="password" placeholder="Podaj hasło" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Form.Control type="password" placeholder="Podaj hasło"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}/>
           </Form.Group>
           <div className="d-flex justify-content-center">
-            <button style={buttonStyle} variant="success" type="submit" >
+            <button style={buttonStyle} variant="success" type="submit">
               Rejestruj
             </button>
           </div>

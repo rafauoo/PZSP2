@@ -27,6 +27,8 @@ function NavbarExample() {
           <Navbar.Toggle aria-controls="basic-navbar-nav"/>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto justify-content-between">
+            </Nav>
+            <Nav className="ml-auto">
               {role === 'admin' ? (
                 <>
                   <Nav.Link href="/createCompetition">Stwórz konkurs</Nav.Link>
@@ -41,7 +43,6 @@ function NavbarExample() {
 
               {isLoggedIn ? (
                 <>
-                  <Nav.Link href="/profile">Profil</Nav.Link>
                 </>
               ) : (
                 <>
@@ -49,10 +50,6 @@ function NavbarExample() {
                   <Nav.Link href="/register">Rejestracja</Nav.Link>
                 </>
               )}
-
-            </Nav>
-
-            <Nav className="ml-auto">
               {isLoggedIn && (
                 <Nav.Link onClick={logout}>Wyloguj</Nav.Link>
               )}

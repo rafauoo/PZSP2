@@ -74,9 +74,11 @@ function ParticipantItem({
         </td>
         <td>
           <div style={buttonContainerStyle}>
-            <button style={buttonStyle} onClick={handleShowAttachmentForm}>
-              Załącz pracę
-            </button>
+            {!participant.attachment ? (
+              <button style={buttonStyle} onClick={handleShowAttachmentForm}>
+                Załącz pracę
+              </button>
+            ) : null}
             <button style={buttonStyle} onClick={handleShowEditModal}>
               Edytuj
             </button>

@@ -8,6 +8,7 @@ import AddParticipantModal from "../components/AddParticipantModal";
 import {submitForm} from "../requests/user_panel";
 
 const Konkursy = () => {
+  const [comingCompetitions, setComingCompetitions] = useState([]);
   const [ongoingCompetitions, setOngoingCompetitions] = useState([]);
   const [otherCompetitions, setOtherCompetitions] = useState([]);
   const [role, setRole] = useState(undefined);
@@ -40,14 +41,23 @@ const Konkursy = () => {
         const competitions = response.data;
         const now = new Date();
 
-        const ongoingCompetitions = competitions.filter(
-          (competition) => new Date(competition.end_at) > now
-        );
+        const comingCompetitions = competitions
+          .filter((competition) => new Date(competition.start_at) > now)
+          .sort((a, b) => new Date(a.end_at) - new Date(b.end_at));
 
-        const otherCompetitions = competitions.filter(
-          (competition) => new Date(competition.end_at) <= now
-        );
 
+        const ongoingCompetitions = competitions
+          .filter((competition) => {
+            return new Date(competition.end_at) > now && new Date(competition.start_at) <= now
+          })
+          .sort((a, b) => new Date(a.end_at) - new Date(b.end_at));
+
+
+        const otherCompetitions = competitions
+          .filter((competition) => new Date(competition.end_at) <= now)
+          .sort((a, b) => new Date(a.end_at) - new Date(b.end_at));
+        
+        setComingCompetitions(comingCompetitions);
         setOngoingCompetitions(ongoingCompetitions);
         setOtherCompetitions(otherCompetitions);
       })
@@ -80,6 +90,46 @@ const Konkursy = () => {
 
   return (
     <div>
+      <Table striped bordered={false} hover>
+        <thead>
+        <tr>
+          <th>
+            <h1>Nadchodzące konkursy</h1>
+          </th>
+          <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
+          <th style={centeredCellStyle}>Data zakończenia konkursu</th>
+          <th style={centeredCellStyle}></th>
+        </tr>
+        </thead>
+        <tbody>
+        {comingCompetitions.map((competition, index) => (
+          <tr key={competition.id}>
+            <td>
+              <h4>{competition.title}</h4>
+              <p>{competition.description}</p>
+            </td>
+            <td style={centeredCellStyle}>
+              {formatDate(competition.start_at)}
+            </td>
+            <td style={centeredCellStyle}>
+              {formatDate(competition.end_at)}
+            </td>
+            <td style={centeredCellStyle}>
+              <RegulaminModal
+                title={competition.title}
+                description={competition.description}
+              />
+              <button
+                style={buttonStyle}
+                onClick={() => handleShowAddParticipantModal(competition.id)}
+              >
+                Dodaj
+              </button>
+            </td>
+          </tr>
+        ))}
+        </tbody>
+      </Table>
       <Table striped bordered={false} hover>
         <thead>
         <tr>
@@ -148,18 +198,6 @@ const Konkursy = () => {
         ))}
         </tbody>
       </Table>
-
-      {role === "admin" ? (
-        <Link to="/createCompetition">
-          <button style={buttonStyle}>Stwórz nowy konkurs</button>
-        </Link>
-      ) : null}
-      <AddParticipantModal
-        competitionId={selectedCompetitionId}
-        show={showAddParticipantModal}
-        handleClose={handleCloseAddParticipantModal}
-        onAddParticipant={handleAddParticipant}
-      />
     </div>
   );
 };
