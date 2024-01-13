@@ -10,7 +10,7 @@ import ParticipantsTable from "./pages/Paricipants";
 import Konkursy from "./pages/Konkursy";
 import RegisterParticipantTable from "./pages/RegisterParicipant"
 import CreateCompetition from "./pages/CreateCompetition";
-import UserPanel from "./pages/UserPanel";
+import UserPanel from "./pages/UserPanel/UserPanel";
 import UserProfile from "./pages/UserProfile";
 
 
