@@ -17,6 +17,7 @@ import {
 const LOADING_MESSAGE = "Trwa ładowanie...";
 const DELETE_PARTICIPANT_CONFIRMATION = 'Czy na pewno chcesz usunąć tego uczestnika?';
 const DELETE_APPLICATION_CONFIRMATION = 'Czy na pewno chcesz usunąć to zgłoszenie?';
+const DELETE_FILE_CONFIRMATION = 'Czy na pewno chcesz usunąć ten załącznik?';
 
 function UserPanel() {
   const [showMessageModal, setShowMessageModal] = useState(false);
@@ -103,6 +104,10 @@ function UserPanel() {
   };
 
   const handleRemoveFile = async (attachmentId) => {
+    const isConfirmed = window.confirm(DELETE_FILE_CONFIRMATION);
+    if (!isConfirmed) {
+      return;
+    }
     const {
       updatedApplications, showMessageModal, messageText
     } = await handleRemoveFileLogic(attachmentId, applicationsData);
@@ -122,7 +127,7 @@ function UserPanel() {
   };
 
   return (<div className="user-panel">
-    {loading ? ( // Sprawdzamy czy strona się ładowuje
+    {loading ? (
       <p>{LOADING_MESSAGE}</p>) : (<>
       {applicationsData.length !== 0 ? (<>
         <UserPanelHeader/>

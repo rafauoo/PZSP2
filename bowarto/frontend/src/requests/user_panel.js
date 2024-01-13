@@ -1,4 +1,5 @@
 import refreshAccessToken from "./refresh";
+import {editParticipant} from "../api/requests/participant";
 
 export const fetchDataFromApi = async (url) => {
   try {
@@ -190,27 +191,20 @@ export async function updateParticipant(participantId, formData) {
 
 export async function uploadAttachment(participantId, newAttachment) {
   try {
-    // Pobierz token dostępu
-    await refreshAccessToken();
-    const token = sessionStorage.getItem('access');
 
-    // Utwórz formularz do przesyłania pliku
     const formData = new FormData();
-    formData.append('participant', participantId);
-    formData.append('path', newAttachment);
+    formData.append('attachment', JSON.stringify({'path': newAttachment}));
+    console.log(formData)
 
     // Utwórz adres URL do wysłania załącznika
-    // const apiUrl = 'http://20.108.53.69/api/files/';
-    const apiUrl = 'http://20.108.53.69/api/files/';
 
     // Wyślij żądanie POST do wysłania załącznika
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    const response = await editParticipant(participantId, newAttachment)
+
+    // Sprawdź, czy status odpowiedzi jest w zakresie 200-299
+    if (!response.ok) {
+      throw new Error(`Upload failed with status ${response.status}`);
+    }
 
     // Pobierz dane odpowiedzi
     const result = await response.json();
@@ -221,6 +215,7 @@ export async function uploadAttachment(participantId, newAttachment) {
     return result;
   } catch (error) {
     console.error('Error uploading attachment:', error);
+    throw error;
   }
 }
 
