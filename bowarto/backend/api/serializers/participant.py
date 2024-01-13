@@ -24,7 +24,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
         # Handle the update for the nested File field
         if attachment_data:
             # Check if the file type is allowed before saving
-            file_content = attachment_data.get('file').read()
+            file_content = attachment_data.get('path').read()
             if not is_allowed_file_type(file_content):
                 raise serializers.ValidationError("Invalid file type.")
 
