@@ -35,7 +35,8 @@ class ParticipantSerializer(serializers.ModelSerializer):
                                                    allow_null=True,
                                                    required=False)
             if attachment_serializer.is_valid():
-                instance.attachment.delete()
+                if instance.attachment:
+                    instance.attachment.delete()
                 attachment_serializer.save()
                 instance.attachment = attachment_serializer.instance
 
