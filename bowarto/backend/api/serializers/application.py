@@ -9,8 +9,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     participants = ParticipantSerializer(many=True, read_only=True)
     competition = CompetitionSerializer()
 
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
-                                              write_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     competition = serializers.PrimaryKeyRelatedField(
         queryset=Competition.objects.all(), write_only=True)
 
