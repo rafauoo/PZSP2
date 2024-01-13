@@ -93,6 +93,7 @@ const Konkursy = () => {
           <th>
             <h1>Aktualne konkursy</h1>
           </th>
+          <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
           <th style={centeredCellStyle}>Data zakończenia konkursu</th>
           <th style={centeredCellStyle}></th>
         </tr>
@@ -103,7 +104,9 @@ const Konkursy = () => {
             <td>
               <h4>{competition.title}</h4>
               <p>{competition.description}</p>
-              <p>{competition.id}</p>
+            </td>
+            <td style={centeredCellStyle}>
+              {formatDate(competition.start_at)}
             </td>
             <td style={centeredCellStyle}>
               {formatDate(competition.end_at)}

@@ -22,14 +22,16 @@ class App extends Component {
         <main role="main" className="container">
           <Router>
             <Routes>
-              <Route exact path="/" element={<Home/>}></Route>
-              <Route exact path="/konkursy" element={<Konkursy/>}></Route>
-              <Route exact path="/createCompetition" element={<CreateCompetition/>}></Route>
+              <Route exact path="/" element={<Konkursy/>}></Route>
+              <Route exact path="/createCompetition"
+                     element={<CreateCompetition/>}></Route>
               <Route exact path="/register" element={<Register/>}></Route>
               <Route exact path="/login" element={<Login/>}></Route>
               <Route exact path="/user_panel" element={<UserPanel/>}></Route>
-              <Route exact path="/participants" element={<ParticipantsTable/>}></Route>
-              <Route exact path="/registerParticipant" element={<RegisterParticipantTable/>}></Route>
+              <Route exact path="/participants"
+                     element={<ParticipantsTable/>}></Route>
+              <Route exact path="/registerParticipant"
+                     element={<RegisterParticipantTable/>}></Route>
               <Route exact path="/profile" element={<UserProfile/>}></Route>
             </Routes>
           </Router>

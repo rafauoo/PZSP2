@@ -25,7 +25,6 @@ export async function submitForm(competitionId, formData) {
   try {
     console.log(competitionId, formData)
     // Step 1: Try to fetch existing applications for the given competitionId
-    console.log(competitionId)
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
     const apiUrl = `http://20.108.53.69/api/applications/?competition=${competitionId}`;
@@ -36,6 +35,7 @@ export async function submitForm(competitionId, formData) {
       }
     });
     const existingApplications = await response.json();
+    console.log(existingApplications)
     // Step 2: Check if the list is empty
     if (existingApplications.length === 0) {
       // If the list is empty, create a new application object
@@ -51,6 +51,7 @@ export async function submitForm(competitionId, formData) {
       });
 
       const createdApplicationData = await createApplicationResponse.json();
+      console.log(createdApplicationData)
       const createdApplicationId = createdApplicationData.id;
       // Add the applicationId to the formData
       formData.application = createdApplicationId;

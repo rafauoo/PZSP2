@@ -10,6 +10,8 @@ import {
   fetchDataFromApi,
   submitForm, updateParticipant, uploadAttachment
 } from "../requests/user_panel";
+import {getCompetitionList} from "../api/requests/competition";
+import {getApplicationList} from "../api/requests/application";
 
 const buttonStyle = {
   backgroundColor: 'rgb(131, 203, 83)',
@@ -28,36 +30,10 @@ function UserPanel() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const applications = await fetchDataFromApi('http://20.108.53.69/api/applications/');
-        const participants = await fetchDataFromApi('http://20.108.53.69/api/participants/');
-        const competitions = await fetchDataFromApi('http://20.108.53.69/api/competitions/');
-        const files = await fetchDataFromApi('http://20.108.53.69/api/files/');
-
-        // Przyporządkuj uczestników do odpowiednich aplikacji
-        const applicationsWithParticipants = applications.map(application => {
-          const applicationParticipants = participants.filter(participant => participant.application === application.id);
-          return {...application, participants: applicationParticipants};
-        });
-
-        // Przyporządkuj pliki do odpowiednich uczestników
-        const applicationsWithParticipantsAndFiles = applicationsWithParticipants.map(application => {
-          const applicationParticipantsWithFiles = application.participants.map(participant => {
-            const participantFiles = files.filter(file => file.participant === participant.id);
-            // Jeśli uczestnik ma przypisany plik, zwróć jego id, w przeciwnym razie null
-            const participantFile = participantFiles.length > 0 ? participantFiles[0].id : null;
-            return {...participant, file: participantFile};
-          });
-
-          return {...application, participants: applicationParticipantsWithFiles};
-        });
-
-        // Przyporządkuj konkursy do odpowiednich aplikacji
-        const applicationsWithCompetitions = applicationsWithParticipantsAndFiles.map(application => {
-          const competition = competitions.find(comp => comp.id === application.competition);
-          return {...application, competition};
-        });
-
-        setApplicationsData(applicationsWithCompetitions);
+        await refreshAccessToken()
+        const applications = await getApplicationList();
+        console.log(applications)
+        setApplicationsData(applications);
 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -81,7 +57,10 @@ function UserPanel() {
             console.log('Application ID:', application.id);
             console.log('Updated Participants:', updatedParticipants);
 
-            return updatedParticipants.length !== 0 ? {...application, participants: updatedParticipants} : null;
+            return updatedParticipants.length !== 0 ? {
+              ...application,
+              participants: updatedParticipants
+            } : null;
           });
 
           // Log the updated applications
@@ -257,9 +236,6 @@ function UserPanel() {
   }
   return (
     <div className="user-panel">
-      <Link to="/konkursy">
-        <button style={buttonStyle}>Przejdź do konkursów</button>
-      </Link>
       {applicationsData.length !== 0 ? (
           <>
             <UserPanelHeader/>
