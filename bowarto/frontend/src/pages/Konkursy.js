@@ -80,13 +80,6 @@ const Konkursy = () => {
 
   return (
     <div>
-      <ErrorModal
-        title="Nie jesteś zalogowany"
-        description="Musisz się zalogować aby móc przeglądać tę stronę"
-        link="login"
-        link_title="Zaloguj"
-      />
-
       <Table striped bordered={false} hover>
         <thead>
         <tr>

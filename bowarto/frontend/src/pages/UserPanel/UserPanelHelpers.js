@@ -133,8 +133,8 @@ export const handleAddAttachmentLogic = async (participantId, newAttachment, pre
         // Znajdź uczestnika o tym samym ID co przekazane participantId
         if (participant.id === participantId) {
           // Dodaj nowy plik do uczestnika (jeśli nie ma jeszcze przypisanego pliku)
-          const updatedFile = participant.file ? participant.file : uploadedFile.id;
-          return {...participant, file: updatedFile};
+          const updatedFile = participant.attachment ? participant.attachment : uploadedFile.id;
+          return {...participant, attachment: updatedFile};
         }
         return participant;
       });

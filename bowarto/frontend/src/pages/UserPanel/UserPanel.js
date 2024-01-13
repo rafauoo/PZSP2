@@ -17,7 +17,7 @@ import {
 const LOADING_MESSAGE = "Trwa ładowanie...";
 const DELETE_PARTICIPANT_CONFIRMATION = 'Czy na pewno chcesz usunąć tego uczestnika?';
 const DELETE_APPLICATION_CONFIRMATION = 'Czy na pewno chcesz usunąć to zgłoszenie?';
-const DELETE_FILE_CONFIRMATION = 'Czy na pewno chcesz usunąć ten załącznik?';
+const DELETE_FILE_CONFIRMATION = 'Czy na pewno chcesz usunąć ten załącznik?';
 
 function UserPanel() {
   const [showMessageModal, setShowMessageModal] = useState(false);

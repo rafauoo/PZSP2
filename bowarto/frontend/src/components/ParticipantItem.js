@@ -65,8 +65,8 @@ function ParticipantItem({
         <td>{participant.first_name} {participant.last_name}</td>
         <td>{participant.email}</td>
         <td style={buttonContainerStyle}>
-          {participant.file && (
-            <AttachmentDisplay attachment={participant.file}
+          {participant.attachment && (
+            <AttachmentDisplay attachment={participant.attachment.id}
                                participant={participant.id}
                                onDownload={onDownloadFile}
                                onRemove={onRemoveFile}/>
