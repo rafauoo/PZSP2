@@ -99,14 +99,10 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
 
     # @allow_admin
     def put(self, request, *args, **kwargs):
-        print(request.data)
-        if not request.data.get('attachment.path'):
-            request.data['attachment.path'] = None
         return super().put(request, *args, **kwargs)
 
     # @allow_admin_or_participant_creator
     def patch(self, request, *args, **kwargs):
-        print(request.data)
         return super().patch(request, *args, **kwargs)
 
     # @allow_admin_or_participant_creator

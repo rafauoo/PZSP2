@@ -23,10 +23,12 @@ class FileList(generics.ListAPIView):
             return super().get(request, *args, **kwargs)
         if request.user.is_user:
             return self.get_files_for_user(request)
-        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'message': 'Not permitted'},
+                        status=status.HTTP_403_FORBIDDEN)
 
     def get_files_for_user(self, request):
-        files = File.objects.filter(attachment_participant__application__user=request.user)
+        files = File.objects.filter(
+            attachment_participant__application__user=request.user)
         serializer = FileSerializer(files, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -44,16 +46,19 @@ class FileDetail(generics.RetrieveDestroyAPIView):
     def _get_file_by_id(self, id):
         file_instance = get_object_or_404(File, id=id)
         file_content = file_instance.path.read()
-        response = HttpResponse(file_content, content_type='application/octet-stream')
-        response['Content-Disposition'] = content_disposition_header(False, file_instance.path.name)
+        response = HttpResponse(file_content,
+                                content_type='application/octet-stream')
+        response['Content-Disposition'] = content_disposition_header(False,
+                                                                     file_instance.path.name)
         return response
 
-    @allow_authenticated
+    # @allow_authenticated
     def delete(self, request, *args, **kwargs):
         id = self.kwargs.get('id')
-        if request.user.is_admin:
+        if request.user.is_admin or self._is_user_permitted(request.user, id):
             return self._delete_file_by_id(id)
-        return Response({'message': 'Not permitted'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'message': 'Not permitted'},
+                        status=status.HTTP_403_FORBIDDEN)
 
     def _is_user_permitted(self, user, file_id):
         try:
@@ -70,4 +75,5 @@ class FileDetail(generics.RetrieveDestroyAPIView):
         default_storage.delete(storage_path)
 
         file_instance.delete()
-        return Response({'message': 'File deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'File deleted successfully.'},
+                        status=status.HTTP_204_NO_CONTENT)

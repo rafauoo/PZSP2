@@ -25,7 +25,6 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
         # Update or create the File instance
         attachment_data = validated_data.get('attachment', {})
-        print(attachment_data)
         if not attachment_data or not attachment_data.get('path'):
             instance.attachment.delete()
             instance.attachment = None
@@ -36,6 +35,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
                                                    allow_null=True,
                                                    required=False)
             if attachment_serializer.is_valid():
+                instance.attachment.delete()
                 attachment_serializer.save()
                 instance.attachment = attachment_serializer.instance
 
