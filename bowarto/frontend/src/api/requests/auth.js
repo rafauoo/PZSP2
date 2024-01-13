@@ -69,10 +69,12 @@ export const registerUser = async (userData) => {
 
 export const getMe = async () => {
   try {
+    const accessToken = sessionStorage.getItem('access');
     return await apiRequest(meUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
       },
     });
   } catch (error) {
