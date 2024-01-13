@@ -103,14 +103,14 @@ function UserPanel() {
     setMessageText(messageText);
   };
 
-  const handleRemoveFile = async (attachmentId) => {
+  const handleRemoveFile = async (participantId) => {
     const isConfirmed = window.confirm(DELETE_FILE_CONFIRMATION);
     if (!isConfirmed) {
       return;
     }
     const {
       updatedApplications, showMessageModal, messageText
-    } = await handleRemoveFileLogic(attachmentId, applicationsData);
+    } = await handleRemoveFileLogic(participantId, applicationsData);
 
     setApplicationsData(updatedApplications);
     setShowMessageModal(showMessageModal);

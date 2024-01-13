@@ -1,5 +1,4 @@
 import refreshAccessToken from "./refresh";
-import {editParticipant} from "../api/requests/participant";
 
 export const fetchDataFromApi = async (url) => {
   try {
@@ -26,6 +25,7 @@ export async function submitForm(competitionId, formData) {
   try {
     console.log(competitionId, formData)
     // Step 1: Try to fetch existing applications for the given competitionId
+    console.log(competitionId)
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
     const apiUrl = `http://20.108.53.69/api/applications/?competition=${competitionId}`;
@@ -36,7 +36,6 @@ export async function submitForm(competitionId, formData) {
       }
     });
     const existingApplications = await response.json();
-    console.log(existingApplications)
     // Step 2: Check if the list is empty
     if (existingApplications.length === 0) {
       // If the list is empty, create a new application object
@@ -52,7 +51,6 @@ export async function submitForm(competitionId, formData) {
       });
 
       const createdApplicationData = await createApplicationResponse.json();
-      console.log(createdApplicationData)
       const createdApplicationId = createdApplicationData.id;
       // Add the applicationId to the formData
       formData.application = createdApplicationId;
@@ -191,20 +189,28 @@ export async function updateParticipant(participantId, formData) {
 
 export async function uploadAttachment(participantId, newAttachment) {
   try {
+    // Pobierz token dostępu
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
+    console.log(participantId, newAttachment)
 
+    // Utwórz formularz do przesyłania pliku
     const formData = new FormData();
-    formData.append('attachment', JSON.stringify({'path': newAttachment}));
-    console.log(formData)
+    // formData.append('participant', participantId);
+    formData.append('attachment.path', newAttachment);
 
     // Utwórz adres URL do wysłania załącznika
+    // const apiUrl = 'http://20.108.53.69/api/files/';
+    const apiUrl = 'http://20.108.53.69/api/participants/' + participantId + '/';
 
     // Wyślij żądanie POST do wysłania załącznika
-    const response = await editParticipant(participantId, newAttachment)
-
-    // Sprawdź, czy status odpowiedzi jest w zakresie 200-299
-    if (!response.ok) {
-      throw new Error(`Upload failed with status ${response.status}`);
-    }
+    const response = await fetch(apiUrl, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
 
     // Pobierz dane odpowiedzi
     const result = await response.json();
@@ -215,7 +221,6 @@ export async function uploadAttachment(participantId, newAttachment) {
     return result;
   } catch (error) {
     console.error('Error uploading attachment:', error);
-    throw error;
   }
 }
 
@@ -264,17 +269,20 @@ const saveFile = (data, filename) => {
   document.body.removeChild(link);
 };
 
-export const deleteFile = async (attachmentId) => {
+export const deleteFile = async (participantId) => {
   try {
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
 
-    // Usuń plik z serwera
-    const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
-      method: 'DELETE',
+    const data = {"attachment": null}
+
+    const response = await fetch(`http://20.108.53.69/api/participants/${participantId}/`, {
+      method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
+      body: JSON.stringify(data)
     });
 
     if (!response.ok) {

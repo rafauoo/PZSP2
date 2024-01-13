@@ -3,9 +3,9 @@ import {
   deleteParticipantAndCheckApplication, downloadFile,
   submitForm,
   updateParticipant,
-  uploadAttachment
+  uploadAttachment,
+  deleteFile
 } from "../../requests/user_panel";
-import {deleteFile} from "../../api/requests/file";
 
 export const handleDeleteParticipantLogic = async (participantId, prevApplications) => {
   try {

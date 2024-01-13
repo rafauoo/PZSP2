@@ -67,6 +67,7 @@ function ParticipantItem({
         <td style={buttonContainerStyle}>
           {participant.file && (
             <AttachmentDisplay attachment={participant.file}
+                               participant={participant.id}
                                onDownload={onDownloadFile}
                                onRemove={onRemoveFile}/>
           )}
@@ -79,7 +80,8 @@ function ParticipantItem({
             <button style={buttonStyle} onClick={handleShowEditModal}>
               Edytuj
             </button>
-            <button style={buttonStyle} onClick={() => handleDelete(participant.id)}>
+            <button style={buttonStyle}
+                    onClick={() => handleDelete(participant.id)}>
               Usuń
             </button>
           </div>
