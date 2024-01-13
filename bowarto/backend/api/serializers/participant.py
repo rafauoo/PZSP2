@@ -28,7 +28,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
         if not attachment_data or not attachment_data.get('path'):
             if instance.attachment:
                 instance.attachment.delete()
-
+                instance.attachment = None
         else:
             attachment_serializer = FileSerializer(instance.attachment,
                                                    data=attachment_data,
