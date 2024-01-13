@@ -59,12 +59,15 @@ class Application(models.Model):
 class Competition(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    type = models.CharField(max_length=50, choices=CompetitionType.choices, default=CompetitionType.OTHER)
+    type = models.CharField(max_length=50, choices=CompetitionType.choices,
+                            default=CompetitionType.OTHER)
     start_at = models.DateTimeField()
     end_at = models.DateTimeField()
-    poster = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
+    poster = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True,
+                                  null=True, unique=True,
                                   related_name='poster_competition')
-    regulation = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
+    regulation = models.OneToOneField(File, on_delete=models.SET_NULL,
+                                      blank=True, null=True, unique=True,
                                       related_name='regulation_competition')
 
     class Meta:
@@ -83,7 +86,8 @@ class Competition(models.Model):
     def clean(self):
         super().clean()
         if self.start_at and self.end_at and self.start_at >= self.end_at:
-            raise ValidationError("End date must be greater than the start date.")
+            raise ValidationError(
+                "End date must be greater than the start date.")
 
         valid_competition_types = [tag.value for tag in CompetitionType]
         if self.type and self.type not in valid_competition_types:
@@ -108,7 +112,8 @@ class Participant(models.Model):
     application = models.ForeignKey(Application, models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    attachment = models.OneToOneField(File, on_delete=models.SET_NULL, blank=True, null=True, unique=True,
+    attachment = models.OneToOneField(File, on_delete=models.SET_NULL,
+                                      blank=True, null=True,
                                       related_name='attachment_participant')
 
     class Meta:
@@ -162,7 +167,8 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     school = models.ForeignKey(School, models.SET_NULL, blank=True, null=True)
-    user_type = models.CharField(max_length=20, choices=UserType.choices, default=UserType.USER)
+    user_type = models.CharField(max_length=20, choices=UserType.choices,
+                                 default=UserType.USER)
 
     last_login = None
     USERNAME_FIELD = "email"
@@ -189,7 +195,8 @@ class User(AbstractBaseUser):
             raise ValidationError("Invalid user type.")
 
         if self.user_type != UserType.USER.value and self.school is not None:
-            raise ValidationError("Only users with type 'USER' can have a school.")
+            raise ValidationError(
+                "Only users with type 'USER' can have a school.")
 
     def save(self, *args, **kwargs):
         if self.id:  # Check if the instance is already saved (updating)

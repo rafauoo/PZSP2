@@ -6,8 +6,7 @@ from ..utils import is_allowed_file_type
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
-    attachment = FileSerializer(
-        required=False)  # Include FileSerializer for the 'attachment' field
+    attachment = FileSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Participant
@@ -15,26 +14,8 @@ class ParticipantSerializer(serializers.ModelSerializer):
             'id', 'email', 'application', 'first_name', 'last_name',
             'attachment')
 
-    def create(self, validated_data):
-        # Extract 'attachment' data from validated_data if present
-        attachment_data = validated_data.pop('attachment', None)
-
-        # Create the participant instance
-        participant = Participant.objects.create(**validated_data)
-
-        # If 'attachment' data is present, create the File instance and associate it with the participant
-        if attachment_data:
-            file_instance = File.objects.create(**attachment_data)
-            participant.attachment = file_instance
-            participant.save()
-
-        return participant
-
     def update(self, instance, validated_data):
-        # Extract 'attachment' data from validated_data if present
-        attachment_data = validated_data.pop('attachment', None)
-
-        # Update the participant instance
+        # Update Participant fields
         instance.email = validated_data.get('email', instance.email)
         instance.application = validated_data.get('application',
                                                   instance.application)
@@ -42,13 +23,21 @@ class ParticipantSerializer(serializers.ModelSerializer):
                                                  instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
 
-        if attachment_data:
-            if instance.attachment:
-                instance.attachment.delete()  # Delete the previous attachment
-            file_instance = instance.attachment if instance.attachment else File()
-            file_instance.path = attachment_data.get('path', file_instance.path)
-            file_instance.save()
-            instance.attachment = file_instance
+        # Update or create the File instance
+        attachment_data = validated_data.get('attachment', {})
+        print(attachment_data)
+        if not attachment_data or not attachment_data.get('path'):
+            instance.attachment.delete()
+            instance.attachment = None
+
+        else:
+            attachment_serializer = FileSerializer(instance.attachment,
+                                                   data=attachment_data,
+                                                   allow_null=True,
+                                                   required=False)
+            if attachment_serializer.is_valid():
+                attachment_serializer.save()
+                instance.attachment = attachment_serializer.instance
 
         instance.save()
         return instance
