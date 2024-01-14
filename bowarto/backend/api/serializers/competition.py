@@ -1,49 +1,88 @@
 from rest_framework import serializers
 
+from .file import FileSerializer
 from ..models import Competition, File
 from ..utils import is_allowed_file_type
 
 
 class CompetitionSerializer(serializers.ModelSerializer):
-    poster = serializers.PrimaryKeyRelatedField(
-        queryset=File.objects.all(),
-        required=False,
-        allow_null=True
-    )
-    regulation = serializers.PrimaryKeyRelatedField(
-        queryset=File.objects.all(),
-        required=False,
-        allow_null=True
-    )
+    poster = FileSerializer(required=False, allow_null=True)
+    regulation = FileSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Competition
-        fields = ['id', 'title', 'description', 'start_at', 'end_at', 'type', 'poster', 'regulation']
+        fields = ['id', 'title', 'description', 'start_at', 'end_at', 'type',
+                  'poster', 'regulation']
+
+    def create(self, validated_data):
+        # Extract nested serializer data
+        poster_data = validated_data.pop('poster', {})
+        regulation_data = validated_data.pop('regulation', {})
+
+        # Create Competition instance
+        competition = Competition.objects.create(**validated_data)
+
+        # Create or update nested serializer instances
+        self.create_or_update_nested_serializer(competition, 'poster',
+                                                poster_data)
+        self.create_or_update_nested_serializer(competition, 'regulation',
+                                                regulation_data)
+
+        return competition
+
+    def create_or_update_nested_serializer(self, instance, field_name, data):
+        # Helper method to create or update nested serializer instances
+        nested_instance = getattr(instance, field_name, None)
+        nested_serializer = FileSerializer(nested_instance, data=data,
+                                           allow_null=True, required=False)
+
+        if nested_serializer.is_valid():
+            if nested_instance:
+                nested_instance.delete()
+            nested_serializer.save()
+            setattr(instance, field_name, nested_serializer.instance)
+        instance.save()
 
     def update(self, instance, validated_data):
-        poster_id = validated_data.pop('poster', None)
-        regulation_id = validated_data.pop('regulation', None)
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description',
+                                                  instance.description)
+        instance.type = validated_data.get('type', instance.type)
+        instance.start_at = validated_data.get('start_at', instance.start_at)
+        instance.end_at = validated_data.get('end_at', instance.end_at)
 
-        # Perform the regular update on the competition instance
-        instance = super().update(instance, validated_data)
+        # TODO zrobić z tego funkcje
+        poster_data = validated_data.get('poster', {})
+        if not poster_data or not poster_data.get('path'):
+            if instance.poster:
+                instance.poster.delete()
+                instance.poster = None
+        else:
+            poster_serializer = FileSerializer(instance.poster,
+                                               data=poster_data,
+                                               allow_null=True,
+                                               required=False)
+            if poster_serializer.is_valid():
+                if instance.poster:
+                    instance.poster.delete()
+                poster_serializer.save()
+                instance.poster = poster_serializer.instance
 
-        # Handle the update for the nested File fields (poster and regulation)
-        if poster_id is not None:
-            # Check if the file type is allowed before saving
-            poster_content = File.objects.get(id=poster_id).file.read()
-            if not is_allowed_file_type(poster_content):
-                raise serializers.ValidationError("Invalid file type for poster.")
-
-            instance.poster = File.objects.get(id=poster_id)
-            instance.save()
-
-        if regulation_id is not None:
-            # Check if the file type is allowed before saving
-            regulation_content = File.objects.get(id=regulation_id).file.read()
-            if not is_allowed_file_type(regulation_content):
-                raise serializers.ValidationError("Invalid file type for regulation.")
-
-            instance.regulation = File.objects.get(id=regulation_id)
-            instance.save()
-
+        # TODO zrobić z tego funkcje
+        regulation_data = validated_data.get('regulation', {})
+        if not regulation_data or not regulation_data.get('path'):
+            if instance.regulation:
+                instance.regulation.delete()
+                instance.regulation = None
+        else:
+            regulation_serializer = FileSerializer(instance.regulation,
+                                                   data=regulation_data,
+                                                   allow_null=True,
+                                                   required=False)
+            if regulation_serializer.is_valid():
+                if instance.regulation:
+                    instance.regulation.delete()
+                regulation_serializer.save()
+                instance.regulation = regulation_serializer.instance
+        instance.save()
         return instance

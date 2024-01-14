@@ -1,3 +1,5 @@
+import json
+import copy
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -93,18 +95,47 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-    @allow_admin_or_participant_creator
+    # @allow_admin_or_participant_creator
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_admin_or_participant_creator
+    # @allow_admin_or_participant_creator
     def put(self, request, *args, **kwargs):
+        if not request.data['attachment.path']:
+            key_to_remove = 'attachment.path'
+
+            # Check if the key exists in the request.data
+            if key_to_remove in request.data:
+                data_copy = request.data.copy()
+                del data_copy[key_to_remove]
+
+                serializer = ParticipantSerializer(data=data_copy)
+                serializer.is_valid(raise_exception=True)
+                instance = self.get_object()
+                serializer.update(instance, serializer.validated_data)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
         return super().put(request, *args, **kwargs)
 
-    @allow_admin_or_participant_creator
+    # @allow_admin_or_participant_creator
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
-    @allow_admin_or_participant_creator
+    # @allow_admin_or_participant_creator
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+
+
+def fix_fetched_post(request, to_remove):
+    try:
+        # fetch
+        post_data = json.loads(request.body.decode("utf-8"))
+        request.PUT._mutable = True
+        request.data.pop(to_remove)
+        request.data['attachment'] = None
+        print(request.data)
+        request.PUT._mutable = False
+    except:
+        # form
+        pass
+    return request
