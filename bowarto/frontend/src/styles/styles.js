@@ -1,6 +1,15 @@
 export const headers = {
   width: '500px'
 }
+export const centeredHeader = {
+  width: '500px',
+  marginLeft: "auto",
+  marginRight: "auto",
+  textAlign: "center",
+}
+export const innerTable = {
+  width: "100%",
+}
 
 export const buttonStyleEdit = {
   backgroundColor: 'rgb(131, 203, 83)',
@@ -68,9 +77,9 @@ export const buttonStyleBasic = {
 };
 
 export const iconButtonStyle = {
-  marginRight: '8px', 
-  height: '18px', 
-  width: '18px', 
+  marginRight: '8px',
+  height: '18px',
+  width: '18px',
   marginBottom: '2px'
 };
 
@@ -94,7 +103,7 @@ export const tableRowStyle = {
 
 export const buttonSaveChanges = {
   backgroundColor: 'rgb(113, 176, 70)',
-  borderColor:  'rgb(113, 176, 70)'
+  borderColor: 'rgb(113, 176, 70)'
 };
 
 export const centeredCellStyle = {

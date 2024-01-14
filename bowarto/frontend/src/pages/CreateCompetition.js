@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
@@ -113,10 +113,10 @@ class CreateCompetition extends Component {
     return (
 
       <div className="d-flex justify-content-center">
-        <div style={{width: '60%'}}>
+        <div style={{ width: '60%' }}>
           <h1 className="text-left">Formularz Konkursowy</h1>
           <div className="d-flex justify-content-start vh-100">
-            <Form style={{width: '100%'}} onSubmit={this.handleSubmit}>
+            <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
 
                 <Form.Label>Nazwa konkursu*</Form.Label>
@@ -163,9 +163,9 @@ class CreateCompetition extends Component {
 
                 <Form.Label>Kategoria*</Form.Label>
                 <Form.Select aria-label="Kategoria" name="category"
-                             value={this.state.category}
-                             onChange={this.handleInputChange}
-                             required>
+                  value={this.state.category}
+                  onChange={this.handleInputChange}
+                  required>
                   <option value="Kategoria" disable selected hidden>Wybierz
                     kategorię
                   </option>

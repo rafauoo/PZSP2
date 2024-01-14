@@ -1,5 +1,5 @@
 import ParticipantsList from "./ParticipantsList";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import formatDate from "../utils/format";
 import AddParticipantModal from "./AddParticipantModal";
 import {
@@ -10,17 +10,17 @@ import { buttonContainerStyle, buttonStyleBasic, buttonStyleDelete, buttonStyleE
 
 
 function ApplicationRow({
-                          application,
-                          expanded,
-                          onToggleExpand,
-                          onDeleteApplication,
-                          onDeleteParticipant,
-                          onAddParticipant,
-                          onEditParticipant,
-                          onAddAttachment,
-                          onDownloadFile,
-                          onRemoveFile
-                        }) {
+  application,
+  expanded,
+  onToggleExpand,
+  onDeleteApplication,
+  onDeleteParticipant,
+  onAddParticipant,
+  onEditParticipant,
+  onAddAttachment,
+  onDownloadFile,
+  onRemoveFile
+}) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
 
@@ -33,7 +33,6 @@ function ApplicationRow({
     setShowAddParticipantModal(false);
   };
 
-
   return (
     <>
       <tr>
@@ -43,18 +42,18 @@ function ApplicationRow({
         <td></td>
         <td style={buttonContainerStyle}>
           <button style={buttonStyleBasic}
-                  onClick={() => onToggleExpand(application.id)}>
-            <img src={require('../images/view.png')} alt="Widok" style={iconButtonStyle}/>
+            onClick={() => onToggleExpand(application.id)}>
+            <img src={require('../images/view.png')} alt="Widok" style={iconButtonStyle} />
             {expanded ? 'Ukryj' : 'Wyświetl'}
           </button>
           <button style={buttonStyleEdit}
-                  onClick={() => handleShowAddParticipantModal(application.competition.id)}>
-            <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyle}/>
+            onClick={() => handleShowAddParticipantModal(application.competition.id)}>
+            <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyle} />
             Dodaj
           </button>
           <button style={buttonStyleDelete}
-                  onClick={() => onDeleteApplication(application.id)}>
-              <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle}/>
+            onClick={() => onDeleteApplication(application.id)}>
+            <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle} />
             Usuń aplikację
           </button>
         </td>
@@ -79,7 +78,6 @@ function ApplicationRow({
         handleClose={handleCloseAddParticipantModal}
         onAddParticipant={onAddParticipant}
       />
-
     </>
   );
 }

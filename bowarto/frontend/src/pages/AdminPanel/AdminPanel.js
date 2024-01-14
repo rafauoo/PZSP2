@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import MessageModal from "../../components/MessageModal";
-import {getApplicationList} from "../../api/requests/application";
+import { getApplicationList } from "../../api/requests/application";
 import CompetitionsTable from "./components/CompetitionsTable";
-import {getUserByID} from "../../api/requests/user";
+import { getUserByID } from "../../api/requests/user";
 import refreshAccessToken from "../../requests/refresh";
+import { getCompetitionList } from "../../api/requests/competition";
 
 const LOADING_MESSAGE = "Trwa ładowanie...";
 
@@ -13,11 +14,6 @@ const AdminPanel = () => {
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([])
-
-  useEffect(() => {
-    fetchData()
-  }, []);
-
 
   const fetchData = async () => {
     try {
@@ -32,7 +28,7 @@ const AdminPanel = () => {
 
         if (!uniqueCompetitionIds.has(competitionId)) {
           uniqueCompetitionIds.add(competitionId);
-          acc.push({...competition, applications: []});
+          acc.push({ ...competition, applications: [] });
         }
 
         return acc;
@@ -72,6 +68,9 @@ const AdminPanel = () => {
     }
   };
 
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   return (
     <div>
@@ -80,7 +79,8 @@ const AdminPanel = () => {
       ) : (
         <>
           {data.length !== 0 ? (
-            <CompetitionsTable competitions={data}/>
+            //<CompetitionsTable competitions={data}/> 
+            <CompetitionsTable competitionsList={data} />
           ) : (
             <>
               <p>Nie posiadasz obecnie żadnych zgłoszeń.</p>
