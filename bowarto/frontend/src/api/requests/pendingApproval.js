@@ -67,7 +67,7 @@ export const approvePendingApproval = async (pendingApprovalID) => {
   }
 };
 
-export const approvePendingApproval = async (pendingApprovalID) => {
+export const rejectPendingApproval = async (pendingApprovalID) => {
   try {
     const accessToken = sessionStorage.getItem('access');
     return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}reject/`, {
