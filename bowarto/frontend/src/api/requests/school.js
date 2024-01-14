@@ -3,13 +3,13 @@ import {schoolsUrl} from "../urls";
 
 export const getSchoolList = async () => {
   try {
-    // TODO     const accessToken = sessionStorage.getItem('access');
+    const accessToken = sessionStorage.getItem('access');
 
     return await apiRequest(schoolsUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        //TODO         'Authorization': `Bearer ${accessToken}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
     });
   } catch (error) {
