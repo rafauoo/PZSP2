@@ -44,6 +44,9 @@ class File(models.Model):
 
         super().delete(*args, **kwargs)
 
+    def __str__(self):
+        return f"{self.id} {self.path}"
+
 
 class Application(models.Model):
     competition = models.ForeignKey('Competition', models.SET_NULL, null=True)
@@ -92,19 +95,6 @@ class Competition(models.Model):
         valid_competition_types = [tag.value for tag in CompetitionType]
         if self.type and self.type not in valid_competition_types:
             raise ValidationError("Invalid competition type.")
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-
-        # Delete previous attachments before setting new ones
-        if self.id:  # Check if it's an existing instance (not a new one)
-            original = Competition.objects.get(pk=self.id)
-            if original.poster != self.poster:
-                original.poster.delete()
-            if original.regulation != self.regulation:
-                original.regulation.delete()
-
-        super().save(*args, **kwargs)
 
 
 class Participant(models.Model):

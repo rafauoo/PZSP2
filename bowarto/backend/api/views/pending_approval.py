@@ -1,5 +1,5 @@
-from rest_framework import generics
-from rest_framework.decorators import authentication_classes
+from rest_framework import generics, status
+from rest_framework.decorators import authentication_classes, action
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.http import QueryDict
@@ -32,21 +32,44 @@ class PendingApprovalList(generics.ListCreateAPIView):
 
 
 @authentication_classes([JWTAuthentication])
-class PendingApprovalDetail(generics.RetrieveDestroyAPIView):
+class PendingApprovalDetail(generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = PendingApprovalSerializer
     queryset = PendingApproval.objects.all()
 
     @allow_admin
+    @action(detail=True, methods=['post'])
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_admin
-    def delete(self, request, *args, **kwargs):
-        approval_id = self.kwargs.get('id')
 
-        approval = get_object_or_404(PendingApproval, id=approval_id)
+@authentication_classes([JWTAuthentication])
+class ApproveApprovalView(generics.DestroyAPIView):
+    lookup_field = 'id'
+    queryset = PendingApproval.objects.all()
+    serializer_class = PendingApprovalSerializer
+
+    @allow_admin
+    def destroy(self, request, *args, **kwargs):
+        approval = self.get_object()
         approval.user.school = approval.school
         approval.user.save()
+        approval.delete()
 
-        return super().delete(request, *args, **kwargs)
+        return Response({'detail': 'Approval successfully accepted'},
+                        status=status.HTTP_200_OK)
+
+
+@authentication_classes([JWTAuthentication])
+class RejectApprovalView(generics.DestroyAPIView):
+    lookup_field = 'id'
+    queryset = PendingApproval.objects.all()
+    serializer_class = PendingApprovalSerializer
+
+    @allow_admin
+    def destroy(self, request, *args, **kwargs):
+        approval = self.get_object()
+        approval.delete()
+
+        return Response({'detail': 'Approval successfully rejected'},
+                        status=status.HTTP_200_OK)
