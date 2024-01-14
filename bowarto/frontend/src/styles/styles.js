@@ -1,3 +1,7 @@
+export const headers = {
+  width: '500px'
+}
+
 export const buttonStyleEdit = {
   backgroundColor: 'rgb(131, 203, 83)',
   borderRadius: '5px',
@@ -32,6 +36,26 @@ export const buttonStyle = {
   padding: '5px 10px',
   border: 'none',
   cursor: 'pointer',
+  marginRight: '10px'
+};
+
+export const buttonStyled = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+};
+
+export const buttonSubmit = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+  marginTop: '20px'
 };
 
 export const buttonStyleBasic = {
@@ -71,4 +95,9 @@ export const tableRowStyle = {
 export const buttonSaveChanges = {
   backgroundColor: 'rgb(113, 176, 70)',
   borderColor:  'rgb(113, 176, 70)'
-}
+};
+
+export const centeredCellStyle = {
+  textAlign: "center",
+  verticalAlign: "middle",
+};

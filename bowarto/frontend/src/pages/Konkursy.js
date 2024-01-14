@@ -6,6 +6,7 @@ import RegulaminModal from "./RegulaminModal";
 import ErrorModal from "./ErrorModal";
 import AddParticipantModal from "../components/AddParticipantModal";
 import {submitForm} from "../requests/user_panel";
+import { buttonStyle, buttonStyleEdit, centeredCellStyle, headers } from "../styles/styles";
 
 const Konkursy = () => {
   const [comingCompetitions, setComingCompetitions] = useState([]);
@@ -73,28 +74,14 @@ const Konkursy = () => {
     return new Date(dateString).toLocaleDateString("pl-PL", options);
   };
 
-  const buttonStyle = {
-    backgroundColor: "rgb(131, 203, 83)",
-    borderRadius: "5px",
-    color: "black",
-    padding: "5px 10px",
-    border: "none",
-    cursor: "pointer",
-    margin: "5px",
-  };
-
-  const centeredCellStyle = {
-    textAlign: "center",
-    verticalAlign: "middle",
-  };
-
   return (
     <div>
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
         <tr>
           <th>
-            <h1>Nadchodzące konkursy</h1>
+            <h1 style={headers}>Nadchodzące konkursy</h1>
           </th>
           <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
           <th style={centeredCellStyle}>Data zakończenia konkursu</th>
@@ -120,7 +107,7 @@ const Konkursy = () => {
                 description={competition.description}
               />
               <button
-                style={buttonStyle}
+                style={buttonStyleEdit}
                 onClick={() => handleShowAddParticipantModal(competition.id)}
               >
                 Dodaj
@@ -130,11 +117,12 @@ const Konkursy = () => {
         ))}
         </tbody>
       </Table>
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
         <tr>
           <th>
-            <h1>Aktualne konkursy</h1>
+            <h1 style={headers}>Aktualne konkursy</h1>
           </th>
           <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
           <th style={centeredCellStyle}>Data zakończenia konkursu</th>
@@ -160,7 +148,7 @@ const Konkursy = () => {
                 description={competition.description}
               />
               <button
-                style={buttonStyle}
+                style={buttonStyleEdit}
                 onClick={() => handleShowAddParticipantModal(competition.id)}
               >
                 Dodaj
@@ -170,12 +158,12 @@ const Konkursy = () => {
         ))}
         </tbody>
       </Table>
-
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
         <tr>
           <th>
-            <h1>Starsze konkursy</h1>
+            <h1 style={headers}>Zakończone konkursy</h1>
           </th>
           <th style={centeredCellStyle}>Data zakończenia konkursu</th>
           <th style={centeredCellStyle}></th>
@@ -192,7 +180,7 @@ const Konkursy = () => {
               {formatDate(competition.end_at)}
             </td>
             <td style={centeredCellStyle}>
-              <button style={buttonStyle}>Wyniki</button>
+              <button style={buttonStyleEdit}>Wyniki</button>
             </td>
           </tr>
         ))}

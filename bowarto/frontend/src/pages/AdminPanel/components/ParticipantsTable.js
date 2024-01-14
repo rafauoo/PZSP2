@@ -8,7 +8,7 @@ const participantsTable = ({participants}) => {
       <thead>
       <tr>
         <th>Imię i nazwisko</th>
-        <th>Email</th>
+        <th>E-mail</th>
         <th>Załącznik</th>
         <th></th>
       </tr>
