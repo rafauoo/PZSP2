@@ -3,7 +3,8 @@ from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from ..models import School
-from ..permissions import allow_admin, allow_admin_or_school_user, allow_authenticated, allow_any
+from ..permissions import allow_admin, allow_admin_or_school_user, \
+    allow_authenticated, allow_any
 from ..serializers.school import SchoolSerializer
 
 
@@ -13,7 +14,7 @@ class SchoolList(generics.ListCreateAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
-    @allow_any
+    @allow_authenticated
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -26,11 +27,14 @@ class SchoolList(generics.ListCreateAPIView):
 
         existing_school = School.objects.filter(email=email).first()
         if existing_school:
-            return Response({'message': 'School with this email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'message': 'School with this email already exists.'},
+                status=status.HTTP_400_BAD_REQUEST)
 
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                        headers=headers)
 
 
 @authentication_classes([JWTAuthentication])
