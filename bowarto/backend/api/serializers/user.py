@@ -10,16 +10,19 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'created_at',
                   'school', 'user_type']
-        extra_kwargs = {'school': {'read_only': True}}
+        extra_kwargs = {'school': {'read_only': True},
+                        'user_type': {'read_only': True}}
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'first_name', 'last_name')
+        fields = (
+            'id', 'email', 'password', 'first_name', 'last_name', 'user_type')
         extra_kwargs = {
             'password': {'write_only': True},
-            'id': {'read_only': True}
+            'id': {'read_only': True},
+            'user_type': {'read_only': True}
         }
 
     def create(self, validated_data):
