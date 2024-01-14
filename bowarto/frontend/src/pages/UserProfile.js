@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import AddSchoolModal from '../components/AddSchoolModal';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/esm/FormGroup';
-import { editUser, getUserMe } from '../api/requests/user';
+import { editUser } from '../api/requests/user';
 import { getSchoolList, createSchool } from '../api/requests/school';
 import { createPendingApproval } from '../api/requests/pendingApproval';
+import { getMe, refreshAccessToken } from '../api/requests/auth';
 
 const buttonStyle = {
   backgroundColor: "rgb(131, 203, 83)",
@@ -21,18 +22,30 @@ class UserProfile extends Component {
       super(props);
       this.state = {
         userInfo: null,
+        oldPendingSchool: null,
         pendingSchool: null, 
         schools: [],
         showPopup: false
       };
     }
 
+    async refreshAcccess() {
+      const accessToken = await refreshAccessToken(sessionStorage.getItem('refresh'));
+      sessionStorage.setItem('access', accessToken);
+    }
+
     async componentDidMount() {
-      getUserMe()
+      await this.refreshAcccess();
+      getMe()
       .then(data => {
-        this.setState({ userInfo: data });
+        this.setState({ 
+          userInfo: data, 
+          oldPendingSchool: data.school, 
+          pendingSchool: data.school 
+        });
       });
 
+      await this.refreshAcccess();
       getSchoolList()
       .then(data => {
         this.setState({ schools: data });
@@ -50,11 +63,12 @@ class UserProfile extends Component {
     };
 
     onAddSchool = async (newSchool) => {
+      await this.refreshAcccess();
       createSchool(newSchool).then(_ => {
         // const updatedUser = {
         //   ...this.state.userInfo,
         //   school: data.id,
-        // };
+        // }; 
         // this.setState({ userInfo: updatedUser });
 
         getSchoolList()
@@ -88,18 +102,20 @@ class UserProfile extends Component {
 
       console.log("Form submitted");
 
-      const {userInfo, pendingSchool} = this.state;
+      const {userInfo, oldPendingSchool, pendingSchool} = this.state;
 
+      await this.refreshAcccess();
       editUser(userInfo.id, userInfo).then(data => {
         console.log(data);
         window.alert('Dane zostały pomyślnie zaktualizowane!');
       });
-      if(pendingSchool) {
+
+      if(oldPendingSchool !== pendingSchool) {
         const pendingApproval = {
           user: userInfo.id,
           school: pendingSchool
         };
-
+        await this.refreshAcccess();
         createPendingApproval(pendingApproval).then(data => {
           console.log(data);
           window.alert('Wysłano prośbę o zmianę szkoły!');
@@ -116,7 +132,9 @@ class UserProfile extends Component {
 
       const { first_name, last_name, email } = userInfo;
       const schoolID = userInfo.school;
-
+      
+      // selected={school.id === schoolID}
+      // selected={schoolID == null}
       return (
         <>
           <div className="d-flex justify-content-center">
@@ -137,9 +155,9 @@ class UserProfile extends Component {
                 <Form.Label>Szkoła</Form.Label>
                 <div className="d-flex">
                   <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleSchoolChange}>
-                    <option key={null} value={null} selected={schoolID == null}>Brak</option>
+                    <option key={null} value={null}>Brak</option>
                     {schools.map((school) => (
-                      <option key={school.id} value={school.id} selected={school.id === schoolID}>
+                      <option key={school.id} value={school.id}> 
                         {school.name}, {school.postcode} {school.city}
                       </option>
                     ))}

@@ -35,23 +35,6 @@ export const getUserByID = async (userID) => {
   }
 };
 
-export const getUserMe = async () => {
-  try {
-    const accessToken = sessionStorage.getItem('access');
-    return await apiRequest(`${meUrl}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-
-      },
-    });
-  } catch (error) {
-    console.error('Error fetching user by ID:', error.message);
-    throw error;
-  }
-};
-
 export const editUser = async (userID, userData) => {
   try {
     const accessToken = sessionStorage.getItem('access');
