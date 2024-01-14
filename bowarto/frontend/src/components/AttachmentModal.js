@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { buttonSaveChanges } from '../styles/styles';
 
 function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
   const [newAttachment, setNewAttachment] = useState(null);
@@ -22,12 +23,13 @@ function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Załącz prace</Modal.Title>
+        <Modal.Title>Załącz pracę</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
           <div>
             <label>Wybierz załącznik:</label>
+            <br></br>
             <input type="file" onChange={handleAttachmentChange}/>
           </div>
         </form>
@@ -36,7 +38,7 @@ function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
         <Button variant="secondary" onClick={handleClose}>
           Zamknij
         </Button>
-        <Button variant="primary" onClick={handleUploadClick}>
+        <Button style={buttonSaveChanges} onClick={handleUploadClick}>
           Prześlij plik
         </Button>
       </Modal.Footer>

@@ -20,7 +20,7 @@ function ParticipantsTable() {
         <tr>
           <th>Imię</th>
           <th>Nazwisko</th>
-          <th>Email</th>
+          <th>E-mail</th>
           <th></th>
         </tr>
       </thead>

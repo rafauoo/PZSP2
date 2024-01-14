@@ -3,16 +3,7 @@ import refreshAccessToken from "../requests/refresh";
 import AddSchoolModal from '../components/AddSchoolModal';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/esm/FormGroup';
-
-const buttonStyle = {
-  backgroundColor: "rgb(131, 203, 83)",
-  borderRadius: "5px",
-  color: "black",
-  padding: "5px 10px",
-  border: "none",
-  cursor: "pointer",
-  margin: "5px", 
-};
+import { buttonStyle, buttonStyled, buttonSubmit } from '../styles/styles';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -127,9 +118,11 @@ class UserProfile extends Component {
 
       return (
         <>
+          <br></br>
           <div className="d-flex justify-content-center">
             <h1>Profil użytkownika</h1>
           </div>
+          <br></br>
           <div className="d-flex justify-content-center vh-100">
             <Form onSubmit={this.handleSubmit}>
               <FormGroup className="mb-3">
@@ -139,7 +132,7 @@ class UserProfile extends Component {
                 <Form.Label>Nazwisko</Form.Label>
                 <Form.Control type="text" id='last_name' defaultValue={`${last_name}`} onChange={this.handleChange}/>
   
-                <Form.Label>Email</Form.Label>
+                <Form.Label>E-mail</Form.Label>
                 <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChange}/>
   
                 <Form.Label>Szkoła</Form.Label>
@@ -152,7 +145,7 @@ class UserProfile extends Component {
                       </option>
                     ))}
                   </Form.Select>
-                  <button style={buttonStyle} type="button" onClick={this.togglePopup}>
+                  <button style={buttonStyled} type="button" onClick={this.togglePopup}>
                     Inna
                   </button>
                   {showPopup && (
@@ -164,7 +157,7 @@ class UserProfile extends Component {
                   )}
                 </div>
                 <div className="d-flex justify-content-center">
-                  <button style={buttonStyle} type="submit">
+                  <button style={buttonSubmit} type="submit">
                       Zapisz zmiany
                   </button>
                 </div>

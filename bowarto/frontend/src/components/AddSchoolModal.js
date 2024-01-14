@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { buttonSaveChanges } from '../styles/styles';
 
 function AddSchoolModal({show, handleClose, onAddSchool}) {
   const [newSchool, setNewSchool] = useState({
@@ -79,7 +80,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Adres email:
+              Adres e-mail:
             </label>
             <input
               type="email"
@@ -174,8 +175,8 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
         <Button variant="secondary" type="button" onClick={handleClose}>
           Zamknij
         </Button>
-        <Button variant="primary" type="button" onClick={handleAddSchool}>
-          Dodaj Szkołę
+        <Button style={buttonSaveChanges} type="button" onClick={handleAddSchool}>
+          Dodaj szkołę
         </Button>
       </Modal.Footer>
     </Modal>

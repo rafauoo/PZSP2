@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import refreshAccessToken from "../requests/refresh";
+import { buttonSaveChanges } from "../styles/styles";
 
 class CreateCompetition extends Component {
   constructor(props) {
@@ -109,16 +110,6 @@ class CreateCompetition extends Component {
   }
 
   render() {
-    const buttonStyle = {
-      backgroundColor: 'rgb(131, 203, 83)',
-      borderRadius: '5px',
-      color: 'black',
-      padding: '5px 10px',
-      border: 'none',
-      cursor: 'pointer',
-      margin: '5px'
-    };
-
     return (
 
       <div className="d-flex justify-content-center">
@@ -135,6 +126,7 @@ class CreateCompetition extends Component {
                   name="competitionName"
                   value={this.state.competitionName}
                   onChange={this.handleInputChange}
+                  required
                 />
 
                 <div className="row">
@@ -149,7 +141,7 @@ class CreateCompetition extends Component {
                       timeFormat="HH:mm"
                       timeIntervals={15}
                       timeCaption="Time"
-
+                      required
                     />
                   </div>
 
@@ -164,6 +156,7 @@ class CreateCompetition extends Component {
                       timeFormat="HH:mm"
                       timeIntervals={15}
                       timeCaption="Time"
+                      required
                     />
                   </div>
                 </div>
@@ -171,7 +164,8 @@ class CreateCompetition extends Component {
                 <Form.Label>Kategoria*</Form.Label>
                 <Form.Select aria-label="Kategoria" name="category"
                              value={this.state.category}
-                             onChange={this.handleInputChange}>
+                             onChange={this.handleInputChange}
+                             required>
                   <option value="Kategoria" disable selected hidden>Wybierz
                     kategorię
                   </option>
@@ -191,6 +185,7 @@ class CreateCompetition extends Component {
                   onChange={this.handleInputChange}
                   // style={{ height: '100px' }}  // Adjust the height value as needed
                   rows={7}  // Adjust the height value as needed
+                  required
 
                 />
 
@@ -202,6 +197,7 @@ class CreateCompetition extends Component {
                       type="file"
                       name="attachment"
                       onChange={this.handleFileChange}
+                      required
                     />
                   </div>
 
@@ -218,8 +214,8 @@ class CreateCompetition extends Component {
               </Form.Group>
 
               <div className="d-flex justify-content-left">
-                <Button style={buttonStyle} type="submit">
-                  Swtórz konkurs
+                <Button style={buttonSaveChanges} type="submit">
+                  Stwórz konkurs
                 </Button>
               </div>
             </Form>
