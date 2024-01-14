@@ -1,5 +1,6 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
+from rest_framework_simplejwt.views import TokenObtainPairView, \
+    TokenRefreshView, TokenBlacklistView
 
 from .views.application import ApplicationList, ApplicationDetail
 from .views.auth import RegisterView, ProfileView
@@ -10,30 +11,43 @@ from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
 from .views.school import SchoolList, SchoolDetail
 from .views.user import UserList, UserDetail
-from .views.pending_approval import PendingApprovalList, PendingApprovalDetail
+from .views.pending_approval import PendingApprovalList, PendingApprovalDetail, \
+    ApproveApprovalView, RejectApprovalView
 
 urlpatterns = [
     path('', index, name="index"),
 
     path('applications/', ApplicationList.as_view(), name="application-list"),
-    path('applications/<int:id>/', ApplicationDetail.as_view(), name="application-detail"),
+    path('applications/<int:id>/', ApplicationDetail.as_view(),
+         name="application-detail"),
 
     path('competitions/', CompetitionList.as_view(), name='competition-list'),
-    path('competitions/<int:id>/', CompetitionDetail.as_view(), name='competition-detail'),
+    path('competitions/<int:id>/', CompetitionDetail.as_view(),
+         name='competition-detail'),
 
-    path('competition_types/', CompetitionTypeList.as_view(), name='competition-type-list'),
+    path('competition_types/', CompetitionTypeList.as_view(),
+         name='competition-type-list'),
 
     path('files/', FileList.as_view(), name="file-list"),
     path('files/<int:id>/', FileDetail.as_view(), name="file-detail"),
 
     path('participants/', ParticipantList.as_view(), name="participant-list"),
-    path('participants/<int:id>/', ParticipantDetail.as_view(), name="participant-detail"),
+    path('participants/<int:id>/', ParticipantDetail.as_view(),
+         name="participant-detail"),
 
     path('schools/', SchoolList.as_view(), name="school-list"),
     path('schools/<int:id>/', SchoolDetail.as_view(), name="school-detail"),
 
     path('approvals/', PendingApprovalList.as_view(), name="approval-list"),
-    path('approvals/<int:id>/', PendingApprovalDetail.as_view(), name="approval-detail"),
+    path('approvals/<int:id>/', PendingApprovalDetail.as_view(),
+         name='pending-approval-detail'),
+    path('approvals/<int:id>/approve/', ApproveApprovalView.as_view(),
+         name='approve-approval'),
+    path('approvals/<int:id>/reject/', RejectApprovalView.as_view(),
+         name='reject-approval'),
+
+    path('users/', UserList.as_view(), name="user-list"),
+    path('users/<int:id>/', UserDetail.as_view(), name="user-detail"),
 
     path('users/', UserList.as_view(), name="user-list"),
     path('users/<int:id>/', UserDetail.as_view(), name="user-detail"),
