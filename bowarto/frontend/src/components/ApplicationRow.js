@@ -2,7 +2,10 @@ import ParticipantsList from "./ParticipantsList";
 import React, {useState} from "react";
 import formatDate from "../utils/format";
 import AddParticipantModal from "./AddParticipantModal";
-import {deleteParticipantAndCheckApplication, submitForm} from "../requests/user_panel";
+import {
+  deleteParticipantAndCheckApplication,
+  submitForm
+} from "../requests/user_panel";
 
 const buttonsContainerStyle = {
   display: 'flex',
@@ -47,16 +50,21 @@ function ApplicationRow({
   return (
     <>
       <tr>
-        <td>{application.competition.title}</td>
-        <td>{formatDate(application.created_at)}</td>
+        <td>
+          <h2>{application.competition.title}</h2>
+        </td>
+        <td></td>
         <td style={buttonsContainerStyle}>
-          <button style={buttonStyle} onClick={() => onToggleExpand(application.id)}>
+          <button style={buttonStyle}
+                  onClick={() => onToggleExpand(application.id)}>
             {expanded ? 'Ukryj' : 'Wyświetl'}
           </button>
-          <button style={buttonStyle} onClick={() => handleShowAddParticipantModal(application.competition.id)}>
+          <button style={buttonStyle}
+                  onClick={() => handleShowAddParticipantModal(application.competition.id)}>
             Dodaj
           </button>
-          <button style={buttonStyle} onClick={() => onDeleteApplication(application.id)}>
+          <button style={buttonStyle}
+                  onClick={() => onDeleteApplication(application.id)}>
             Usuń aplikację
           </button>
         </td>

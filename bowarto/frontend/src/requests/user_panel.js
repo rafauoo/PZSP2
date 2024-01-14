@@ -192,19 +192,20 @@ export async function uploadAttachment(participantId, newAttachment) {
     // Pobierz token dostępu
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
+    console.log(participantId, newAttachment)
 
     // Utwórz formularz do przesyłania pliku
     const formData = new FormData();
-    formData.append('participant', participantId);
-    formData.append('path', newAttachment);
+    // formData.append('participant', participantId);
+    formData.append('attachment.path', newAttachment);
 
     // Utwórz adres URL do wysłania załącznika
     // const apiUrl = 'http://20.108.53.69/api/files/';
-    const apiUrl = 'http://20.108.53.69/api/files/';
+    const apiUrl = 'http://20.108.53.69/api/participants/' + participantId + '/';
 
     // Wyślij żądanie POST do wysłania załącznika
     const response = await fetch(apiUrl, {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -268,17 +269,20 @@ const saveFile = (data, filename) => {
   document.body.removeChild(link);
 };
 
-export const deleteFile = async (attachmentId) => {
+export const deleteFile = async (participantId) => {
   try {
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
 
-    // Usuń plik z serwera
-    const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
-      method: 'DELETE',
+    const data = {"attachment": null}
+
+    const response = await fetch(`http://20.108.53.69/api/participants/${participantId}/`, {
+      method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
+      body: JSON.stringify(data)
     });
 
     if (!response.ok) {

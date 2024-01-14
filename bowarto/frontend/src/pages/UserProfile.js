@@ -148,12 +148,12 @@ class UserProfile extends Component {
                     <option value="" disabled hidden selected={schoolID == null}></option>
                     {schools.map((school) => (
                       <option key={school.id} value={school.id} selected={school.id === schoolID}>
-                        {school.name}
+                        {school.name}, {school.postcode} {school.city}
                       </option>
                     ))}
                   </Form.Select>
                   <button style={buttonStyle} type="button" onClick={this.togglePopup}>
-                    Dodaj
+                    Inna
                   </button>
                   {showPopup && (
                     <AddSchoolModal

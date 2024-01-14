@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
@@ -72,7 +72,7 @@ class CreateCompetition extends Component {
     formData.append('title', this.state.competitionName);
     formData.append('description', this.state.description);
     formData.append('type', this.state.category);
-    formData.append('created_at', this.state.startDate.toISOString());
+    formData.append('start_at', this.state.startDate.toISOString());
     formData.append('end_at', this.state.endDate.toISOString());
     // WARNING: right now there is no attachment sent
 
@@ -122,10 +122,10 @@ class CreateCompetition extends Component {
     return (
 
       <div className="d-flex justify-content-center">
-        <div style={{ width: '60%' }}>
+        <div style={{width: '60%'}}>
           <h1 className="text-left">Formularz Konkursowy</h1>
           <div className="d-flex justify-content-start vh-100">
-            <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
+            <Form style={{width: '100%'}} onSubmit={this.handleSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
 
                 <Form.Label>Nazwa konkursu*</Form.Label>
@@ -169,13 +169,16 @@ class CreateCompetition extends Component {
                 </div>
 
                 <Form.Label>Kategoria*</Form.Label>
-                <Form.Select aria-label="Kategoria" name="category" value={this.state.category} onChange={this.handleInputChange}>
-                  <option value="Kategoria" disable selected hidden>Wybierz kategorię</option>
+                <Form.Select aria-label="Kategoria" name="category"
+                             value={this.state.category}
+                             onChange={this.handleInputChange}>
+                  <option value="Kategoria" disable selected hidden>Wybierz
+                    kategorię
+                  </option>
                   {this.state.competitionsTypes.map(element => {
                     return <option value={element.id}>{element.name}</option>
                   })}
                 </Form.Select>
-
 
 
                 <Form.Label>Opis konkursu*</Form.Label>
@@ -193,7 +196,8 @@ class CreateCompetition extends Component {
 
                 <div className="row">
                   <div className="col-md-6">
-                    <Form.Label>Dodaj regulamin (regulamin w formacie .pdf, .docx)</Form.Label>
+                    <Form.Label>Dodaj regulamin (regulamin w formacie .pdf,
+                      .docx)</Form.Label>
                     <Form.Control
                       type="file"
                       name="attachment"
@@ -202,7 +206,8 @@ class CreateCompetition extends Component {
                   </div>
 
                   <div className="col-md-6">
-                    <Form.Label>Dodaj plakat (plakat w formacie .png, .jpg)</Form.Label>
+                    <Form.Label>Dodaj plakat (plakat w formacie .png,
+                      .jpg)</Form.Label>
                     <Form.Control
                       type="file"
                       name="attachment"
@@ -220,7 +225,7 @@ class CreateCompetition extends Component {
             </Form>
           </div>
         </div>
-      </div >
+      </div>
     );
   }
 }

@@ -65,21 +65,25 @@ function ParticipantItem({
         <td>{participant.first_name} {participant.last_name}</td>
         <td>{participant.email}</td>
         <td style={buttonContainerStyle}>
-          {participant.file && (
-            <AttachmentDisplay attachment={participant.file}
+          {participant.attachment && (
+            <AttachmentDisplay attachment={participant.attachment.id}
+                               participant={participant.id}
                                onDownload={onDownloadFile}
                                onRemove={onRemoveFile}/>
           )}
         </td>
         <td>
           <div style={buttonContainerStyle}>
-            <button style={buttonStyle} onClick={handleShowAttachmentForm}>
-              Załącz pracę
-            </button>
+            {!participant.attachment ? (
+              <button style={buttonStyle} onClick={handleShowAttachmentForm}>
+                Załącz pracę
+              </button>
+            ) : null}
             <button style={buttonStyle} onClick={handleShowEditModal}>
               Edytuj
             </button>
-            <button style={buttonStyle} onClick={() => handleDelete(participant.id)}>
+            <button style={buttonStyle}
+                    onClick={() => handleDelete(participant.id)}>
               Usuń
             </button>
           </div>

@@ -24,13 +24,13 @@ function UserApplicationsTable({
     <div className="user-applications-table">
 
       <Table striped bordered hover>
-        <thead>
-        <tr>
-          <th>Konkurs</th>
-          <th>Utworzenie aplikacji</th>
-          <th></th>
-        </tr>
-        </thead>
+        {/*<thead>*/}
+        {/*<tr>*/}
+        {/*  <th>Konkurs</th>*/}
+        {/*  <th></th>*/}
+        {/*  <th></th>*/}
+        {/*</tr>*/}
+        {/*</thead>*/}
         <tbody>
         {applications.map((application) => (
           <ApplicationRow
