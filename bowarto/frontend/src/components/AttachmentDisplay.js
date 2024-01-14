@@ -18,7 +18,7 @@ const buttonContainerStyle = {
   gap: '10px',
 };
 
-function AttachmentDisplay({attachment, onDownload, onRemove}) {
+function AttachmentDisplay({attachment, participant, onDownload, onRemove}) {
   const handleDownloadFile = () => {
     if (onDownload) {
       // Wywołaj funkcję z komponentu nadrzędnego do pobierania załącznika
@@ -29,7 +29,7 @@ function AttachmentDisplay({attachment, onDownload, onRemove}) {
   const handleRemoveAttachment = () => {
     if (onRemove) {
       // Wywołaj funkcję z komponentu nadrzędnego do usuwania załącznika
-      onRemove(attachment);
+      onRemove(participant);
     }
   };
 
