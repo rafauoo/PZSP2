@@ -95,11 +95,11 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def put(self, request, *args, **kwargs):
         if not request.data['attachment.path']:
             key_to_remove = 'attachment.path'
@@ -117,25 +117,10 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
 
         return super().put(request, *args, **kwargs)
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
-    # @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
-
-
-def fix_fetched_post(request, to_remove):
-    try:
-        # fetch
-        post_data = json.loads(request.body.decode("utf-8"))
-        request.PUT._mutable = True
-        request.data.pop(to_remove)
-        request.data['attachment'] = None
-        print(request.data)
-        request.PUT._mutable = False
-    except:
-        # form
-        pass
-    return request

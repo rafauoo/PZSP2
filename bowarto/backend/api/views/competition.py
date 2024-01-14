@@ -21,7 +21,7 @@ class CompetitionList(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    # @allow_admin
+    @allow_admin
     def post(self, request, *args, **kwargs):
         keys_to_remove = [key for key in request.data if
                           key in ('regulation.path', 'poster.path') and not
@@ -48,7 +48,7 @@ class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin
     def put(self, request, *args, **kwargs):
         keys_to_remove = [key for key in request.data if
                           key in ('regulation.path', 'poster.path') and not
@@ -65,10 +65,10 @@ class CompetitionDetail(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return super().put(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin
     def patch(self, request, *args, **kwargs):
         return super().patch(request, *args, **kwargs)
 
-    @allow_any
+    @allow_admin
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
