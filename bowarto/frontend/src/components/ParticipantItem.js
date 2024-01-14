@@ -3,18 +3,7 @@ import React, {useState} from 'react';
 import EditParticipantModal from './EditParticipantModal';
 import AttachmentModal from './AttachmentModal';
 import AttachmentDisplay from "./AttachmentDisplay";
-import {buttonStyleDelete, buttonStyleEdit, buttonStyleAttach, iconButtonStyle} from "../styles/styles.js";
-
-const tableRowStyle = {
-  borderBottom: '1px solid #ddd',
-  padding: '8px',
-};
-
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: '10px',
-};
+import {tableRowStyle, buttonStyleDelete, buttonStyleEdit, buttonStyleAttach, iconButtonStyle, buttonContainerStyle} from "../styles/styles.js";
 
 function ParticipantItem({
                            participant,

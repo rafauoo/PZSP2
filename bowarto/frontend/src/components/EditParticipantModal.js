@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { buttonSaveChanges } from '../styles/styles';
 
 function EditParticipantModal({
                                 show,
@@ -73,7 +74,7 @@ function EditParticipantModal({
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Email:
+              E-mail:
             </label>
             <input
               type="email"
@@ -90,7 +91,7 @@ function EditParticipantModal({
         <Button variant="secondary" onClick={handleClose}>
           Zamknij
         </Button>
-        <Button variant="primary" onClick={handleEditParticipant}>
+        <Button style={buttonSaveChanges} onClick={handleEditParticipant}>
           Zapisz zmiany
         </Button>
       </Modal.Footer>
