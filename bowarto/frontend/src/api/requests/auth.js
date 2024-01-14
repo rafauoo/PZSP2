@@ -1,5 +1,5 @@
 import {apiRequest} from "./base";
-import {loginUrl, meUrl, refreshUrl, registerUrl} from "../urls";
+import {loginUrl, logoutUrl, meUrl, refreshUrl, registerUrl} from "../urls";
 
 export const refreshAccessToken = async (refreshToken) => {
   try {
@@ -37,7 +37,7 @@ export const loginUser = async (credentials) => {
 
 export const logoutUser = async (refreshToken) => {
   try {
-    await apiRequest(loginUrl, {
+    await apiRequest(logoutUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
