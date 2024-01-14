@@ -10,6 +10,7 @@ from .views.file import FileList, FileDetail
 from .views.index import index
 from .views.participant import ParticipantList, ParticipantDetail
 from .views.school import SchoolList, SchoolDetail
+from .views.stats import StatsView
 from .views.user import UserList, UserDetail
 from .views.pending_approval import PendingApprovalList, PendingApprovalDetail, \
     ApproveApprovalView, RejectApprovalView
@@ -51,6 +52,8 @@ urlpatterns = [
 
     path('users/', UserList.as_view(), name="user-list"),
     path('users/<int:id>/', UserDetail.as_view(), name="user-detail"),
+
+    path('stats/', StatsView.as_view(), name="stats"),
 
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('refresh/', TokenRefreshView.as_view(), name='refresh'),
