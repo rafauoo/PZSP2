@@ -12,6 +12,8 @@ import RegisterParticipantTable from "./pages/RegisterParicipant"
 import CreateCompetition from "./pages/CreateCompetition";
 import UserPanel from "./pages/UserPanel/UserPanel";
 import UserProfile from "./pages/UserProfile";
+import AdminPanel from "./pages/AdminPanel/AdminPanel";
+import PendingApprovals from "./pages/PendingApprovals";
 
 
 class App extends Component {
@@ -23,16 +25,17 @@ class App extends Component {
           <Router>
             <Routes>
               <Route exact path="/" element={<Konkursy/>}></Route>
-              <Route exact path="/createCompetition"
+              <Route exact path="/create_competition"
                      element={<CreateCompetition/>}></Route>
               <Route exact path="/register" element={<Register/>}></Route>
               <Route exact path="/login" element={<Login/>}></Route>
               <Route exact path="/user_panel" element={<UserPanel/>}></Route>
-              <Route exact path="/participants"
-                     element={<ParticipantsTable/>}></Route>
-              <Route exact path="/registerParticipant"
+              <Route exact path="/admin_panel" element={<AdminPanel/>}></Route>
+              <Route exact path="/register_participant"
                      element={<RegisterParticipantTable/>}></Route>
               <Route exact path="/profile" element={<UserProfile/>}></Route>
+              <Route exact path="/pending_approvals"
+                     element={<PendingApprovals/>}/>
             </Routes>
           </Router>
         </main>

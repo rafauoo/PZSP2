@@ -56,7 +56,7 @@ const Konkursy = () => {
         const otherCompetitions = competitions
           .filter((competition) => new Date(competition.end_at) <= now)
           .sort((a, b) => new Date(a.end_at) - new Date(b.end_at));
-        
+
         setComingCompetitions(comingCompetitions);
         setOngoingCompetitions(ongoingCompetitions);
         setOtherCompetitions(otherCompetitions);
@@ -198,6 +198,12 @@ const Konkursy = () => {
         ))}
         </tbody>
       </Table>
+      <AddParticipantModal
+        competitionId={selectedCompetitionId}
+        show={showAddParticipantModal}
+        handleClose={handleCloseAddParticipantModal}
+        onAddParticipant={handleAddParticipant}
+      />
     </div>
   );
 };

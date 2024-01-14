@@ -1,6 +1,7 @@
 async function logout() {
   const updateSession = () => {
     sessionStorage.removeItem('access');
+    sessionStorage.removeItem('refresh');
     sessionStorage.removeItem('role');
     window.location.href = '/'
     alert("Wylogowano")
