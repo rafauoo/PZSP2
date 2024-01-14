@@ -13,7 +13,7 @@ import CreateCompetition from "./pages/CreateCompetition";
 import UserPanel from "./pages/UserPanel/UserPanel";
 import UserProfile from "./pages/UserProfile";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
-import PendingApprovals from "./pages/PendingApprovals";
+import PendingApprovals from "./pages/PendingApprovals/PendingApprovals";
 
 
 class App extends Component {
