@@ -1,38 +1,47 @@
 import React, { Component } from 'react';
-import refreshAccessToken from "../requests/refresh";
 import AddSchoolModal from '../components/AddSchoolModal';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/esm/FormGroup';
+import { editUser } from '../api/requests/user';
+import { getSchoolList, createSchool } from '../api/requests/school';
+import { createPendingApproval } from '../api/requests/pendingApproval';
+import { getMe, refreshAccessToken } from '../api/requests/auth';
 import { buttonStyle, buttonStyled, buttonSubmit } from '../styles/styles';
+
 
 class UserProfile extends Component {
     constructor(props) {
       super(props);
       this.state = {
         userInfo: null,
+        oldPendingSchool: null,
+        pendingSchool: null, 
         schools: [],
         showPopup: false
       };
     }
 
-    async fetchData(url) {
-      await refreshAccessToken();
-      const token = sessionStorage.getItem('access');
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-      return await response.json();
+    async refreshAcccess() {
+      const accessToken = await refreshAccessToken(sessionStorage.getItem('refresh'));
+      sessionStorage.setItem('access', accessToken);
     }
 
     async componentDidMount() {
-      const dataUser = await this.fetchData('http://20.108.53.69/api/me/');
-      this.setState({ userInfo: dataUser });
+      await this.refreshAcccess();
+      getMe()
+      .then(data => {
+        this.setState({ 
+          userInfo: data, 
+          oldPendingSchool: data.school, 
+          pendingSchool: data.school 
+        });
+      });
 
-      const dataSchools = await this.fetchData('http://20.108.53.69/api/schools/');
-      this.setState({ schools: dataSchools });
+      await this.refreshAcccess();
+      getSchoolList()
+      .then(data => {
+        this.setState({ schools: data });
+      });
     }
 
     togglePopup = () => {
@@ -46,31 +55,22 @@ class UserProfile extends Component {
     };
 
     onAddSchool = async (newSchool) => {
-      await refreshAccessToken();
-      const token = sessionStorage.getItem('access');
-      const responseSchool = await fetch('http://20.108.53.69/api/schools/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(newSchool),
+      await this.refreshAcccess();
+      createSchool(newSchool).then(_ => {
+        // const updatedUser = {
+        //   ...this.state.userInfo,
+        //   school: data.id,
+        // }; 
+        // this.setState({ userInfo: updatedUser });
+
+        getSchoolList()
+        .then(data => {
+          this.setState({ schools: data });
+        });
       });
-
-      if(responseSchool.ok) {
-        const newSchool = await responseSchool.json();
-        const updatedUser = {
-          ...this.state.userInfo,
-          school: newSchool.id,
-        };
-        this.setState({ userInfo: updatedUser });
-
-        const dataSchools = await this.fetchData('http://20.108.53.69/api/schools/');
-        this.setState({ schools: dataSchools });
-      }
     }
 
-    handleChange = (event) => {
+    handleChangeDefault = (event) => {
       const { id, value } = event.target;
   
       this.setState({
@@ -81,28 +81,37 @@ class UserProfile extends Component {
       });
     }
 
+    handleSchoolChange = (event) => {
+      const { value } = event.target;
+  
+      this.setState({
+        pendingSchool: value,
+      });
+    }
+
     handleSubmit = async (event) => {
       event.preventDefault();
 
       console.log("Form submitted");
 
-      const {userInfo} = this.state;
+      const {userInfo, oldPendingSchool, pendingSchool} = this.state;
 
-      await refreshAccessToken();
-      const token = sessionStorage.getItem('access');
-      const responseSchool = await fetch(`http://20.108.53.69/api/users/${this.state.userInfo.id}/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(userInfo),
-      });
-      if (responseSchool.ok) {
-        console.log(await responseSchool.json());
+      await this.refreshAcccess();
+      editUser(userInfo.id, userInfo).then(data => {
+        console.log(data);
         window.alert('Dane zostały pomyślnie zaktualizowane!');
-      } else {
-        console.log('Failed to update user data');
+      });
+
+      if(oldPendingSchool !== pendingSchool) {
+        const pendingApproval = {
+          user: userInfo.id,
+          school: pendingSchool
+        };
+        await this.refreshAcccess();
+        createPendingApproval(pendingApproval).then(data => {
+          console.log(data);
+          window.alert('Wysłano prośbę o zmianę szkoły!');
+        });
       }
     }
   
@@ -115,7 +124,9 @@ class UserProfile extends Component {
 
       const { first_name, last_name, email } = userInfo;
       const schoolID = userInfo.school;
-
+      
+      // selected={school.id === schoolID}
+      // selected={schoolID == null}
       return (
         <>
           <br></br>
@@ -127,20 +138,21 @@ class UserProfile extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormGroup className="mb-3">
                 <Form.Label>Imię</Form.Label>
-                <Form.Control type="text" id='first_name' defaultValue={`${first_name}`} onChange={this.handleChange}/>
+                <Form.Control type="text" id='first_name' defaultValue={`${first_name}`} onChange={this.handleChangeDefault}/>
   
                 <Form.Label>Nazwisko</Form.Label>
-                <Form.Control type="text" id='last_name' defaultValue={`${last_name}`} onChange={this.handleChange}/>
+                <Form.Control type="text" id='last_name' defaultValue={`${last_name}`} onChange={this.handleChangeDefault}/>
   
-                <Form.Label>E-mail</Form.Label>
-                <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChange}/>
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChangeDefault}/>
+
   
                 <Form.Label>Szkoła</Form.Label>
                 <div className="d-flex">
-                  <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleChange}>
-                    <option value="" disabled hidden selected={schoolID == null}></option>
+                  <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleSchoolChange}>
+                    <option key={null} value={null}>Brak</option>
                     {schools.map((school) => (
-                      <option key={school.id} value={school.id} selected={school.id === schoolID}>
+                      <option key={school.id} value={school.id}> 
                         {school.name}, {school.postcode} {school.city}
                       </option>
                     ))}

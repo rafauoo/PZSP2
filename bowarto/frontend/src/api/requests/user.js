@@ -1,5 +1,5 @@
 import {apiRequest} from "./base";
-import {usersUrl} from "../urls";
+import {usersUrl, meUrl} from "../urls";
 
 export const getUserList = async () => {
   try {
