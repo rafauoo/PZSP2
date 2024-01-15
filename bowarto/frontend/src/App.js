@@ -14,6 +14,7 @@ import UserPanel from "./pages/UserPanel/UserPanel";
 import UserProfile from "./pages/UserProfile";
 import AdminPanel from "./pages/AdminPanel/AdminPanel";
 import PendingApprovals from "./pages/PendingApprovals/PendingApprovals";
+import Stats from "./pages/Stats";
 
 
 class App extends Component {
@@ -36,6 +37,7 @@ class App extends Component {
               <Route exact path="/profile" element={<UserProfile/>}></Route>
               <Route exact path="/pending_approvals"
                      element={<PendingApprovals/>}/>
+              <Route exact path="/stats" element={<Stats/>}></Route>
             </Routes>
           </Router>
         </main>
