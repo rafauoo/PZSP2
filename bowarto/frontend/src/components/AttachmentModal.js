@@ -19,11 +19,12 @@ function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
     return newAttachment && newAttachment.size <= 10 * 1024 * 1024;
   };
 
-  const handleCloseModal = async () => {
-    setErrorMessage('')
-    setNewAttachment(null)
-    handleClose()
-  }
+  const handleCloseModal = () => {
+    setErrorMessage('');
+    setNewAttachment(null);
+    handleClose();
+  };
+
   const handleUploadClick = async () => {
     if (isFileValid()) {
       onAddAttachment(participantId, newAttachment);
@@ -37,14 +38,18 @@ function AttachmentModal({show, handleClose, onAddAttachment, participantId}) {
       } else if (newAttachment.size > 10 * 1024 * 1024) {
         setErrorMessage('Przekroczono limit przesyłania załącznika. Wybierz mniejszy plik.');
       }
-
-      // Uncomment the line below to log additional error information
-      // console.error('Invalid file. Please select a file less than or equal to 10MB.');
     }
   };
 
+  // Clear selected file on modal close
+  const handleModalClose = () => {
+    setErrorMessage('');
+    setNewAttachment(null);
+    handleClose();
+  };
+
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleModalClose}>
       <Modal.Header closeButton>
         <Modal.Title>Załącz pracę</Modal.Title>
       </Modal.Header>
