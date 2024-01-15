@@ -2,7 +2,7 @@ import 'chart.js/auto';
 import React, {useEffect, useState} from "react";
 import {getStats} from "../api/requests/stats";
 import refreshAccessToken from "../requests/refresh";
-import {Doughnut} from "react-chartjs-2";
+import {Bar, Doughnut} from "react-chartjs-2";
 import {Chart, ArcElement} from 'chart.js'
 
 Chart.register(ArcElement);
@@ -87,7 +87,7 @@ const Stats = () => {
   };
 
   const userChartData = {
-    labels: ["Zwykli użytkownicy", "Uczniowie"],
+    labels: ["Zwykli użytkownicy", "Nauczyciele"],
     datasets: [
       {
         data: [stats.users_count - stats.school_user_count, stats.school_user_count],
@@ -96,12 +96,69 @@ const Stats = () => {
     ],
   };
 
+  const competitionParticipants = stats.competition_participants || {};
+  const competitionParticipantsData = {
+    labels: Object.values(competitionParticipants).map(competition => competition.title),
+    datasets: [
+      {
+        label: 'Liczba uczestników',
+        data: Object.values(competitionParticipants).map(competition => competition.participants_count),
+        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+      },
+    ],
+  };
+  const competitionParticipantsOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Konkursy',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Liczba uczestników',
+        },
+        min: 0,
+      },
+    },
+  };
+  const userParticipants = stats.user_participants || {};
+  const userParticipantsData = {
+    labels: Object.values(userParticipants).map(user => user.user),
+    datasets: [
+      {
+        label: 'Liczba uczestnictw',
+        data: Object.values(userParticipants).map(user => user.participants_count),
+        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+      },
+    ],
+  };
+  const userParticipantsOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Użytkownicy',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Liczba uczestnictw',
+        },
+        min: 0,
+      },
+    },
+  };
   return (
     <div style={styles.statsContainer}>
       {loading ? (
         LOADING_MESSAGE
       ) : (
-        <div style={styles.statsGrid}>
+        <div
+          style={{...styles.statsGrid, gridTemplateColumns: "repeat(3, 1fr)"}}>
           <div style={styles.gridItem}>
             <h2>Statystyki</h2>
             <p>Zgłoszonych uczestników: {stats.participants_count}</p>
@@ -125,6 +182,21 @@ const Stats = () => {
                 ...options,
                 plugins: {legend: {display: false}}
               }}/>
+            </div>
+          </div>
+          {/* Dodaj nowy grid item na wykres słupkowy */}
+          <div style={{...styles.gridItem, gridColumn: 'span 3'}}>
+            <h2>Popularnosć konkursów</h2>
+            <div style={styles.chartContainer}>
+              <Bar data={competitionParticipantsData}
+                   options={competitionParticipantsOptions}/>
+            </div>
+          </div>
+          <div style={{...styles.gridItem, gridColumn: 'span 3'}}>
+            <h2>Aktywność użytkownikow</h2>
+            <div style={styles.chartContainer}>
+              <Bar data={userParticipantsData}
+                   options={userParticipantsOptions}/>
             </div>
           </div>
         </div>
