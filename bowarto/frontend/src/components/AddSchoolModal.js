@@ -41,7 +41,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
         <form>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
-              Nazwa szkoły:
+              Nazwa szkoły<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -50,11 +50,12 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="name"
               value={newSchool.name}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
             <label htmlFor="phone_number" className="form-label">
-              Numer telefonu:
+              Numer telefonu<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -63,6 +64,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="phone_number"
               value={newSchool.phone_number}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
@@ -80,7 +82,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Adres e-mail:
+              Adres e-mail<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="email"
@@ -89,6 +91,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="email"
               value={newSchool.email}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
@@ -106,7 +109,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
           </div>
           <div className="mb-3">
             <label htmlFor="city" className="form-label">
-              Miasto:
+              Miasto<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -115,11 +118,12 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="city"
               value={newSchool.city}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
             <label htmlFor="street" className="form-label">
-              Ulica:
+              Ulica<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -128,11 +132,12 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="street"
               value={newSchool.street}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
             <label htmlFor="building_number" className="form-label">
-              Numer budynku:
+              Numer budynku<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -141,6 +146,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="building_number"
               value={newSchool.building_number}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
@@ -158,7 +164,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
           </div>
           <div className="mb-3">
             <label htmlFor="postcode" className="form-label">
-              Kod pocztowy:
+              Kod pocztowy<span style={{ color: 'red' }}>*</span>:
             </label>
             <input
               type="text"
@@ -167,6 +173,7 @@ function AddSchoolModal({show, handleClose, onAddSchool}) {
               name="postcode"
               value={newSchool.postcode}
               onChange={handleInputChange}
+              required
             />
           </div>
         </form>

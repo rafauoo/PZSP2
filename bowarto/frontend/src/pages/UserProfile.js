@@ -14,7 +14,6 @@ class UserProfile extends Component {
       super(props);
       this.state = {
         userInfo: null,
-        oldPendingSchool: null,
         pendingSchool: null, 
         schools: [],
         showPopup: false
@@ -28,18 +27,17 @@ class UserProfile extends Component {
 
     async componentDidMount() {
       await this.refreshAcccess();
-      getMe()
+      await getMe()
       .then(data => {
         this.setState({ 
-          userInfo: data, 
-          oldPendingSchool: data.school, 
+          userInfo: data,
           pendingSchool: data.school 
         });
       })
       .catch(_ => {});
 
       await this.refreshAcccess();
-      getSchoolList()
+      await getSchoolList()
       .then(data => {
         this.setState({ schools: data });
       })
@@ -58,12 +56,13 @@ class UserProfile extends Component {
 
     onAddSchool = async (newSchool) => {
       await this.refreshAcccess();
-      createSchool(newSchool).then(_ => {
-        getSchoolList()
-        .then(data => {
-          this.setState({ schools: data });
-        })
-        .catch(_ => {});
+      await createSchool(newSchool).then(data => {
+        window.alert('Pomyślnie dodano szkołę!');
+        this.setState({ pendingSchool: data.id }, () => {
+          getSchoolList().then(data => {
+            this.setState({ schools: data });
+          }).catch(_ => {});
+        });
       })
       .catch(_ => {
         window.alert('Szkoła nie została dodana!');
@@ -89,16 +88,15 @@ class UserProfile extends Component {
       });
     }
 
-    handleSubmit = async (event) => {
+    handleUserSubmit = async (event) => {
       event.preventDefault();
 
-      console.log("Form submitted");
+      console.log("Changing user data...");
 
-      const {userInfo, oldPendingSchool, pendingSchool} = this.state;
+      const {userInfo} = this.state;
 
       await this.refreshAcccess();
-      editUser(userInfo.id, userInfo).then(data => {
-        console.log(data);
+      await editUser(userInfo.id, userInfo).then(_ => {
         window.alert('Dane zostały pomyślnie zaktualizowane!');
       })
       .catch(error => {
@@ -108,83 +106,104 @@ class UserProfile extends Component {
           window.alert('Edycja użytkownika nie powiodła się. Spróbuj ponownie.');
         }
       });
+    }
 
-      if(oldPendingSchool !== pendingSchool) {
-        const pendingApproval = {
-          user: userInfo.id,
-          school: pendingSchool
-        };
-        await this.refreshAcccess();
-        createPendingApproval(pendingApproval).then(data => {
-          console.log(data);
-          window.alert('Wysłano prośbę o zmianę szkoły!');
-        })
-        .catch(_ => {
+    handleSchoolSubmit = async (event) => {
+      event.preventDefault();
+
+      console.log("Changing user school...");
+
+      const {userInfo, pendingSchool} = this.state;
+
+      const pendingApproval = {
+        user: userInfo.id,
+        school: pendingSchool
+      };
+      await this.refreshAcccess();
+      await  createPendingApproval(pendingApproval).then(_ => {
+        window.alert('Wysłano prośbę o zmianę szkoły!');
+        window.location.reload();
+      })
+      .catch(error => {
+        if(error.message && error.message.includes('400')) {
+          window.alert('Już jest rozpatrywana jedna proźba o zmianę szkoły!');
+        } else {
           window.alert('Wysłanie prośby o zmianę szkoły nie powiodło się!');
-        });
-      }
+        }
+      });
     }
   
     render() {
-      const { userInfo, schools, showPopup } = this.state;
+      const { userInfo, schools, pendingSchool, showPopup } = this.state;
 
       if (!userInfo) {
         return <div>Ładowanie...</div>;
       }
 
       const { first_name, last_name, email } = userInfo;
-      const schoolID = userInfo.school;
 
       return (
         <>
-          <br></br>
+          <br />
           <div className="d-flex justify-content-center">
             <h1>Profil użytkownika</h1>
           </div>
-          <br></br>
-          <div className="d-flex justify-content-center vh-100">
-            <Form onSubmit={this.handleSubmit}>
-              <FormGroup className="mb-3">
-                <Form.Label>Imię</Form.Label>
-                <Form.Control type="text" id='first_name' defaultValue={`${first_name}`} onChange={this.handleChangeDefault}/>
-  
-                <Form.Label>Nazwisko</Form.Label>
-                <Form.Control type="text" id='last_name' defaultValue={`${last_name}`} onChange={this.handleChangeDefault}/>
-  
-                <Form.Label>Email</Form.Label>
-                <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChangeDefault}/>
-
-  
-                <Form.Label>Szkoła</Form.Label>
-                <div className="d-flex">
-                  <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleSchoolChange}>
-                    <option key={null} value={null} hidden>Brak</option>
-                    {schools.map((school) => (
-                      <option key={school.id} value={school.id}> 
-                        {school.name}, {school.postcode} {school.city}
-                      </option>
-                    ))}
-                  </Form.Select>
-                  <button style={buttonStyled} type="button" onClick={this.togglePopup}>
-                    inna...
-                  </button>
-                  {showPopup && (
-                    <AddSchoolModal
-                      show={showPopup}
-                      handleClose={this.closePopup}
-                      onAddSchool={this.onAddSchool}
-                    />
-                  )}
-                </div>
-                <div className="d-flex justify-content-center">
-                  <button style={buttonSubmit} type="submit">
+          <br />
+          <div className="d-flex flex-column align-items-center vh-100">
+            <div>
+              <Form onSubmit={this.handleUserSubmit}>
+                <FormGroup className="mb-3">
+                  <Form.Label>Imię</Form.Label>
+                  <Form.Control type="text" id='first_name' defaultValue={`${first_name}`} onChange={this.handleChangeDefault}/>
+        
+                  <Form.Label>Nazwisko</Form.Label>
+                  <Form.Control type="text" id='last_name' defaultValue={`${last_name}`} onChange={this.handleChangeDefault}/>
+        
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChangeDefault}/>
+        
+                  <div className="d-flex justify-content-center">
+                    <button style={buttonSubmit} type="submit">
                       Zapisz zmiany
-                  </button>
-                </div>
-              </FormGroup>
-            </Form>
+                    </button>
+                  </div>
+                </FormGroup>
+              </Form>
+            </div>
+            <div>
+              <Form onSubmit={this.handleSchoolSubmit}>
+                <FormGroup className="mb-3">
+                  <Form.Label>Szkoła</Form.Label>
+                  <div className="d-flex">
+                    <Form.Select aria-label="Szkoła" id='school' onChange={this.handleSchoolChange}>
+                      <option key={null} value={null} hidden selected={pendingSchool == null}>Brak</option>
+                      {schools.map((school) => (
+                        <option key={school.id} value={school.id} selected={pendingSchool === school.id}> 
+                          {school.name}, {school.postcode} {school.city}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    <button style={buttonStyled} type="button" onClick={this.togglePopup}>
+                      inna...
+                    </button>
+                    {showPopup && (
+                      <AddSchoolModal
+                        show={showPopup}
+                        handleClose={this.closePopup}
+                        onAddSchool={this.onAddSchool}
+                      />
+                    )}
+                  </div>
+                  <div className="d-flex justify-content-center">
+                    <button style={buttonSubmit} type="submit">
+                      Zmień szkołę
+                    </button>
+                  </div>
+                </FormGroup>
+              </Form>
+            </div>
           </div>
-          </>
+        </>
       );
     }
 }

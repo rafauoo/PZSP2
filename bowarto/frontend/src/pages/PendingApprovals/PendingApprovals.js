@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {getPendingApprovalList} from "../../api/requests/pendingApproval";
-import {getApplicationList} from "../../api/requests/application";
+import refreshAccessToken from "../../requests/refresh";
 import {getUserByID} from "../../api/requests/user";
-import CompetitionsTable from "../AdminPanel/components/CompetitionsTable";
 import MessageModal from "../../components/MessageModal";
 import {getSchoolByID} from "../../api/requests/school";
-import refreshAccessToken from "../../requests/refresh";
-
+import PendingApprovalsTable from "./components/PendingApprovalsTable";
 const LOADING_MESSAGE = "Trwa ładowanie...";
 
 const PendingApprovals = () => {
@@ -49,7 +47,7 @@ const PendingApprovals = () => {
         ) : (
           <>
             {pendingApprovals.length !== 0 ? (
-              <p>Tu będą pending approvals</p>
+              <PendingApprovalsTable approvals={pendingApprovals} />
             ) : (
               <>
                 <br></br>
@@ -59,7 +57,6 @@ const PendingApprovals = () => {
             )}
           </>
         )}
-
         <MessageModal
           show={showMessageModal}
           onClose={() => {
@@ -70,7 +67,7 @@ const PendingApprovals = () => {
         />
       </div>
     </>
-  )
+  );
 }
 
 export default PendingApprovals;
