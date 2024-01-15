@@ -164,7 +164,7 @@ const Stats = () => {
             <p>Zgłoszonych uczestników: {stats.participants_count}</p>
             <p>Złożonych aplikacji: {stats.applications_count}</p>
             <p>Przesłanych prac: {stats.attachments_count}</p>
-            <p>Oczekujących zatwierdzeń: TU BĘDĄ PENDING</p>
+            <p>Oczekujących zatwierdzeń: {stats.approvals_count}</p>
           </div>
           <div style={styles.gridItem}>
             <h2>Konkursy</h2>
