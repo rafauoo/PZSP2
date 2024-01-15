@@ -6,7 +6,7 @@ import {
   deleteParticipantAndCheckApplication,
   submitForm
 } from "../requests/user_panel";
-import { buttonContainerStyle, buttonStyleBasic, buttonStyleDelete, buttonStyleEdit, iconButtonStyle } from "../styles/styles";
+import { buttonContainerStyle, buttonContainerStyleParticipants, buttonStyleBasic, buttonStyleDelete, buttonStyleEdit, buttonStyledShow, buttonStyledShow1, iconButtonStyle } from "../styles/styles";
 
 
 function ApplicationRow({
@@ -39,11 +39,10 @@ function ApplicationRow({
         <td>
           <h2>{application.competition.title}</h2>
         </td>
-        <td></td>
-        <td style={buttonContainerStyle}>
-          <button style={buttonStyleBasic}
+        <td style={buttonContainerStyleParticipants}>
+          <button style={buttonStyledShow1}
             onClick={() => onToggleExpand(application.id)}>
-            <img src={require('../images/view.png')} alt="Widok" style={iconButtonStyle} />
+            <img src={require('../images/view-white.png')} alt="Widok" style={iconButtonStyle} />
             {expanded ? 'Ukryj' : 'Wyświetl'}
           </button>
           <button style={buttonStyleEdit}
