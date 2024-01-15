@@ -75,7 +75,7 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
   return (
     <Modal show={show} onHide={handleClose} >
       <Modal.Header closeButton>
-        <Modal.Title>Edycja Konkursu</Modal.Title>
+        <Modal.Title>Edycja konkursu</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form>
@@ -90,6 +90,7 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
               name="title"
               value={newCompetitionData.title}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="mb-3">
@@ -128,6 +129,9 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
           </div>
 
           <div className="mb-3">
+            <label htmlFor="title" className="form-label">
+                Kategoria:
+            </label>
             <Form.Select aria-label="Kategoria" name="type"
               value={newCompetitionData.type}
               onChange={handleInputChange}
@@ -159,6 +163,7 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
             <label htmlFor="email" className="form-label">
               Załącznik:
             </label>
+            <br></br>
             <input
               type="file"
               name="attachment"

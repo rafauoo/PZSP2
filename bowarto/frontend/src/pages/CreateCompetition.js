@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
@@ -6,7 +6,8 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import refreshAccessToken from "../requests/refresh";
-import { buttonSaveChanges } from "../styles/styles";
+import {buttonSaveChanges} from "../styles/styles";
+import MessageModal from '../components/MessageModal';
 
 class CreateCompetition extends Component {
   constructor(props) {
@@ -17,9 +18,12 @@ class CreateCompetition extends Component {
       endDate: "",
       category: "",
       description: "",
-      // agreement: false,
       competitionsTypes: [],
-      attachment: null // File attachment
+      poster: null,
+      regulation: null,
+      showModal: false,
+      modalTitle: "",
+      modalMessage: "",
     };
   }
 
@@ -36,6 +40,14 @@ class CreateCompetition extends Component {
         console.log("Error fetching data:", error);
       });
   }
+
+  openModal = (title, message) => {
+    this.setState({
+      showModal: true,
+      modalTitle: title,
+      modalMessage: message,
+    });
+  };
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -59,13 +71,20 @@ class CreateCompetition extends Component {
     })
   }
 
-  handleFileChange = (event) => {
+  handlePosterChange = (event) => {
     this.setState({
-      attachment: event.target.files[0]
+      poster: event.target.files[0]
+    });
+  }
+
+  handleRegulationChange = (event) => {
+    this.setState({
+      regulation: event.target.files[0]
     });
   }
 
   handleSubmit = async (event) => {
+    refreshAccessToken()
     event.preventDefault();
 
     // Create form data
@@ -75,9 +94,14 @@ class CreateCompetition extends Component {
     formData.append('type', this.state.category);
     formData.append('start_at', this.state.startDate.toISOString());
     formData.append('end_at', this.state.endDate.toISOString());
-    // WARNING: right now there is no attachment sent
+    if (this.state.poster) {
+      formData.append("poster.path", this.state.poster);
+    }
+    if (this.state.regulation) {
+      formData.append("regulation.path", this.state.regulation);
+    }
 
-    // console.log(formData)
+    console.log(formData)
     const token = sessionStorage.getItem('access');
     await refreshAccessToken();
 
@@ -98,13 +122,14 @@ class CreateCompetition extends Component {
           endDate: "",
           category: "",
           description: "",
-          // agreement: false,
           competitionsTypes: [],
-          attachment: null // File attachment
-
+          regulation: null,
+          poster: null
         });
+        this.openModal("Wiadomość", "Pomyślnie utworzono konkurs.");
       })
       .catch(error => {
+        this.openModal("Wiadomość", "Błąd! Konkurs nie został utworzony.");
         console.error('Error:', error);
       });
   }
@@ -114,11 +139,13 @@ class CreateCompetition extends Component {
 
       <div className="d-flex justify-content-center">
         <div style={{ width: '60%' }}>
-          <h1 className="text-left">Formularz Konkursowy</h1>
-          <div className="d-flex justify-content-start vh-100">
-            <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
+          <br></br>
+          <h1 className="text-left">Formularz konkursowy</h1>
 
+          <div className="d-flex justify-content-start vh-100">
+            <Form style={{width: '100%'}} onSubmit={this.handleSubmit}>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <br></br>
                 <Form.Label>Nazwa konkursu*</Form.Label>
                 <Form.Control
                   type="text"
@@ -128,7 +155,7 @@ class CreateCompetition extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
-
+                <br></br>
                 <div className="row">
                   <div className="col-md-6">
                     <Form.Label>Data rozpoczęcia*</Form.Label>
@@ -160,12 +187,12 @@ class CreateCompetition extends Component {
                     />
                   </div>
                 </div>
-
+                <br></br>
                 <Form.Label>Kategoria*</Form.Label>
                 <Form.Select aria-label="Kategoria" name="category"
-                  value={this.state.category}
-                  onChange={this.handleInputChange}
-                  required>
+                             value={this.state.category}
+                             onChange={this.handleInputChange}
+                             required>
                   <option value="Kategoria" disable selected hidden>Wybierz
                     kategorię
                   </option>
@@ -174,7 +201,7 @@ class CreateCompetition extends Component {
                   })}
                 </Form.Select>
 
-
+                <br></br>
                 <Form.Label>Opis konkursu*</Form.Label>
                 <Form.Control
                   as="textarea"
@@ -188,15 +215,15 @@ class CreateCompetition extends Component {
                   required
 
                 />
-
+                <br></br>
                 <div className="row">
                   <div className="col-md-6">
-                    <Form.Label>Dodaj regulamin (regulamin w formacie .pdf,
+                    <Form.Label>Dodaj regulamin* (regulamin w formacie .pdf,
                       .docx)</Form.Label>
                     <Form.Control
                       type="file"
-                      name="attachment"
-                      onChange={this.handleFileChange}
+                      name="regulation"
+                      onChange={this.handleRegulationChange}
                       required
                     />
                   </div>
@@ -206,21 +233,31 @@ class CreateCompetition extends Component {
                       .jpg)</Form.Label>
                     <Form.Control
                       type="file"
-                      name="attachment"
-                      onChange={this.handleFileChange}
+                      name="poster"
+                      onChange={this.handlePosterChange}
                     />
                   </div>
                 </div>
               </Form.Group>
-
+              <br></br>
               <div className="d-flex justify-content-left">
-                <Button style={buttonSaveChanges} type="submit">
+                <Button style={buttonSaveChanges} type="submit"
+                        disabled={!this.state.regulation}>
                   Stwórz konkurs
                 </Button>
               </div>
             </Form>
           </div>
         </div>
+        <MessageModal
+          title={this.state.modalTitle}
+          show={this.state.showModal}
+          onClose={() => {
+            this.setState({showModal: false})
+            window.location.href = '/';
+          }}
+          message={this.state.modalMessage}
+        />
       </div>
     );
   }
