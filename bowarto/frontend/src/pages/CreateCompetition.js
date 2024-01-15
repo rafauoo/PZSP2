@@ -7,6 +7,7 @@ import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import refreshAccessToken from "../requests/refresh";
 import {buttonSaveChanges} from "../styles/styles";
+import MessageModal from '../components/MessageModal';
 
 class CreateCompetition extends Component {
   constructor(props) {
@@ -20,6 +21,9 @@ class CreateCompetition extends Component {
       competitionsTypes: [],
       poster: null,
       regulation: null,
+      showModal: false,
+      modalTitle: "",
+      modalMessage: "",
     };
   }
 
@@ -36,6 +40,14 @@ class CreateCompetition extends Component {
         console.log("Error fetching data:", error);
       });
   }
+
+  openModal = (title, message) => {
+    this.setState({
+      showModal: true,
+      modalTitle: title,
+      modalMessage: message,
+    });
+  };
 
   handleInputChange = (event) => {
     const target = event.target;
@@ -109,10 +121,11 @@ class CreateCompetition extends Component {
           competitionsTypes: [],
           regulations: null,
           poster: null
-
         });
+        this.openModal("Wiadomość", "Pomyślnie utworzono konkurs.");
       })
       .catch(error => {
+        this.openModal("Wiadomość", "Błąd! Konkurs nie został utworzony.");
         console.error('Error:', error);
       });
   }
@@ -229,7 +242,12 @@ class CreateCompetition extends Component {
             </Form>
           </div>
         </div>
-
+        <MessageModal
+          title={this.state.modalTitle}
+          show={this.state.showModal}
+          onClose={() => this.setState({showModal: false})}
+          message={this.state.modalMessage}
+        />
       </div>
     );
   }
