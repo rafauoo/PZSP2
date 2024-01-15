@@ -2,28 +2,8 @@
 import React, {useState} from 'react';
 import EditParticipantModal from './EditParticipantModal';
 import AttachmentModal from './AttachmentModal';
-import Button from 'react-bootstrap/Button';
 import AttachmentDisplay from "./AttachmentDisplay";
-
-const tableRowStyle = {
-  borderBottom: '1px solid #ddd',
-  padding: '8px',
-};
-
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  gap: '10px',
-};
-
-const buttonStyle = {
-  backgroundColor: 'rgb(131, 203, 83)',
-  borderRadius: '5px',
-  color: 'black',
-  padding: '5px 10px',
-  border: 'none',
-  cursor: 'pointer',
-};
+import {tableRowStyle, buttonStyleDelete, buttonStyleEdit, buttonStyleAttach, iconButtonStyle, buttonContainerStyle} from "../styles/styles.js";
 
 function ParticipantItem({
                            participant,
@@ -75,15 +55,18 @@ function ParticipantItem({
         <td>
           <div style={buttonContainerStyle}>
             {!participant.attachment ? (
-              <button style={buttonStyle} onClick={handleShowAttachmentForm}>
+              <button style={buttonStyleAttach} onClick={handleShowAttachmentForm}>
+                <img src={require('../images/attach.png')} alt="Załącz" style={iconButtonStyle} />
                 Załącz pracę
               </button>
             ) : null}
-            <button style={buttonStyle} onClick={handleShowEditModal}>
+            <button style={buttonStyleEdit} onClick={handleShowEditModal}>
+              <img src={require('../images/edit.png')} alt="Edytuj" style={iconButtonStyle} />
               Edytuj
             </button>
-            <button style={buttonStyle}
+            <button style={buttonStyleDelete}
                     onClick={() => handleDelete(participant.id)}>
+              <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle}/>
               Usuń
             </button>
           </div>

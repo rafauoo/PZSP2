@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { buttonStyle } from '../styles/styles';
 
 function ErrorModal(props) {
   const [show, setShow] = useState(true);
@@ -15,17 +16,6 @@ function ErrorModal(props) {
     // handleClose()
     navigate('/' + props.link);
   };
-
-  const buttonStyle = {
-    backgroundColor: 'rgb(131, 203, 83)',
-    borderRadius: '5px',
-    color: 'black',
-    padding: '5px 10px',
-    border: 'none',
-    cursor: 'pointer',
-    margin: '5px'
-  };
-
 
   const token = sessionStorage.getItem('access');
   return (

@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {getMe, loginUser} from "../api/requests/auth";
+import { buttonSaveChanges, buttonStyle, buttonStyled, buttonSubmit } from '../styles/styles';
 
 function Login() {
   const [username, setUsername] = useState()
@@ -56,22 +57,13 @@ function Login() {
     navigate("/");
   };
 
-
-  const buttonStyle = {
-    backgroundColor: 'rgb(131, 203, 83)',
-    borderRadius: '5px',
-    color: 'black',
-    padding: '5px 10px',
-    border: 'none',
-    cursor: 'pointer',
-    margin: '5px'
-  };
-
   return (
     <>
+      <br></br>
       <div className="d-flex justify-content-center">
-        <h1>Witamy na platformie konkursowej BoWarto!</h1>
+        <h1>Witamy na platformie konkursowej fundacji BoWarto!</h1>
       </div>
+      <br></br>
       <div className="d-flex justify-content-center vh-100">
         <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -90,7 +82,7 @@ function Login() {
           <div className="d-flex justify-content-center">
 
             {/* NOTE: this console.log("ERROR") should be changed */}
-            <button style={buttonStyle} variant="success" type="submit">
+            <button style={buttonSubmit} variant="success" type="submit">
               {/* <Button variant="success" type="submit" onClick={loginError ? console.log("ERROR") : () => handleBack()}> */}
               Zaloguj
             </button>
