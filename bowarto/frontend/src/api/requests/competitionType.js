@@ -1,5 +1,5 @@
-import {competitionTypesUrl} from "../urls";
-import {apiRequest} from "./base";
+import { competitionTypesUrl } from "../urls";
+import { apiRequest } from "./base";
 
 export const getCompetitionTypes = async () => {
   try {

@@ -1,22 +1,8 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import refreshAccessToken from '../requests/refresh';
+import { iconButtonStyle, buttonStyleDelete, buttonStyleEdit, buttonContainerStyleAttachment } from '../styles/styles';
 
-
-const buttonStyle = {
-  backgroundColor: 'rgb(131, 203, 83)',
-  borderRadius: '5px',
-  color: 'black',
-  padding: '5px 10px',
-  border: 'none',
-  cursor: 'pointer',
-};
-
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '10px',
-};
 
 function AttachmentDisplay({attachment, participant, onDownload, onRemove}) {
   const handleDownloadFile = () => {
@@ -34,9 +20,15 @@ function AttachmentDisplay({attachment, participant, onDownload, onRemove}) {
   };
 
   return (
-    <div style={buttonContainerStyle}>
-      <button style={buttonStyle} onClick={handleDownloadFile}>Pobierz</button>
-      <button style={buttonStyle} onClick={handleRemoveAttachment}>Usuń</button>
+    <div style={buttonContainerStyleAttachment}>
+      <button style={buttonStyleEdit} onClick={handleDownloadFile}>
+        <img src={require('../images/download.png')} alt="Pobierz" style={iconButtonStyle}/>
+        Pobierz
+      </button>
+      <button style={buttonStyleDelete} onClick={handleRemoveAttachment}>
+        <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle}/>
+        Usuń
+      </button>
     </div>
   );
 }

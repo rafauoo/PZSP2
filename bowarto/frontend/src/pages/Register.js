@@ -4,16 +4,7 @@ import Form from 'react-bootstrap/Form';
 import refreshAccessToken from '../requests/refresh';
 import {fetchDataFromApi} from '../requests/user_panel';
 import {getSchoolList} from "../api/requests/school";
-
-const buttonStyle = {
-  backgroundColor: 'rgb(131, 203, 83)',
-  borderRadius: '5px',
-  color: 'black',
-  padding: '5px 10px',
-  border: 'none',
-  cursor: 'pointer',
-  margin: '5px'
-};
+import { buttonSaveChanges, buttonStyled, buttonSubmit } from '../styles/styles';
 
 function Register() {
   const [first_name, setFirstName] = useState()
@@ -68,9 +59,11 @@ function Register() {
 
   return (
     <>
+      <br></br>
       <div className="d-flex justify-content-center">
         <h1>Rejestracja użytkownika</h1>
       </div>
+      <br></br>
       <div className="d-flex justify-content-center vh-100">
         <Form style={{width: '50%'}} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -98,8 +91,8 @@ function Register() {
             <Form.Control type="text" placeholder="Podaj miasto" value={town}
                           onChange={(e) => setTown(e.target.value)}/>
 
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Podaj email" value={email}
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control type="email" placeholder="Podaj e-mail" value={email}
                           onChange={(e) => setEmail(e.target.value)}/>
 
           </Form.Group>
@@ -111,8 +104,8 @@ function Register() {
                           onChange={(e) => setPassword(e.target.value)}/>
           </Form.Group>
           <div className="d-flex justify-content-center">
-            <button style={buttonStyle} variant="success" type="submit">
-              Rejestruj
+            <button style={buttonSubmit} variant="success" type="submit">
+              Zarejestruj
             </button>
           </div>
         </Form>

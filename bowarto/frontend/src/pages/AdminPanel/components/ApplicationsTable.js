@@ -3,16 +3,17 @@ import ParticipantsTable from "./ParticipantsTable";
 import Table from "react-bootstrap/Table";
 import ParticipantsList from "../../../components/ParticipantsList";
 import ApplicationRow from "../../../components/ApplicationRow";
+import { innerTable } from "../../../styles/styles";
 
-const ApplicationsTable = ({applications}) => {
+const ApplicationsTable = ({ applications }) => {
   return (
-    <Table striped bordered hover>
+    <table style={innerTable}>
       <tbody>
-      {applications.map((application) => (
-        <ApplicationRow application={application}/>
-      ))};
+        {applications.map((application) => (
+          <ApplicationRow application={application} />
+        ))}
       </tbody>
-    </Table>
+    </table>
   )
 }
 

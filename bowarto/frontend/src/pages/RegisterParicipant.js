@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import refreshAccessToken from "../requests/refresh";
+import { buttonSaveChanges } from "../styles/styles";
 
 const RegisterParticipantTable = (competitionId) => {
   const [formData, setFormData] = useState({
@@ -104,16 +105,6 @@ const RegisterParticipantTable = (competitionId) => {
     }
   }
 
-  const buttonStyle = {
-    backgroundColor: 'rgb(131, 203, 83)',
-    borderRadius: '5px',
-    color: 'black',
-    padding: '5px 10px',
-    border: 'none',
-    cursor: 'pointer',
-    margin: '5px'
-  };
-
   return (
     <div className="d-flex justify-content-center">
       <div style={{width: '60%'}}>
@@ -128,6 +119,7 @@ const RegisterParticipantTable = (competitionId) => {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                required
               />
 
               <Form.Label>Nazwisko*</Form.Label>
@@ -137,15 +129,17 @@ const RegisterParticipantTable = (competitionId) => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                required
               />
 
               <Form.Label>E-mail*</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Podaj email"
+                placeholder="Podaj e-mail"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                required
               />
 
               <Form.Label>Numer telefonu*</Form.Label>
@@ -155,6 +149,7 @@ const RegisterParticipantTable = (competitionId) => {
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
+                required
               />
 
               <Form.Label>Dodaj załącznik (praca w formacie .pdf, .docx)</Form.Label>
@@ -171,11 +166,12 @@ const RegisterParticipantTable = (competitionId) => {
                 name="agreement"
                 checked={formData.agreement}
                 onChange={handleInputChange}
+                required
               />
             </Form.Group>
 
             <div className="d-flex justify-content-left">
-              <Button style={buttonStyle} type="submit">
+              <Button style={buttonSaveChanges} type="submit">
                 Weź udział
               </Button>
             </div>
