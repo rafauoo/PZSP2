@@ -5,7 +5,6 @@ import {getUserByID} from "../../api/requests/user";
 import MessageModal from "../../components/MessageModal";
 import {getSchoolByID} from "../../api/requests/school";
 import PendingApprovalsTable from "./components/PendingApprovalsTable";
-
 const LOADING_MESSAGE = "Trwa ładowanie...";
 
 const PendingApprovals = () => {
@@ -51,7 +50,9 @@ const PendingApprovals = () => {
               <PendingApprovalsTable approvals={pendingApprovals} />
             ) : (
               <>
+                <br></br>
                 <p>Wszystkie zgłoszenia do szkół zostały rozstrzygnięte.</p>
+                <br></br>
               </>
             )}
           </>

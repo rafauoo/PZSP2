@@ -4,7 +4,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.http import QueryDict
 from rest_framework.response import Response
-from ..models import PendingApproval
+from ..models import PendingApproval, School, User
 from ..permissions import allow_authenticated, allow_admin, allow_user
 from ..serializers.pending_approval import PendingApprovalSerializer
 
@@ -22,6 +22,9 @@ class PendingApprovalList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         request_data = request.data.copy()
         request_data['user'] = request.user.id
+        if PendingApproval.objects.filter(user=request.user).exists():
+            return Response({"message": "User already has pending approval"},
+                            status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.get_serializer(data=request_data)
         serializer.is_valid(raise_exception=True)
@@ -69,6 +72,8 @@ class RejectApprovalView(generics.DestroyAPIView):
     @allow_admin
     def destroy(self, request, *args, **kwargs):
         approval = self.get_object()
+        if not User.objects.filter(school=approval.school).exists():
+            approval.school.delete()
         approval.delete()
 
         return Response({'detail': 'Approval successfully rejected'},

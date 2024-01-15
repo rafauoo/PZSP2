@@ -131,15 +131,15 @@ export const handleEditParticipantLogic = async (participantId, editedData, prev
 export const handleAddAttachmentLogic = async (participantId, newAttachment, prevApplications) => {
   try {
     // Wywołaj funkcję do przesłania załącznika
-    const uploadedFile = await uploadAttachment(participantId, newAttachment);
-
+    const updatedParticipant = await uploadAttachment(participantId, newAttachment);
+    const uploadedFile = updatedParticipant.attachment;
     // Zaktualizuj applicationData, dodając nowy plik do odpowiedniego uczestnika
     const updatedApplications = prevApplications.map(application => {
       const updatedParticipants = application.participants.map(participant => {
         // Znajdź uczestnika o tym samym ID co przekazane participantId
         if (participant.id === participantId) {
           // Dodaj nowy plik do uczestnika (jeśli nie ma jeszcze przypisanego pliku)
-          const updatedFile = participant.attachment ? participant.attachment : uploadedFile.id;
+          const updatedFile = participant.attachment ? participant.attachment : uploadedFile;
           return {...participant, attachment: updatedFile};
         }
         return participant;
@@ -155,7 +155,6 @@ export const handleAddAttachmentLogic = async (participantId, newAttachment, pre
       messageText: 'Pomyślnie dodano załącznik.'
     };
   } catch (error) {
-    console.error('Error uploading attachment:', error);
     return {
       showMessageModal: true,
       messageText: 'Błąd podczas przesyłania załącznika.'
@@ -163,29 +162,34 @@ export const handleAddAttachmentLogic = async (participantId, newAttachment, pre
   }
 };
 
-export const removeFileFromParticipant = (participant, participantId) => {
-  if (participant.id === participantId) {
+export const removeFileFromParticipant = (participant, fileId) => {
+  if (participant.attachment && participant.attachment.id === fileId) {
+    console.log({...participant, attachment: null});
     return {...participant, attachment: null};
   }
   return participant;
 };
 
-export const removeFileFromApplications = (applications, participantId) => {
+export const removeFileFromApplications = (applications, fileId) => {
+  console.log('file', fileId)
   return applications.map(application => {
     const updatedParticipants = application.participants.map(participant => {
-      return removeFileFromParticipant(participant, participantId);
+
+      return removeFileFromParticipant(participant, fileId);
     });
     return {...application, participants: updatedParticipants};
   });
 };
 
-export const handleRemoveFileLogic = async (participantId, prevApplications) => {
+export const handleRemoveFileLogic = async (fileId, prevApplications) => {
   try {
     // Wywołaj funkcję do usunięcia załącznika
-    await deleteFile(participantId);
+
+    console.log(fileId, prevApplications)
+    await deleteFile(fileId);
 
     // Zaktualizuj applicationData, usuwając plik z odpowiedniego uczestnika
-    const updatedApplications = removeFileFromApplications(prevApplications, participantId);
+    const updatedApplications = removeFileFromApplications(prevApplications, fileId);
 
     return {
       updatedApplications,

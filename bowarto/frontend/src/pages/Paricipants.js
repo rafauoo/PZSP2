@@ -21,7 +21,6 @@ function ParticipantsTable() {
           <th>Imię</th>
           <th>Nazwisko</th>
           <th>E-mail</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>

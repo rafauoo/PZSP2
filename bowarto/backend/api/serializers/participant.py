@@ -14,7 +14,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
             'id', 'email', 'application', 'first_name', 'last_name',
             'attachment')
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data, *args, **kwargs):
         # Update Participant fields
         instance.email = validated_data.get('email', instance.email)
         instance.application = validated_data.get('application',
@@ -25,20 +25,21 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
         # TODO zrobić z tego funkcje
         attachment_data = validated_data.get('attachment', {})
-        if not attachment_data or not attachment_data.get('path'):
-            if instance.attachment:
-                instance.attachment.delete()
-                instance.attachment = None
-        else:
-            attachment_serializer = FileSerializer(instance.attachment,
-                                                   data=attachment_data,
-                                                   allow_null=True,
-                                                   required=False)
-            if attachment_serializer.is_valid():
+        if attachment_data:
+            if not attachment_data or not attachment_data.get('path'):
                 if instance.attachment:
                     instance.attachment.delete()
-                attachment_serializer.save()
-                instance.attachment = attachment_serializer.instance
+                    instance.attachment = None
+            else:
+                attachment_serializer = FileSerializer(instance.attachment,
+                                                       data=attachment_data,
+                                                       allow_null=True,
+                                                       required=False)
+                if attachment_serializer.is_valid():
+                    if instance.attachment:
+                        instance.attachment.delete()
+                    attachment_serializer.save()
+                    instance.attachment = attachment_serializer.instance
 
         instance.save()
         return instance

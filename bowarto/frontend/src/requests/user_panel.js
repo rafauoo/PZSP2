@@ -272,20 +272,20 @@ const saveFile = (data, filename) => {
   document.body.removeChild(link);
 };
 
-export const deleteFile = async (participantId) => {
+export const deleteFile = async (fileId) => {
   try {
     await refreshAccessToken();
     const token = sessionStorage.getItem('access');
 
-    const data = {"attachment": null}
-
-    const response = await fetch(`http://20.108.53.69/api/participants/${participantId}/`, {
-      method: 'PATCH',
+    // const data = {"attachment": null}
+    // const formData = new FormData();
+    // // formData.append('participant', participantId);
+    // formData.append('attachment', null);
+    const response = await fetch(`http://20.108.53.69/api/files/${fileId}/`, {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(data)
     });
 
     if (!response.ok) {
