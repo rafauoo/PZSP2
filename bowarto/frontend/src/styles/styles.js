@@ -110,3 +110,25 @@ export const centeredCellStyle = {
   textAlign: "center",
   verticalAlign: "middle",
 };
+
+export const titled = {
+  width: "500px",
+  textAlign: "left",
+  verticalAlign: "middle",
+  fontSize: "40px",
+};
+
+export const headerShowStyle = {
+  textAlign: "right",
+  verticalAlign: "middle",
+};
+
+export const buttonStyledShow = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  width: '70px',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+};

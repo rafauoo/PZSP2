@@ -9,21 +9,7 @@ import {
 } from "./UserPanel/UserPanelHelpers";
 import MessageModal from "../components/MessageModal";
 import Button from "react-bootstrap/Button";
-
-const buttonStyle = {
-  backgroundColor: "rgb(131, 203, 83)",
-  borderRadius: "5px",
-  color: "black",
-  padding: "5px 10px",
-  border: "none",
-  cursor: "pointer",
-  margin: "5px",
-};
-
-const centeredCellStyle = {
-  textAlign: "center",
-  verticalAlign: "middle",
-};
+import { buttonStyle, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, titled } from "../styles/styles";
 
 const formatDate = (dateString) => {
   const options = {day: "numeric", month: "numeric", year: "numeric"};
@@ -42,12 +28,12 @@ const CompetitionsTable = ({
       <thead>
       <tr>
         <th>
-          <h1>{title}</h1>
+          <h1 style={titled}>{title}</h1>
         </th>
         <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
         <th style={centeredCellStyle}>Data zakończenia konkursu</th>
-        <th style={centeredCellStyle}>
-          <button style={buttonStyle}
+        <th colSpan="3" style={headerShowStyle}>
+          <button style={buttonStyledShow}
                   onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
         </th>
       </tr>
@@ -72,6 +58,8 @@ const CompetitionsTable = ({
                   Regulamin
                 </Button>
               )}
+            </td>
+            <td style={centeredCellStyle}>
               {competition.poster && (
                 <Button
                   style={buttonStyle}
@@ -80,6 +68,8 @@ const CompetitionsTable = ({
                   Plakat
                 </Button>
               )}
+            </td>
+            <td style={centeredCellStyle}>
               {title === "Aktualne konkursy" && sessionStorage.getItem('role') === 'user' ? (
                 <Button
                   style={buttonStyle}
