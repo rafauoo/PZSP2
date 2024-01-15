@@ -4,7 +4,6 @@ import {schoolsUrl} from "../urls";
 export const getSchoolList = async () => {
   try {
     const accessToken = sessionStorage.getItem('access');
-
     return await apiRequest(schoolsUrl, {
       method: 'GET',
       headers: {
@@ -37,12 +36,12 @@ export const createSchool = async (schoolData) => {
 
 export const getSchoolByID = async (schoolID) => {
   try {
-    // TODO     const accessToken = sessionStorage.getItem('access');
+    const accessToken = sessionStorage.getItem('access');
     return await apiRequest(`${schoolsUrl}${schoolID}/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // TODO         'Authorization': `Bearer ${accessToken}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
     });
   } catch (error) {

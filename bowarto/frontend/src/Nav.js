@@ -31,6 +31,7 @@ function NavbarExample() {
             <Nav className="ml-auto">
               {role === 'admin' ? (
                 <>
+                  <Nav.Link href="/stats">Statystyki</Nav.Link>
                   <Nav.Link href="/pending_approvals">Oczekujące
                     zatwierdzenia</Nav.Link>
                   <Nav.Link href="/create_competition">Stwórz konkurs</Nav.Link>

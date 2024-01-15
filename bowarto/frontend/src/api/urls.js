@@ -13,3 +13,4 @@ export const logoutUrl = apiUrl + 'logout/';
 export const refreshUrl = apiUrl + 'refresh/';
 export const registerUrl = apiUrl + 'register/';
 export const meUrl = apiUrl + 'me/';
+export const statsUrl = apiUrl + 'stats/';

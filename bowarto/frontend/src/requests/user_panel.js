@@ -254,7 +254,10 @@ export const downloadFile = async (attachmentId) => {
 }
 
 const parseFilenameFromContentDisposition = (contentDisposition) => {
-  const match = /filename\*=utf-8''(.+)/.exec(contentDisposition);
+  console.log(contentDisposition)
+  const regex = /filename="(.*?)"/;
+  const match = regex.exec(contentDisposition);
+  console.log(match)
   return match ? decodeURIComponent(match[1]) : 'downloaded_file';
 };
 

@@ -57,28 +57,34 @@ export const handleDeleteApplicationLogic = async (applicationId, prevApplicatio
   }
 };
 
-export const handleAddParticipantLogic = async (competitionId, newParticipant, prevApplications) => {
+export const handleAddParticipantLogic = async (competitionId, newParticipant, prevApplications = null) => {
   try {
     // Call the submitForm function with formData and competitionId
     const createdParticipant = await submitForm(competitionId, newParticipant);
+    if (prevApplications) {
+      // Find the application to which the participant is added
+      const updatedApplications = prevApplications.map(application => {
+        if (application.competition.id === competitionId) {
+          // Add the created participant to the application
+          return {
+            ...application,
+            participants: [...application.participants, createdParticipant]
+          };
+        }
+        return application;
+      });
+      return {
+        updatedApplications,
+        showMessageModal: true,
+        messageText: 'Pomyślnie dodano uczestnika.'
+      };
+    } else {
+      return {
+        showMessageModal: true,
+        messageText: 'Pomyślnie dodano uczestnika.'
+      };
+    }
 
-    // Find the application to which the participant is added
-    const updatedApplications = prevApplications.map(application => {
-      if (application.competition.id === competitionId) {
-        // Add the created participant to the application
-        return {
-          ...application,
-          participants: [...application.participants, createdParticipant]
-        };
-      }
-      return application;
-    });
-
-    return {
-      updatedApplications,
-      showMessageModal: true,
-      messageText: 'Pomyślnie dodano uczestnika.'
-    };
   } catch (error) {
     console.error('Error adding participant:', error);
     return {
