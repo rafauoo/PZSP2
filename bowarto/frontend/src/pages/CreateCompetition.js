@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker';
 import axios from 'axios';
 import 'react-datepicker/dist/react-datepicker.css';
 import refreshAccessToken from "../requests/refresh";
-import { buttonSaveChanges } from "../styles/styles";
+import {buttonSaveChanges} from "../styles/styles";
 
 class CreateCompetition extends Component {
   constructor(props) {
@@ -17,9 +17,9 @@ class CreateCompetition extends Component {
       endDate: "",
       category: "",
       description: "",
-      // agreement: false,
       competitionsTypes: [],
-      attachment: null // File attachment
+      poster: null,
+      regulation: null,
     };
   }
 
@@ -59,13 +59,20 @@ class CreateCompetition extends Component {
     })
   }
 
-  handleFileChange = (event) => {
+  handlePosterChange = (event) => {
     this.setState({
-      attachment: event.target.files[0]
+      poster: event.target.files[0]
+    });
+  }
+
+  handleRegulationChange = (event) => {
+    this.setState({
+      regulation: event.target.files[0]
     });
   }
 
   handleSubmit = async (event) => {
+    refreshAccessToken()
     event.preventDefault();
 
     // Create form data
@@ -75,9 +82,10 @@ class CreateCompetition extends Component {
     formData.append('type', this.state.category);
     formData.append('start_at', this.state.startDate.toISOString());
     formData.append('end_at', this.state.endDate.toISOString());
-    // WARNING: right now there is no attachment sent
+    formData.append("poster.path", this.state.poster);
+    formData.append("regulation.path", this.state.regulation);
 
-    // console.log(formData)
+    console.log(formData)
     const token = sessionStorage.getItem('access');
     await refreshAccessToken();
 
@@ -98,9 +106,9 @@ class CreateCompetition extends Component {
           endDate: "",
           category: "",
           description: "",
-          // agreement: false,
           competitionsTypes: [],
-          attachment: null // File attachment
+          regulations: null,
+          poster: null
 
         });
       })
@@ -113,10 +121,10 @@ class CreateCompetition extends Component {
     return (
 
       <div className="d-flex justify-content-center">
-        <div style={{ width: '60%' }}>
+        <div style={{width: '60%'}}>
           <h1 className="text-left">Formularz Konkursowy</h1>
           <div className="d-flex justify-content-start vh-100">
-            <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
+            <Form style={{width: '100%'}} onSubmit={this.handleSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
 
                 <Form.Label>Nazwa konkursu*</Form.Label>
@@ -163,9 +171,9 @@ class CreateCompetition extends Component {
 
                 <Form.Label>Kategoria*</Form.Label>
                 <Form.Select aria-label="Kategoria" name="category"
-                  value={this.state.category}
-                  onChange={this.handleInputChange}
-                  required>
+                             value={this.state.category}
+                             onChange={this.handleInputChange}
+                             required>
                   <option value="Kategoria" disable selected hidden>Wybierz
                     kategorię
                   </option>
@@ -195,8 +203,8 @@ class CreateCompetition extends Component {
                       .docx)</Form.Label>
                     <Form.Control
                       type="file"
-                      name="attachment"
-                      onChange={this.handleFileChange}
+                      name="regulation"
+                      onChange={this.handleRegulationChange}
                       required
                     />
                   </div>
@@ -206,8 +214,8 @@ class CreateCompetition extends Component {
                       .jpg)</Form.Label>
                     <Form.Control
                       type="file"
-                      name="attachment"
-                      onChange={this.handleFileChange}
+                      name="poster"
+                      onChange={this.handlePosterChange}
                     />
                   </div>
                 </div>
@@ -221,6 +229,7 @@ class CreateCompetition extends Component {
             </Form>
           </div>
         </div>
+
       </div>
     );
   }
