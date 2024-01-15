@@ -4,7 +4,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from ..models import School
 from ..permissions import allow_admin, allow_admin_or_school_user, \
-    allow_authenticated, allow_any
+    allow_authenticated, allow_any, allow_admin_or_school_user_or_observer
 from ..serializers.school import SchoolSerializer
 
 
@@ -43,7 +43,7 @@ class SchoolDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
-    @allow_admin_or_school_user
+    @allow_admin_or_school_user_or_observer
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

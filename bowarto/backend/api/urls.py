@@ -41,7 +41,7 @@ urlpatterns = [
 
     path('approvals/', PendingApprovalList.as_view(), name="approval-list"),
     path('approvals/<int:id>/', PendingApprovalDetail.as_view(),
-         name='pending-approval-detail'),
+         name='approval-detail'),
     path('approvals/<int:id>/approve/', ApproveApprovalView.as_view(),
          name='approve-approval'),
     path('approvals/<int:id>/reject/', RejectApprovalView.as_view(),

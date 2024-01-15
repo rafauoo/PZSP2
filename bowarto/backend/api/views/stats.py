@@ -9,12 +9,12 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from ..models import Competition, User, Application, Participant, \
     PendingApproval, UserType
 from django.db.models import Count
-from ..permissions import allow_admin
+from ..permissions import allow_admin, allow_admin_or_observer
 
 
 @authentication_classes([JWTAuthentication])
 class StatsView(APIView):
-    @allow_admin
+    @allow_admin_or_observer
     def get(self, request, *args, **kwargs):
         current_date = datetime.now()
 

@@ -22,6 +22,7 @@ class CompetitionType(models.TextChoices):
 class UserType(models.TextChoices):
     ADMIN = 'admin', _('Admin')
     USER = 'user', _('User')
+    OBSERVER = 'observer', _('Observer')
 
     @classmethod
     def from_str(cls, value):
@@ -176,6 +177,10 @@ class User(AbstractBaseUser):
     @property
     def is_user(self):
         return self.user_type == UserType.USER.value
+
+    @property
+    def is_observer(self):
+        return self.user_type == UserType.OBSERVER.value
 
     def clean(self):
         super().clean()

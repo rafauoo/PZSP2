@@ -8,7 +8,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from ..models import Participant, Application
 from ..permissions import allow_authenticated, \
-    allow_admin_or_participant_creator, allow_any, allow_admin
+    allow_admin_or_participant_creator, allow_any, allow_admin, \
+    allow_admin_or_participant_creator_or_observer
 from ..serializers.file import FileSerializer
 from ..serializers.participant import ParticipantSerializer
 from django.shortcuts import get_object_or_404
@@ -25,7 +26,7 @@ class ParticipantList(generics.ListCreateAPIView):
     @allow_authenticated
     def get(self, request, *args, **kwargs):
         # return super().get(request, *args, **kwargs)
-        if request.user.is_admin:
+        if request.user.is_admin or request.user.is_observer:
             return super().get(request, *args, **kwargs)
         if request.user.is_user:
             return self._get_participants_created_by_user(request.user)
@@ -95,7 +96,7 @@ class ParticipantDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Participant.objects.all()
     serializer_class = ParticipantSerializer
 
-    @allow_admin_or_participant_creator
+    @allow_admin_or_participant_creator_or_observer
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

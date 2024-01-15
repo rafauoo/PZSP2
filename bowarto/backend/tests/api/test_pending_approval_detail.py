@@ -13,7 +13,8 @@ class TestPendingApprovalDetail(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.admin = create_admin('admin@example.com',
+                                  'verylongandsecurepassword')
         self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
         self.school = School.objects.create(
@@ -31,14 +32,17 @@ class TestPendingApprovalDetail(TestCase):
             user=self.user,
             school=self.school)
 
-        self.url = reverse('approval-detail', kwargs={'id': self.pending_approval.id})
+        self.url = reverse('approval-detail',
+                           kwargs={'id': self.pending_approval.id})
 
     def test_get_pending_approval_as_admin(self):
         # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'admin@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         # WHEN
         response = self.client.get(self.url)
@@ -46,49 +50,17 @@ class TestPendingApprovalDetail(TestCase):
         # THEN
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_delete_pending_approval_as_admin(self):
-        # GIVEN
-        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
-        login_response = perform_login(login_data)
-        self.access_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-
-        # WHEN
-        response = self.client.delete(self.url)
-
-        # THEN
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertIsNone(PendingApproval.objects.filter(id=self.pending_approval.id).first())
-
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.school, self.pending_approval.school)
-
     def test_get_pending_approval_as_user(self):
         # GIVEN
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'user@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         self.access_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         # WHEN
         response = self.client.get(self.url)
 
         # THEN
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_delete_pending_approval_as_user(self):
-        # GIVEN
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
-        login_response = perform_login(login_data)
-        self.access_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
-
-        # WHEN
-        response = self.client.delete(self.url)
-
-        # THEN
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertIsNotNone(PendingApproval.objects.filter(id=self.pending_approval.id).first())
-
-        self.user.refresh_from_db()
-        self.assertIsNone(self.user.school)

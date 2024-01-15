@@ -19,7 +19,7 @@ class FileList(generics.ListAPIView):
 
     @allow_authenticated
     def get(self, request, *args, **kwargs):
-        if request.user.is_admin:
+        if request.user.is_admin or request.user.is_observer:
             return super().get(request, *args, **kwargs)
         if request.user.is_user:
             return self.get_files_for_user(request)

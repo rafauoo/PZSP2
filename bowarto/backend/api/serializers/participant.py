@@ -31,6 +31,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
                     instance.attachment.delete()
                     instance.attachment = None
             else:
+
                 attachment_serializer = FileSerializer(instance.attachment,
                                                        data=attachment_data,
                                                        allow_null=True,
