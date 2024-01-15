@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {getPendingApprovalList} from "../../api/requests/pendingApproval";
-import {refreshAccessToken} from "../../api/requests/auth";
-import {getApplicationList} from "../../api/requests/application";
+import refreshAccessToken from "../../requests/refresh";
 import {getUserByID} from "../../api/requests/user";
-import CompetitionsTable from "../AdminPanel/components/CompetitionsTable";
 import MessageModal from "../../components/MessageModal";
 import {getSchoolByID} from "../../api/requests/school";
+import PendingApprovalsTable from "./components/PendingApprovalsTable";
 
 const LOADING_MESSAGE = "Trwa ładowanie...";
 
@@ -49,7 +48,7 @@ const PendingApprovals = () => {
         ) : (
           <>
             {pendingApprovals.length !== 0 ? (
-              <p>Tu będą pending approvals</p>
+              <PendingApprovalsTable approvals={pendingApprovals} />
             ) : (
               <>
                 <p>Wszystkie zgłoszenia do szkół zostały rozstrzygnięte.</p>
@@ -57,7 +56,6 @@ const PendingApprovals = () => {
             )}
           </>
         )}
-
         <MessageModal
           show={showMessageModal}
           onClose={() => {
@@ -68,7 +66,7 @@ const PendingApprovals = () => {
         />
       </div>
     </>
-  )
+  );
 }
 
 export default PendingApprovals;
