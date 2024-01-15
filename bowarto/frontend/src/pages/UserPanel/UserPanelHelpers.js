@@ -155,7 +155,6 @@ export const handleAddAttachmentLogic = async (participantId, newAttachment, pre
       messageText: 'Pomyślnie dodano załącznik.'
     };
   } catch (error) {
-    console.error('Error uploading attachment:', error);
     return {
       showMessageModal: true,
       messageText: 'Błąd podczas przesyłania załącznika.'

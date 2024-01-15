@@ -278,14 +278,15 @@ export const deleteFile = async (participantId) => {
     const token = sessionStorage.getItem('access');
 
     const data = {"attachment": null}
-
+    const formData = new FormData();
+    // formData.append('participant', participantId);
+    formData.append('attachment', null);
     const response = await fetch(`http://20.108.53.69/api/participants/${participantId}/`, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(data)
+      body: formData
     });
 
     if (!response.ok) {
