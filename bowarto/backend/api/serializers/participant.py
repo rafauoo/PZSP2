@@ -23,7 +23,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
                                                  instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
 
-        # Update or create the File instance
+        # TODO zrobić z tego funkcje
         attachment_data = validated_data.get('attachment', {})
         if not attachment_data or not attachment_data.get('path'):
             if instance.attachment:
