@@ -94,8 +94,12 @@ class CreateCompetition extends Component {
     formData.append('type', this.state.category);
     formData.append('start_at', this.state.startDate.toISOString());
     formData.append('end_at', this.state.endDate.toISOString());
-    formData.append("poster.path", this.state.poster);
-    formData.append("regulation.path", this.state.regulation);
+    if (this.state.poster) {
+      formData.append("poster.path", this.state.poster);
+    }
+    if (this.state.regulation) {
+      formData.append("regulation.path", this.state.regulation);
+    }
 
     console.log(formData)
     const token = sessionStorage.getItem('access');
@@ -119,7 +123,7 @@ class CreateCompetition extends Component {
           category: "",
           description: "",
           competitionsTypes: [],
-          regulations: null,
+          regulation: null,
           poster: null
         });
         this.openModal("Wiadomość", "Pomyślnie utworzono konkurs.");
@@ -235,7 +239,8 @@ class CreateCompetition extends Component {
               </Form.Group>
 
               <div className="d-flex justify-content-left">
-                <Button style={buttonSaveChanges} type="submit">
+                <Button style={buttonSaveChanges} type="submit"
+                        disabled={!this.state.regulation}>
                   Stwórz konkurs
                 </Button>
               </div>
@@ -245,7 +250,10 @@ class CreateCompetition extends Component {
         <MessageModal
           title={this.state.modalTitle}
           show={this.state.showModal}
-          onClose={() => this.setState({showModal: false})}
+          onClose={() => {
+            this.setState({showModal: false})
+            window.location.href = '/';
+          }}
           message={this.state.modalMessage}
         />
       </div>
