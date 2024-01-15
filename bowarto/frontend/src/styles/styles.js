@@ -48,6 +48,26 @@ export const buttonStyle = {
   marginRight: '10px'
 };
 
+export const buttonStyle1 = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+  marginRight: '10px'
+};
+
+export const buttonStyle2 = {
+  backgroundColor: 'rgb(189, 235, 157)',
+  borderRadius: '5px',
+  color: 'black',
+  padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+  marginRight: '10px'
+};
+
 export const buttonStyled = {
   backgroundColor: 'rgb(131, 203, 83)',
   borderRadius: '5px',
@@ -80,6 +100,13 @@ export const iconButtonStyle = {
   marginRight: '8px',
   height: '18px',
   width: '18px',
+  marginBottom: '2px'
+};
+
+export const iconButtonStyleAdd = {
+  backgroundColor: 'rgb(131, 203, 83)',
+  height: '22px',
+  width: '22px',
   marginBottom: '2px'
 };
 
@@ -124,9 +151,9 @@ export const headerShowStyle = {
 };
 
 export const buttonStyledShow = {
-  backgroundColor: 'rgb(131, 203, 83)',
+  backgroundColor: 'rgb(87, 135, 53)',
+  color: 'white',
   borderRadius: '5px',
-  color: 'black',
   width: '70px',
   padding: '5px 10px',
   border: 'none',

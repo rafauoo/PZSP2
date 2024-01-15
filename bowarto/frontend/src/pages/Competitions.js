@@ -9,7 +9,7 @@ import {
 } from "./UserPanel/UserPanelHelpers";
 import MessageModal from "../components/MessageModal";
 import Button from "react-bootstrap/Button";
-import { buttonStyle, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, titled } from "../styles/styles";
+import { buttonStyle, buttonStyle1, buttonStyle2, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, iconButtonStyle, iconButtonStyleAdd, titled } from "../styles/styles";
 
 const formatDate = (dateString) => {
   const options = {day: "numeric", month: "numeric", year: "numeric"};
@@ -52,9 +52,10 @@ const CompetitionsTable = ({
             <td style={centeredCellStyle}>
               {competition.regulation && (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle2}
                   onClick={() => handleDownloadFile(competition.regulation.id)}
                 >
+                  <img src={require('../images/download.png')} alt="Pobierz regulamin" style={iconButtonStyle} />
                   Regulamin
                 </Button>
               )}
@@ -62,9 +63,10 @@ const CompetitionsTable = ({
             <td style={centeredCellStyle}>
               {competition.poster && (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle2}
                   onClick={() => handleDownloadFile(competition.poster.id)}
                 >
+                  <img src={require('../images/download.png')} alt="Pobierz plakat" style={iconButtonStyle} />
                   Plakat
                 </Button>
               )}
@@ -72,10 +74,10 @@ const CompetitionsTable = ({
             <td style={centeredCellStyle}>
               {title === "Aktualne konkursy" && sessionStorage.getItem('role') === 'user' ? (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle1}
                   onClick={() => handleShowAddParticipantModal(competition.id)}
                 >
-                  Dodaj
+                  <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyleAdd} />
                 </Button>
               ) : null}
             </td>
@@ -159,14 +161,14 @@ const Competitions = () => {
 
   return (
     <div>
-
+      <br></br>
       <CompetitionsTable
         title="Aktualne konkursy"
         competitions={ongoingCompetitions}
         handleDownloadFile={handleDownloadFile}
         handleShowAddParticipantModal={handleShowAddParticipantModal}
       />
-
+      <br></br>
       <CompetitionsTable
         title="Nadchodzące konkursy"
         competitions={comingCompetitions}
@@ -176,8 +178,8 @@ const Competitions = () => {
         }
       />
 
-
-      <CompetitionsTable title="Starsze konkursy"
+      <br></br>
+      <CompetitionsTable title="Zakończone konkursy"
                          handleDownloadFile={handleDownloadFile}
                          competitions={otherCompetitions}/>
 
