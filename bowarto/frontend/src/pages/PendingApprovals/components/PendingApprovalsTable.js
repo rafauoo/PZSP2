@@ -1,9 +1,10 @@
 import React from "react";
+import Table from "react-bootstrap/Table";
 import PendingApprovalItem from "./PendingApprovalItem";
 
 const PendingApprovalsTable = ({ approvals }) => {
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+    <Table striped bordered={false} hover>
       <thead>
         <tr>
           <th>Użytkownik</th>
@@ -15,7 +16,7 @@ const PendingApprovalsTable = ({ approvals }) => {
           <PendingApprovalItem key={approval.id} approval={approval} />
         ))}
       </tbody>
-    </table>
+    </Table>
   );
 };
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import Table from "react-bootstrap/Table";
 import { approvePendingApproval, rejectPendingApproval } from '../../../api/requests/pendingApproval';
+import { buttonStyle, buttonStyleAttach, buttonStyleDelete, innerTable } from '../../../styles/styles';
 
 const PendingApprovalItem = ({approval}) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -31,26 +33,30 @@ const PendingApprovalItem = ({approval}) => {
   return (
     <tr valign="top">
       <td>
-        <p>{approval.user.first_name} {approval.user.last_name}</p>
+        <p>{approval.user.email}</p>
         {showDetails && (
-          <table cellSpacing="8">
+          <Table style={innerTable}>
           <tbody>
             <tr>
-              <td>email</td>
-              <td>{approval.user.email}</td>
+              <td>Imię</td>
+              <td>{approval.user.first_name}</td>
+            </tr>
+            <tr>
+              <td>Nazwisko</td>
+              <td>{approval.user.last_name}</td>
             </tr>
             <tr>
               <td>typ</td>
               <td>{approval.user.user_type}</td>
             </tr>
           </tbody>
-        </table>
+        </Table>
         )}
       </td>
       <td>
         <p>{approval.school.name}, {approval.school.postcode} {approval.school.city}</p>
         {showDetails && (
-          <table cellSpacing="8">
+          <Table style={innerTable}>
             <tbody>
               <tr>
                 <td>telefon</td>
@@ -77,21 +83,21 @@ const PendingApprovalItem = ({approval}) => {
                 <td>{approval.school.apartment_number}</td>
               </tr>
             </tbody>
-          </table>
+          </Table>
         )}
       </td>
       <td>
-        <button onClick={toggleDetails}>
+        <button onClick={toggleDetails} style={buttonStyle}>
           {showDetails ? 'Zwiń' : 'Rozwiń'}
         </button>
       </td>
       <td>
-        <button onClick={onAccept}>
+        <button onClick={onAccept} style={buttonStyleAttach}>
           Zaakceptuj
         </button>
       </td>
       <td>
-        <button onClick={onDeny}>
+        <button onClick={onDeny} style={buttonStyleDelete}>
           Odrzuć
         </button>
       </td>
