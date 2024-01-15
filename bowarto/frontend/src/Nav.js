@@ -40,7 +40,7 @@ function NavbarExample() {
               ) : null}
               {role === 'user' ? (
                 <>
-                  <Nav.Link href="/user_panel">Moje aplikacje</Nav.Link>
+                  <Nav.Link href="/user_panel">Moje zgłoszenia</Nav.Link>
                   <Nav.Link href="/profile">Profil</Nav.Link>
                 </>
               ) : null}
