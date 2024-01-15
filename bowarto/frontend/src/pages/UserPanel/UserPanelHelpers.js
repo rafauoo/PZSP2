@@ -131,15 +131,15 @@ export const handleEditParticipantLogic = async (participantId, editedData, prev
 export const handleAddAttachmentLogic = async (participantId, newAttachment, prevApplications) => {
   try {
     // Wywołaj funkcję do przesłania załącznika
-    const uploadedFile = await uploadAttachment(participantId, newAttachment);
-
+    const updatedParticipant = await uploadAttachment(participantId, newAttachment);
+    const uploadedFile = updatedParticipant.attachment;
     // Zaktualizuj applicationData, dodając nowy plik do odpowiedniego uczestnika
     const updatedApplications = prevApplications.map(application => {
       const updatedParticipants = application.participants.map(participant => {
         // Znajdź uczestnika o tym samym ID co przekazane participantId
         if (participant.id === participantId) {
           // Dodaj nowy plik do uczestnika (jeśli nie ma jeszcze przypisanego pliku)
-          const updatedFile = participant.attachment ? participant.attachment : uploadedFile.id;
+          const updatedFile = participant.attachment ? participant.attachment : uploadedFile;
           return {...participant, attachment: updatedFile};
         }
         return participant;
