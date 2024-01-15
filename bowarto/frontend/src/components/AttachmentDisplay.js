@@ -15,7 +15,8 @@ function AttachmentDisplay({attachment, participant, onDownload, onRemove}) {
   const handleRemoveAttachment = () => {
     if (onRemove) {
       // Wywołaj funkcję z komponentu nadrzędnego do usuwania załącznika
-      onRemove(participant);
+      console.log(participant)
+      onRemove(attachment);
     }
   };
 
