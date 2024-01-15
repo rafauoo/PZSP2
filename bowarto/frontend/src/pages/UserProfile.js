@@ -6,16 +6,8 @@ import { editUser } from '../api/requests/user';
 import { getSchoolList, createSchool } from '../api/requests/school';
 import { createPendingApproval } from '../api/requests/pendingApproval';
 import { getMe, refreshAccessToken } from '../api/requests/auth';
+import { buttonStyle, buttonStyled, buttonSubmit } from '../styles/styles';
 
-const buttonStyle = {
-  backgroundColor: "rgb(131, 203, 83)",
-  borderRadius: "5px",
-  color: "black",
-  padding: "5px 10px",
-  border: "none",
-  cursor: "pointer",
-  margin: "5px", 
-};
 
 class UserProfile extends Component {
     constructor(props) {
@@ -137,9 +129,11 @@ class UserProfile extends Component {
       // selected={schoolID == null}
       return (
         <>
+          <br></br>
           <div className="d-flex justify-content-center">
             <h1>Profil użytkownika</h1>
           </div>
+          <br></br>
           <div className="d-flex justify-content-center vh-100">
             <Form onSubmit={this.handleSubmit}>
               <FormGroup className="mb-3">
@@ -151,6 +145,7 @@ class UserProfile extends Component {
   
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="text" id='email' defaultValue={`${email}`} onChange={this.handleChangeDefault}/>
+
   
                 <Form.Label>Szkoła</Form.Label>
                 <div className="d-flex">
@@ -162,7 +157,7 @@ class UserProfile extends Component {
                       </option>
                     ))}
                   </Form.Select>
-                  <button style={buttonStyle} type="button" onClick={this.togglePopup}>
+                  <button style={buttonStyled} type="button" onClick={this.togglePopup}>
                     Inna
                   </button>
                   {showPopup && (
@@ -174,7 +169,7 @@ class UserProfile extends Component {
                   )}
                 </div>
                 <div className="d-flex justify-content-center">
-                  <button style={buttonStyle} type="submit">
+                  <button style={buttonSubmit} type="submit">
                       Zapisz zmiany
                   </button>
                 </div>

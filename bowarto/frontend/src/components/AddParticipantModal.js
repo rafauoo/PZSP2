@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import {submitForm} from "../requests/user_panel";
+import { buttonSaveChanges } from '../styles/styles';
 
 function AddParticipantModal({show, handleClose, onAddParticipant, competitionId}) {
   const [newParticipant, setNewParticipant] = useState({
@@ -60,7 +61,7 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Email:
+              E-mail:
             </label>
             <input
               type="email"
@@ -77,7 +78,7 @@ function AddParticipantModal({show, handleClose, onAddParticipant, competitionId
         <Button variant="secondary" onClick={handleClose}>
           Zamknij
         </Button>
-        <Button variant="primary" onClick={handleAddParticipant}>
+        <Button style={buttonSaveChanges} onClick={handleAddParticipant}>
           Dodaj uczestnika
         </Button>
       </Modal.Footer>
