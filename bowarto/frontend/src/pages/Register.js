@@ -79,32 +79,32 @@ function Register() {
         <Form style={{width: '50%'}} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
 
-            <Form.Label>Imię</Form.Label>
-            <Form.Control type="text" value={first_name}
+            <Form.Label>Imię*</Form.Label>
+            <Form.Control required type="text" value={first_name}
                           onChange={(e) => setFirstName(e.target.value)}
                           placeholder="Podaj imię"/>
 
-            <Form.Label>Nazwisko</Form.Label>
-            <Form.Control type="text" placeholder="Podaj nazwisko"
+            <Form.Label>Nazwisko*</Form.Label>
+            <Form.Control required type="text" placeholder="Podaj nazwisko"
                           value={last_name}
                           onChange={(e) => setLastname(e.target.value)}/>
 
 
-            <Form.Label>E-mail</Form.Label>
-            <Form.Control type="email" placeholder="Podaj e-mail" value={email}
+            <Form.Label>E-mail*</Form.Label>
+            <Form.Control required type="email" placeholder="Podaj e-mail" value={email}
                           onChange={(e) => setEmail(e.target.value)}/>
 
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Hasło</Form.Label>
-            <Form.Control type="password" placeholder="Podaj hasło"
+            <Form.Label>Hasło*</Form.Label>
+            <Form.Control required type="password" placeholder="Podaj hasło"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}/>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Powtórz hasło</Form.Label>
-            <Form.Control type="password" placeholder="Powtórz hasło"
+            <Form.Label>Powtórz hasło*</Form.Label>
+            <Form.Control required type="password" placeholder="Powtórz hasło"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}/>
           </Form.Group>

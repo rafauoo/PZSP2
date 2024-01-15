@@ -35,13 +35,15 @@ class UserProfile extends Component {
           oldPendingSchool: data.school, 
           pendingSchool: data.school 
         });
-      });
+      })
+      .catch(_ => {});
 
       await this.refreshAcccess();
       getSchoolList()
       .then(data => {
         this.setState({ schools: data });
-      });
+      })
+      .catch(_ => {});
     }
 
     togglePopup = () => {
@@ -57,16 +59,14 @@ class UserProfile extends Component {
     onAddSchool = async (newSchool) => {
       await this.refreshAcccess();
       createSchool(newSchool).then(_ => {
-        // const updatedUser = {
-        //   ...this.state.userInfo,
-        //   school: data.id,
-        // }; 
-        // this.setState({ userInfo: updatedUser });
-
         getSchoolList()
         .then(data => {
           this.setState({ schools: data });
-        });
+        })
+        .catch(_ => {});
+      })
+      .catch(_ => {
+        window.alert('Szkoła nie została dodana!');
       });
     }
 
@@ -100,6 +100,13 @@ class UserProfile extends Component {
       editUser(userInfo.id, userInfo).then(data => {
         console.log(data);
         window.alert('Dane zostały pomyślnie zaktualizowane!');
+      })
+      .catch(error => {
+        if(error.message && error.message.includes('400')) {
+          window.alert('Email jest już używany przez innego użytkownika. Proszę podać inny email.');
+        } else {
+          window.alert('Edycja użytkownika nie powiodła się. Spróbuj ponownie.');
+        }
       });
 
       if(oldPendingSchool !== pendingSchool) {
@@ -111,6 +118,9 @@ class UserProfile extends Component {
         createPendingApproval(pendingApproval).then(data => {
           console.log(data);
           window.alert('Wysłano prośbę o zmianę szkoły!');
+        })
+        .catch(_ => {
+          window.alert('Wysłanie prośby o zmianę szkoły nie powiodło się!');
         });
       }
     }
@@ -124,9 +134,7 @@ class UserProfile extends Component {
 
       const { first_name, last_name, email } = userInfo;
       const schoolID = userInfo.school;
-      
-      // selected={school.id === schoolID}
-      // selected={schoolID == null}
+
       return (
         <>
           <br></br>
@@ -150,7 +158,7 @@ class UserProfile extends Component {
                 <Form.Label>Szkoła</Form.Label>
                 <div className="d-flex">
                   <Form.Select aria-label="Szkoła" id='school' defaultValue={schoolID} onChange={this.handleSchoolChange}>
-                    <option key={null} value={null}>Brak</option>
+                    <option key={null} value={null} hidden>Brak</option>
                     {schools.map((school) => (
                       <option key={school.id} value={school.id}> 
                         {school.name}, {school.postcode} {school.city}

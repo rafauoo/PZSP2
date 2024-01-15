@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {getPendingApprovalList} from "../../api/requests/pendingApproval";
-import {refreshAccessToken} from "../../api/requests/auth";
 import {getApplicationList} from "../../api/requests/application";
 import {getUserByID} from "../../api/requests/user";
 import CompetitionsTable from "../AdminPanel/components/CompetitionsTable";
 import MessageModal from "../../components/MessageModal";
 import {getSchoolByID} from "../../api/requests/school";
+import refreshAccessToken from "../../requests/refresh";
 
 const LOADING_MESSAGE = "Trwa ładowanie...";
 
@@ -52,7 +52,9 @@ const PendingApprovals = () => {
               <p>Tu będą pending approvals</p>
             ) : (
               <>
+                <br></br>
                 <p>Wszystkie zgłoszenia do szkół zostały rozstrzygnięte.</p>
+                <br></br>
               </>
             )}
           </>

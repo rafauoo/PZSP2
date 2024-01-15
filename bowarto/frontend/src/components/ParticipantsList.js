@@ -18,7 +18,6 @@ function ParticipantsList({
         <th>Imię i nazwisko</th>
         <th>E-mail</th>
         <th>Załącznik</th>
-        <th></th>
       </tr>
       </thead>
       <tbody>

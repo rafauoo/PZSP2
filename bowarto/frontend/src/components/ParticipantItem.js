@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import EditParticipantModal from './EditParticipantModal';
 import AttachmentModal from './AttachmentModal';
 import AttachmentDisplay from "./AttachmentDisplay";
-import {tableRowStyle, buttonStyleDelete, buttonStyleEdit, buttonStyleAttach, iconButtonStyle, buttonContainerStyle} from "../styles/styles.js";
+import {tableRowStyle, buttonStyleDelete, buttonStyleEdit, buttonStyleAttach, iconButtonStyle, buttonContainerStyle, buttonContainerStyle1, iconButtonStyleDelete, buttonStyle2, buttonStyle} from "../styles/styles.js";
 
 function ParticipantItem({
                            participant,
@@ -44,7 +44,7 @@ function ParticipantItem({
       <tr className="participant-item" style={tableRowStyle}>
         <td>{participant.first_name} {participant.last_name}</td>
         <td>{participant.email}</td>
-        <td style={buttonContainerStyle}>
+        <td style={buttonContainerStyle1}>
           {participant.attachment && (
             <AttachmentDisplay attachment={participant.attachment.id}
                                participant={participant.id}
@@ -55,19 +55,18 @@ function ParticipantItem({
         <td>
           <div style={buttonContainerStyle}>
             {!participant.attachment ? (
-              <button style={buttonStyleAttach} onClick={handleShowAttachmentForm}>
+              <button style={buttonStyle} onClick={handleShowAttachmentForm}>
                 <img src={require('../images/attach.png')} alt="Załącz" style={iconButtonStyle} />
                 Załącz pracę
               </button>
             ) : null}
-            <button style={buttonStyleEdit} onClick={handleShowEditModal}>
+            <button style={buttonStyle} onClick={handleShowEditModal}>
               <img src={require('../images/edit.png')} alt="Edytuj" style={iconButtonStyle} />
               Edytuj
             </button>
             <button style={buttonStyleDelete}
                     onClick={() => handleDelete(participant.id)}>
-              <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle}/>
-              Usuń
+              <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyleDelete}/>
             </button>
           </div>
         </td>

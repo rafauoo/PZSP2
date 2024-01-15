@@ -9,21 +9,7 @@ import {
 } from "./UserPanel/UserPanelHelpers";
 import MessageModal from "../components/MessageModal";
 import Button from "react-bootstrap/Button";
-
-const buttonStyle = {
-  backgroundColor: "rgb(131, 203, 83)",
-  borderRadius: "5px",
-  color: "black",
-  padding: "5px 10px",
-  border: "none",
-  cursor: "pointer",
-  margin: "5px",
-};
-
-const centeredCellStyle = {
-  textAlign: "center",
-  verticalAlign: "middle",
-};
+import { buttonStyle, buttonStyle1, buttonStyle2, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, iconButtonStyle, iconButtonStyleAdd, titled } from "../styles/styles";
 
 const formatDate = (dateString) => {
   const options = {day: "numeric", month: "numeric", year: "numeric"};
@@ -42,12 +28,12 @@ const CompetitionsTable = ({
       <thead>
       <tr>
         <th>
-          <h1>{title}</h1>
+          <h1 style={titled}>{title}</h1>
         </th>
-        <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
-        <th style={centeredCellStyle}>Data zakończenia konkursu</th>
-        <th style={centeredCellStyle}>
-          <button style={buttonStyle}
+        <th style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
+        <th style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
+        <th colSpan="3" style={headerShowStyle}>
+          <button style={buttonStyledShow}
                   onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
         </th>
       </tr>
@@ -66,26 +52,32 @@ const CompetitionsTable = ({
             <td style={centeredCellStyle}>
               {competition.regulation && (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle2}
                   onClick={() => handleDownloadFile(competition.regulation.id)}
                 >
+                  <img src={require('../images/download.png')} alt="Pobierz regulamin" style={iconButtonStyle} />
                   Regulamin
                 </Button>
               )}
+            </td>
+            <td style={centeredCellStyle}>
               {competition.poster && (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle2}
                   onClick={() => handleDownloadFile(competition.poster.id)}
                 >
+                  <img src={require('../images/download.png')} alt="Pobierz plakat" style={iconButtonStyle} />
                   Plakat
                 </Button>
               )}
+            </td>
+            <td style={centeredCellStyle}>
               {title === "Aktualne konkursy" && sessionStorage.getItem('role') === 'user' ? (
                 <Button
-                  style={buttonStyle}
+                  style={buttonStyle1}
                   onClick={() => handleShowAddParticipantModal(competition.id)}
                 >
-                  Dodaj
+                  <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyleAdd} />
                 </Button>
               ) : null}
             </td>
@@ -169,14 +161,14 @@ const Competitions = () => {
 
   return (
     <div>
-
+      <br></br>
       <CompetitionsTable
         title="Aktualne konkursy"
         competitions={ongoingCompetitions}
         handleDownloadFile={handleDownloadFile}
         handleShowAddParticipantModal={handleShowAddParticipantModal}
       />
-
+      <br></br>
       <CompetitionsTable
         title="Nadchodzące konkursy"
         competitions={comingCompetitions}
@@ -186,8 +178,8 @@ const Competitions = () => {
         }
       />
 
-
-      <CompetitionsTable title="Starsze konkursy"
+      <br></br>
+      <CompetitionsTable title="Zakończone konkursy"
                          handleDownloadFile={handleDownloadFile}
                          competitions={otherCompetitions}/>
 
