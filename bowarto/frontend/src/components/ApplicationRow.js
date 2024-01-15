@@ -1,39 +1,26 @@
 import ParticipantsList from "./ParticipantsList";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import formatDate from "../utils/format";
 import AddParticipantModal from "./AddParticipantModal";
 import {
   deleteParticipantAndCheckApplication,
   submitForm
 } from "../requests/user_panel";
+import { buttonContainerStyle, buttonStyleBasic, buttonStyleDelete, buttonStyleEdit, iconButtonStyle } from "../styles/styles";
 
-const buttonsContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end',
-};
-
-const buttonStyle = {
-  backgroundColor: 'rgb(131, 203, 83)',
-  borderRadius: '5px',
-  color: 'black',
-  padding: '5px 10px',
-  border: 'none',
-  cursor: 'pointer',
-  margin: '5px'
-};
 
 function ApplicationRow({
-                          application,
-                          expanded,
-                          onToggleExpand,
-                          onDeleteApplication,
-                          onDeleteParticipant,
-                          onAddParticipant,
-                          onEditParticipant,
-                          onAddAttachment,
-                          onDownloadFile,
-                          onRemoveFile
-                        }) {
+  application,
+  expanded,
+  onToggleExpand,
+  onDeleteApplication,
+  onDeleteParticipant,
+  onAddParticipant,
+  onEditParticipant,
+  onAddAttachment,
+  onDownloadFile,
+  onRemoveFile
+}) {
   const [showAddParticipantModal, setShowAddParticipantModal] = useState(false);
 
 
@@ -46,7 +33,6 @@ function ApplicationRow({
     setShowAddParticipantModal(false);
   };
 
-
   return (
     <>
       <tr>
@@ -54,17 +40,20 @@ function ApplicationRow({
           <h2>{application.competition.title}</h2>
         </td>
         <td></td>
-        <td style={buttonsContainerStyle}>
-          <button style={buttonStyle}
-                  onClick={() => onToggleExpand(application.id)}>
+        <td style={buttonContainerStyle}>
+          <button style={buttonStyleBasic}
+            onClick={() => onToggleExpand(application.id)}>
+            <img src={require('../images/view.png')} alt="Widok" style={iconButtonStyle} />
             {expanded ? 'Ukryj' : 'Wyświetl'}
           </button>
-          <button style={buttonStyle}
-                  onClick={() => handleShowAddParticipantModal(application.competition.id)}>
+          <button style={buttonStyleEdit}
+            onClick={() => handleShowAddParticipantModal(application.competition.id)}>
+            <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyle} />
             Dodaj
           </button>
-          <button style={buttonStyle}
-                  onClick={() => onDeleteApplication(application.id)}>
+          <button style={buttonStyleDelete}
+            onClick={() => onDeleteApplication(application.id)}>
+            <img src={require('../images/delete.png')} alt="Usuń" style={iconButtonStyle} />
             Usuń aplikację
           </button>
         </td>
@@ -89,7 +78,6 @@ function ApplicationRow({
         handleClose={handleCloseAddParticipantModal}
         onAddParticipant={onAddParticipant}
       />
-
     </>
   );
 }
