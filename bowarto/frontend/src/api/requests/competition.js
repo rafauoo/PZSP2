@@ -1,5 +1,6 @@
 import {apiRequest} from "./base";
 import {competitionsUrl} from "../urls";
+import refreshAccessToken from "../../requests/refresh";
 
 export const getCompetitionList = async () => {
   try {
@@ -49,6 +50,7 @@ export const createCompetition = async (competitionData) => {
 
 export const editCompetition = async (competitionID, competitionData) => {
   try {
+    await refreshAccessToken();
     const accessToken = sessionStorage.getItem('access');
     return await apiRequest(`${competitionsUrl}${competitionID}/`, {
       method: 'PATCH',

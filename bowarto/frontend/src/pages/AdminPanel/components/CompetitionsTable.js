@@ -33,15 +33,12 @@ const CompetitionsTable = ({ competitionsList }) => {
   return (
     <>
       <br></br>
-      <h1>Konkursy | Zgłoszenia</h1>
+      <h1>Zgłoszenia do konkursów</h1>
       <br></br>
-      <SingleCompetitionTable competitions={comingCompetitions} header={"Nadchodzące konkursy"} />
-      <br></br>
-      <br></br>
-      <SingleCompetitionTable competitions={ongoingCompetitions} header={"Aktualne konkursy"} />
+      <SingleCompetitionTable competitions={ongoingCompetitions}/>
       <br></br>
       <br></br>
-      <SingleCompetitionTable competitions={otherCompetitions} header={"Pozostałe konkursy"} />
+      <SingleCompetitionTable competitions={otherCompetitions} header={"Zakończone konkursy"} />
       <br></br>
       <br></br>
     </>

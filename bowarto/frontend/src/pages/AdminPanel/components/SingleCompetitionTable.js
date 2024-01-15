@@ -18,6 +18,7 @@ const SingleCompetitionTable = ({ competitions, header }) => {
       <Table striped bordered={false} hover>
         <thead>
           <tr>
+            <th style={centeredCellStyle}>Nazwa</th>
             <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
             <th style={centeredCellStyle}>Data zakończenia konkursu</th>
             <th style={centeredCellStyle}></th>
