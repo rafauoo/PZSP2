@@ -9,7 +9,7 @@ class FileSerializer(serializers.ModelSerializer):
         model = File
         fields = ['id', 'path']
 
-    # def validate_path(self, value):
-    #     if not is_allowed_file_type(value.read()):
-    #         raise serializers.ValidationError("Invalid file type.")
-    #     return value
+    def validate_path(self, value):
+        if not is_allowed_file_type(value.read()):
+            raise serializers.ValidationError("Invalid file type.")
+        return value
