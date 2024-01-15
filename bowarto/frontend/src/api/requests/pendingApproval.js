@@ -51,10 +51,10 @@ export const getPendingApprovalByID = async (pendingApprovalID) => {
   }
 };
 
-export const deletePendingApproval = async (pendingApprovalID) => {
+export const approvePendingApproval = async (pendingApprovalID) => {
   try {
     const accessToken = sessionStorage.getItem('access');
-    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}/`, {
+    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}approve/`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,23 @@ export const deletePendingApproval = async (pendingApprovalID) => {
       },
     });
   } catch (error) {
-    console.error('Error deleting pending approval:', error.message);
+    console.error('Error approving pending approval:', error.message);
+    throw error;
+  }
+};
+
+export const rejectPendingApproval = async (pendingApprovalID) => {
+  try {
+    const accessToken = sessionStorage.getItem('access');
+    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}reject/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+  } catch (error) {
+    console.error('Error rejecting pending approval:', error.message);
     throw error;
   }
 };

@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
 import RegulaminModal from "./RegulaminModal";
 import ErrorModal from "./ErrorModal";
 import AddParticipantModal from "../components/AddParticipantModal";
-import {submitForm} from "../requests/user_panel";
+import { submitForm } from "../requests/user_panel";
+import { buttonStyle, buttonStyleEdit, centeredCellStyle, headers } from "../styles/styles";
 
 const Konkursy = () => {
   const [comingCompetitions, setComingCompetitions] = useState([]);
@@ -69,133 +70,120 @@ const Konkursy = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    const options = {day: "numeric", month: "numeric", year: "numeric"};
+    const options = { day: "numeric", month: "numeric", year: "numeric" };
     return new Date(dateString).toLocaleDateString("pl-PL", options);
-  };
-
-  const buttonStyle = {
-    backgroundColor: "rgb(131, 203, 83)",
-    borderRadius: "5px",
-    color: "black",
-    padding: "5px 10px",
-    border: "none",
-    cursor: "pointer",
-    margin: "5px",
-  };
-
-  const centeredCellStyle = {
-    textAlign: "center",
-    verticalAlign: "middle",
   };
 
   return (
     <div>
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
-        <tr>
-          <th>
-            <h1>Nadchodzące konkursy</h1>
-          </th>
-          <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
-          <th style={centeredCellStyle}>Data zakończenia konkursu</th>
-          <th style={centeredCellStyle}></th>
-        </tr>
+          <tr>
+            <th>
+              <h1 style={headers}>Nadchodzące konkursy</h1>
+            </th>
+            <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
+            <th style={centeredCellStyle}>Data zakończenia konkursu</th>
+            <th style={centeredCellStyle}></th>
+          </tr>
         </thead>
         <tbody>
-        {comingCompetitions.map((competition, index) => (
-          <tr key={competition.id}>
-            <td>
-              <h4>{competition.title}</h4>
-              <p>{competition.description}</p>
-            </td>
-            <td style={centeredCellStyle}>
-              {formatDate(competition.start_at)}
-            </td>
-            <td style={centeredCellStyle}>
-              {formatDate(competition.end_at)}
-            </td>
-            <td style={centeredCellStyle}>
-              <RegulaminModal
-                title={competition.title}
-                description={competition.description}
-              />
-              <button
-                style={buttonStyle}
-                onClick={() => handleShowAddParticipantModal(competition.id)}
-              >
-                Dodaj
-              </button>
-            </td>
-          </tr>
-        ))}
+          {comingCompetitions.map((competition, index) => (
+            <tr key={competition.id}>
+              <td>
+                <h4>{competition.title}</h4>
+                <p>{competition.description}</p>
+              </td>
+              <td style={centeredCellStyle}>
+                {formatDate(competition.start_at)}
+              </td>
+              <td style={centeredCellStyle}>
+                {formatDate(competition.end_at)}
+              </td>
+              <td style={centeredCellStyle}>
+                <RegulaminModal
+                  title={competition.title}
+                  description={competition.description}
+                />
+                <button
+                  style={buttonStyleEdit}
+                  onClick={() => handleShowAddParticipantModal(competition.id)}
+                >
+                  Dodaj
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
-        <tr>
-          <th>
-            <h1>Aktualne konkursy</h1>
-          </th>
-          <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
-          <th style={centeredCellStyle}>Data zakończenia konkursu</th>
-          <th style={centeredCellStyle}></th>
-        </tr>
+          <tr>
+            <th>
+              <h1 style={headers}>Aktualne konkursy</h1>
+            </th>
+            <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
+            <th style={centeredCellStyle}>Data zakończenia konkursu</th>
+            <th style={centeredCellStyle}></th>
+          </tr>
         </thead>
         <tbody>
-        {ongoingCompetitions.map((competition, index) => (
-          <tr key={competition.id}>
-            <td>
-              <h4>{competition.title}</h4>
-              <p>{competition.description}</p>
-            </td>
-            <td style={centeredCellStyle}>
-              {formatDate(competition.start_at)}
-            </td>
-            <td style={centeredCellStyle}>
-              {formatDate(competition.end_at)}
-            </td>
-            <td style={centeredCellStyle}>
-              <RegulaminModal
-                title={competition.title}
-                description={competition.description}
-              />
-              <button
-                style={buttonStyle}
-                onClick={() => handleShowAddParticipantModal(competition.id)}
-              >
-                Dodaj
-              </button>
-            </td>
-          </tr>
-        ))}
+          {ongoingCompetitions.map((competition, index) => (
+            <tr key={competition.id}>
+              <td>
+                <h4>{competition.title}</h4>
+                <p>{competition.description}</p>
+              </td>
+              <td style={centeredCellStyle}>
+                {formatDate(competition.start_at)}
+              </td>
+              <td style={centeredCellStyle}>
+                {formatDate(competition.end_at)}
+              </td>
+              <td style={centeredCellStyle}>
+                <RegulaminModal
+                  title={competition.title}
+                  description={competition.description}
+                />
+                <button
+                  style={buttonStyleEdit}
+                  onClick={() => handleShowAddParticipantModal(competition.id)}
+                >
+                  Dodaj
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
-
+      <br></br>
       <Table striped bordered={false} hover>
         <thead>
-        <tr>
-          <th>
-            <h1>Starsze konkursy</h1>
-          </th>
-          <th style={centeredCellStyle}>Data zakończenia konkursu</th>
-          <th style={centeredCellStyle}></th>
-        </tr>
+          <tr>
+            <th>
+              <h1 style={headers}>Zakończone konkursy</h1>
+            </th>
+            <th style={centeredCellStyle}>Data zakończenia konkursu</th>
+            <th style={centeredCellStyle}></th>
+          </tr>
         </thead>
         <tbody>
-        {otherCompetitions.map((competition, index) => (
-          <tr key={index}>
-            <td>
-              <h4>{competition.title}</h4>
-              <p>{competition.description}</p>
-            </td>
-            <td style={centeredCellStyle}>
-              {formatDate(competition.end_at)}
-            </td>
-            <td style={centeredCellStyle}>
-              <button style={buttonStyle}>Wyniki</button>
-            </td>
-          </tr>
-        ))}
+          {otherCompetitions.map((competition, index) => (
+            <tr key={index}>
+              <td>
+                <h4>{competition.title}</h4>
+                <p>{competition.description}</p>
+              </td>
+              <td style={centeredCellStyle}>
+                {formatDate(competition.end_at)}
+              </td>
+              <td style={centeredCellStyle}>
+                <button style={buttonStyleEdit}>Wyniki</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
       <AddParticipantModal

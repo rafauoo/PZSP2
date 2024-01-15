@@ -9,7 +9,9 @@ const MessageModal = ({title, onClose, show, message}) => {
         <Modal.Title>{title || 'Wiadomość'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {message}
+        {message.split('\n').map((line, index) => (
+          <div key={index}>{line}</div>
+        ))}
       </Modal.Body>
       <Modal.Footer>
         <button style={buttonStyle} onClick={onClose}>

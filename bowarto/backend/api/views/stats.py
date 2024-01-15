@@ -7,7 +7,7 @@ from rest_framework.decorators import authentication_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from ..models import Competition, User, Application, Participant, \
-    PendingApproval
+    PendingApproval, UserType
 from django.db.models import Count
 from ..permissions import allow_admin
 
@@ -27,8 +27,9 @@ class StatsView(APIView):
 
         competitions_count = Competition.objects.count()
 
-        users_count = User.objects.count()
-        school_users_count = User.objects.exclude(school__isnull=True).count()
+        users_count = User.objects.exclude(user_type=UserType.ADMIN).count()
+        school_users_count = User.objects.exclude(
+            user_type=UserType.ADMIN, school__isnull=True).count()
 
         applications_count = Application.objects.count()
         participants_count = Participant.objects.count()
@@ -50,7 +51,7 @@ class StatsView(APIView):
             user['id']: {'user': f"{user['first_name']} {user['last_name']}",
                          'participants_count': user['participants_count']} for
             user in
-            User.objects.annotate(
+            User.objects.exclude(user_type=UserType.ADMIN).annotate(
                 participants_count=Count('application__participant')).values(
                 'id',
                 'first_name',
@@ -58,8 +59,11 @@ class StatsView(APIView):
                 'participants_count')}
 
         competition_dates = {
-            comp['id']: {'start_at': comp['start_at'], 'end_at': comp['end_at']}
-            for comp in Competition.objects.values('id', 'start_at', 'end_at')}
+            comp['id']: {'start_at': comp['start_at'],
+                         'end_at': comp['end_at'],
+                         'title': comp['title']}
+            for comp in
+            Competition.objects.values('id', 'title', 'start_at', 'end_at')}
         data = {
             'competitions_count': competitions_count,
             'ongoing_competitions_count': ongoing_competitions.count(),

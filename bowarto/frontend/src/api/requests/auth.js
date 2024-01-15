@@ -1,5 +1,5 @@
 import {apiRequest} from "./base";
-import {loginUrl, meUrl, refreshUrl, registerUrl} from "../urls";
+import {loginUrl, logoutUrl, meUrl, refreshUrl, registerUrl} from "../urls";
 
 export const refreshAccessToken = async (refreshToken) => {
   try {
@@ -37,7 +37,7 @@ export const loginUser = async (credentials) => {
 
 export const logoutUser = async (refreshToken) => {
   try {
-    await apiRequest(loginUrl, {
+    await apiRequest(logoutUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,13 +54,37 @@ export const logoutUser = async (refreshToken) => {
 
 export const registerUser = async (userData) => {
   try {
-    return await apiRequest(registerUrl, {
+    const response = await fetch(registerUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userData),
     });
+
+    if (!response.ok) {
+      const responseBody = await response.json();
+
+      const errors = {};
+
+      if ('password' in responseBody) {
+        errors['password'] = responseBody['password'][0];
+      }
+      if ('email' in responseBody) {
+        errors['email'] = responseBody['email'][0];
+      }
+      if ('first_name' in responseBody) {
+        errors['first_name'] = responseBody['first_name'][0];
+      }
+      if ('last_name' in responseBody) {
+        errors['last_name'] = responseBody['last_name'][0];
+      }
+
+      return {success: false, response: errors};
+    }
+
+    const jsonResponse = await response.json();
+    return {success: true, response: jsonResponse};
   } catch (error) {
     console.error('Error during registration:', error.message);
     throw error;
