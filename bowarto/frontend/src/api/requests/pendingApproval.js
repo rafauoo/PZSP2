@@ -54,7 +54,7 @@ export const getPendingApprovalByID = async (pendingApprovalID) => {
 export const approvePendingApproval = async (pendingApprovalID) => {
   try {
     const accessToken = sessionStorage.getItem('access');
-    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}approve/`, {
+    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}/approve/`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export const approvePendingApproval = async (pendingApprovalID) => {
 export const rejectPendingApproval = async (pendingApprovalID) => {
   try {
     const accessToken = sessionStorage.getItem('access');
-    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}reject/`, {
+    return await apiRequest(`${pendingApprovalsUrl}${pendingApprovalID}/reject/`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
