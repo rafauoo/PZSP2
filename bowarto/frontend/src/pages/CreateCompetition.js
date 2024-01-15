@@ -114,11 +114,12 @@ class CreateCompetition extends Component {
 
       <div className="d-flex justify-content-center">
         <div style={{ width: '60%' }}>
-          <h1 className="text-left">Formularz Konkursowy</h1>
+          <br></br>
+          <h1 className="text-left">Formularz konkursowy</h1>
           <div className="d-flex justify-content-start vh-100">
             <Form style={{ width: '100%' }} onSubmit={this.handleSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-
+                <br></br>
                 <Form.Label>Nazwa konkursu*</Form.Label>
                 <Form.Control
                   type="text"
@@ -128,7 +129,7 @@ class CreateCompetition extends Component {
                   onChange={this.handleInputChange}
                   required
                 />
-
+                <br></br>
                 <div className="row">
                   <div className="col-md-6">
                     <Form.Label>Data rozpoczęcia*</Form.Label>
@@ -160,7 +161,7 @@ class CreateCompetition extends Component {
                     />
                   </div>
                 </div>
-
+                <br></br>
                 <Form.Label>Kategoria*</Form.Label>
                 <Form.Select aria-label="Kategoria" name="category"
                   value={this.state.category}
@@ -174,7 +175,7 @@ class CreateCompetition extends Component {
                   })}
                 </Form.Select>
 
-
+                <br></br>
                 <Form.Label>Opis konkursu*</Form.Label>
                 <Form.Control
                   as="textarea"
@@ -188,10 +189,10 @@ class CreateCompetition extends Component {
                   required
 
                 />
-
+                <br></br>
                 <div className="row">
                   <div className="col-md-6">
-                    <Form.Label>Dodaj regulamin (regulamin w formacie .pdf,
+                    <Form.Label>Dodaj regulamin* (regulamin w formacie .pdf,
                       .docx)</Form.Label>
                     <Form.Control
                       type="file"
@@ -212,7 +213,7 @@ class CreateCompetition extends Component {
                   </div>
                 </div>
               </Form.Group>
-
+              <br></br>
               <div className="d-flex justify-content-left">
                 <Button style={buttonSaveChanges} type="submit">
                   Stwórz konkurs

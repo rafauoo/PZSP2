@@ -110,9 +110,29 @@ export const iconButtonStyleAdd = {
   marginBottom: '2px'
 };
 
+export const iconButtonStyleDelete = {
+  backgroundColor: 'rgb(245, 117, 73)',
+  height: '22px',
+  width: '22px',
+  marginBottom: '2px'
+};
+
 export const buttonContainerStyle = {
   display: 'flex',
   justifyContent: "flex-end",
+  gap: '20px',
+};
+
+export const buttonContainerStyleParticipants = {
+  display: 'flex',
+  justifyContent: "flex-end",
+  gap: '20px',
+  height: '62px'
+};
+
+export const buttonContainerStyle1 = {
+  display: 'flex',
+  justifyContent: "center",
   gap: '20px',
 };
 
@@ -156,6 +176,16 @@ export const buttonStyledShow = {
   borderRadius: '5px',
   width: '70px',
   padding: '5px 10px',
+  border: 'none',
+  cursor: 'pointer',
+};
+
+export const buttonStyledShow1 = {
+  backgroundColor: 'rgb(87, 135, 53)',
+  color: 'white',
+  borderRadius: '5px',
+  padding: '5px 10px',
+  width: '110px',
   border: 'none',
   cursor: 'pointer',
 };

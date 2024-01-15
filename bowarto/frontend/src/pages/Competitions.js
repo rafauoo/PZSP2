@@ -30,8 +30,8 @@ const CompetitionsTable = ({
         <th>
           <h1 style={titled}>{title}</h1>
         </th>
-        <th style={centeredCellStyle}>Data rozpoczęcia konkursu</th>
-        <th style={centeredCellStyle}>Data zakończenia konkursu</th>
+        <th style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
+        <th style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
         <th colSpan="3" style={headerShowStyle}>
           <button style={buttonStyledShow}
                   onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>

@@ -52,7 +52,9 @@ const PendingApprovals = () => {
               <p>Tu będą pending approvals</p>
             ) : (
               <>
+                <br></br>
                 <p>Wszystkie zgłoszenia do szkół zostały rozstrzygnięte.</p>
+                <br></br>
               </>
             )}
           </>
