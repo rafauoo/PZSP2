@@ -146,7 +146,7 @@ class UserProfile extends Component {
                     ))}
                   </Form.Select>
                   <button style={buttonStyled} type="button" onClick={this.togglePopup}>
-                    Inna
+                    inna...
                   </button>
                   {showPopup && (
                     <AddSchoolModal
