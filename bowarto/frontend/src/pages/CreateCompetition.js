@@ -102,9 +102,9 @@ class CreateCompetition extends Component {
     }
 
     console.log(formData)
-    const token = sessionStorage.getItem('access');
-    await refreshAccessToken();
 
+    await refreshAccessToken();
+    const token = sessionStorage.getItem('access');
     fetch('http://20.108.53.69/api/competitions/', {
       method: 'POST',
       body: formData,
