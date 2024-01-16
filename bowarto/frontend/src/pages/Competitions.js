@@ -9,39 +9,23 @@ import {
 } from "./UserPanel/UserPanelHelpers";
 import MessageModal from "../components/MessageModal";
 import Button from "react-bootstrap/Button";
-import { buttonStyle, buttonStyle1, buttonStyle2, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, iconButtonStyle, iconButtonStyleAdd, titled } from "../styles/styles";
+import EditCompetitionModal from "./AdminPanel/components/EditCompetitionModal";
+import { buttonStyle, buttonStyle1, buttonStyle2, buttonStyleEdit, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, iconButtonStyle, iconButtonStyleAdd, titled } from "../styles/styles";
 
 const formatDate = (dateString) => {
   const options = {day: "numeric", month: "numeric", year: "numeric"};
   return new Date(dateString).toLocaleDateString("pl-PL", options);
 };
 
-const CompetitionsTable = ({
-                             competitions,
-                             title,
-                             handleDownloadFile,
-                             handleShowAddParticipantModal,
-                           }) => {
-  const [expanded, setExpanded] = useState(false)
+const CompetitionDataRow = ({ competition, title, handleDownloadFile, handleShowAddParticipantModal }) => {
+  const [showEditCompetitionModal, setShowCompetitionModal] = useState(false);
+  console.log(showEditCompetitionModal)
+  const handleModalClose = () => {
+    showEditCompetitionModal ? setShowCompetitionModal(false) : setShowCompetitionModal(true);
+  };
+
   return (
-    <Table striped bordered={false} hover>
-      <thead>
-      <tr>
-        <th>
-          <h1 style={titled}>{title}</h1>
-        </th>
-        <th style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
-        <th style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
-        <th colSpan="3" style={headerShowStyle}>
-          <button style={buttonStyledShow}
-                  onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
-        </th>
-      </tr>
-      </thead>
-      {expanded ? (
-        <tbody>
-        {competitions.map((competition, index) => (
-          <tr key={competition.id}>
+      <tr key={competition.id}>
             <td>
               <h4>{competition.title}</h4>
               <p>{competition.description}</p>
@@ -80,8 +64,49 @@ const CompetitionsTable = ({
                   <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyleAdd} />
                 </Button>
               ) : null}
+              {sessionStorage.getItem('role') === 'admin' ? (
+                <td style={centeredCellStyle}>
+                  <button
+                    style={buttonStyleEdit}
+                    onClick={handleModalClose}
+                  >
+                    Edytuj
+                  </button>
+                </td>
+              ) : null}
             </td>
+            <EditCompetitionModal show={showEditCompetitionModal} handleClose={handleModalClose} competition={competition} />
           </tr>
+  )
+}
+
+const CompetitionsTable = ({
+                             competitions,
+                             title,
+                             handleDownloadFile,
+                             handleShowAddParticipantModal,
+                           }) => {
+  const [expanded, setExpanded] = useState(false)
+  console.log(sessionStorage.getItem('role'))
+  return (
+    <Table striped bordered={false} hover>
+      <thead>
+      <tr>
+        <th>
+          <h1 style={titled}>{title}</h1>
+        </th>
+        <th style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
+        <th style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
+        <th colSpan="3" style={headerShowStyle}>
+          <button style={buttonStyledShow}
+                  onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
+        </th>
+      </tr>
+      </thead>
+      {expanded ? (
+        <tbody>
+        {competitions.map((competition, index) => (
+          <CompetitionDataRow title={title} competition={competition} handleAddParticipantModal={handleShowAddParticipantModal} handleDownloadFile={handleDownloadFile}/>
         ))}
         </tbody>) : null}
     </Table>

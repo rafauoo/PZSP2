@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { centeredCellStyle } from "../../../styles/styles";
+import { centeredCellStyle, headerShowStyle, buttonStyledShow } from "../../../styles/styles";
 import formatDate from "../../../utils/format";
 import { buttonStyleEdit } from "../../../styles/styles";
 import EditCompetitionModal from "./EditCompetitionModal";
 
 const CompetitionRow = ({ competition, showUserApplicationsTable }) => {
-
+  const [expanded, setExpanded] = useState(false)
   const [showEditCompetitionModal, setShowCompetitionModal] = useState(false);
   const handleModal = () => {
     showEditCompetitionModal ? setShowCompetitionModal(false) : setShowCompetitionModal(true);
@@ -25,14 +25,10 @@ const CompetitionRow = ({ competition, showUserApplicationsTable }) => {
         <td style={centeredCellStyle}>
           {formatDate(competition.end_at)}
         </td>
-        <td style={centeredCellStyle}>
-          <button
-            style={buttonStyleEdit}
-            onClick={handleModal}
-          >
-            Edytuj
-          </button>
-        </td>
+        <th colSpan="3" style={headerShowStyle}>
+          <button style={buttonStyledShow}
+                  onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
+        </th>
       </tr>
       <EditCompetitionModal show={showEditCompetitionModal} handleClose={handleModal} competition={competition} />
     </>
