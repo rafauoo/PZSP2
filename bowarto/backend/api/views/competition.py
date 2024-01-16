@@ -21,7 +21,7 @@ class CompetitionList(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-    @allow_admin
+    @allow_any
     def post(self, request, *args, **kwargs):
         keys_to_remove = [key for key in request.data if
                           key in ('regulation.path', 'poster.path') and not
