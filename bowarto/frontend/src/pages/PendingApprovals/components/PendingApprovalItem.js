@@ -14,6 +14,7 @@ const PendingApprovalItem = ({approval}) => {
     await approvePendingApproval(approval.id)
     .then(_ => {
       window.alert("Wniosek został zaakceptowany.");
+      window.location.reload();
     })
     .catch(_ => {
       window.alert("Nie udało się zaakceptować wniosku.");
@@ -24,6 +25,7 @@ const PendingApprovalItem = ({approval}) => {
     await rejectPendingApproval(approval.id)
     .then(_ => {
       window.alert("Wniosek został odrzucony.");
+      window.location.reload();
     })
     .catch(_ => {
       window.alert("Nie udało się odrzucić wniosku.");
