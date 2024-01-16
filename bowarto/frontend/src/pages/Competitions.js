@@ -2,7 +2,10 @@ import React, {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import AddParticipantModal from "../components/AddParticipantModal";
 import {submitForm} from "../requests/user_panel";
-import {getCompetitionList} from "../api/requests/competition";
+import {
+  deleteCompetitionByID,
+  getCompetitionList
+} from "../api/requests/competition";
 import {
   handleAddParticipantLogic,
   handleDownloadFileLogic
@@ -10,73 +13,114 @@ import {
 import MessageModal from "../components/MessageModal";
 import Button from "react-bootstrap/Button";
 import EditCompetitionModal from "./AdminPanel/components/EditCompetitionModal";
-import { buttonStyle, buttonStyle1, buttonStyle2, buttonStyleEdit, buttonStyled, buttonStyledShow, centeredCellStyle, headerShowStyle, iconButtonStyle, iconButtonStyleAdd, titled } from "../styles/styles";
+import {
+  buttonStyle,
+  buttonStyle1,
+  buttonStyle2,
+  buttonStyleEdit,
+  buttonStyled,
+  buttonStyledShow,
+  centeredCellStyle,
+  headerShowStyle,
+  iconButtonStyle,
+  iconButtonStyleAdd,
+  titled,
+  buttonStyleDelete
+} from "../styles/styles";
+import refreshAccessToken from "../requests/refresh";
+import {apiRequest} from "../api/requests/base";
+import {competitionsUrl} from "../api/urls";
 
 const formatDate = (dateString) => {
   const options = {day: "numeric", month: "numeric", year: "numeric"};
   return new Date(dateString).toLocaleDateString("pl-PL", options);
 };
 
-const CompetitionDataRow = ({ competition, title, handleDownloadFile, handleShowAddParticipantModal }) => {
+const CompetitionDataRow = ({
+                              competition,
+                              title,
+                              handleDownloadFile,
+                              handleShowAddParticipantModal
+                            }) => {
   const [showEditCompetitionModal, setShowCompetitionModal] = useState(false);
-  console.log(showEditCompetitionModal)
-  const handleModalClose = () => {
-    showEditCompetitionModal ? setShowCompetitionModal(false) : setShowCompetitionModal(true);
+  const handleModalClose = async () => {
+    try {
+      await refreshAccessToken();
+      const accessToken = sessionStorage.getItem('access');
+      await fetch(`${competitionsUrl}${competition.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error('Error editing competition:', error.message);
+      window.location.reload();
+      throw error;
+    }
+
   };
 
   return (
-      <tr key={competition.id}>
-            <td>
-              <h4>{competition.title}</h4>
-              <p>{competition.description}</p>
-            </td>
-            <td
-              style={centeredCellStyle}>{formatDate(competition.start_at)}</td>
-            <td style={centeredCellStyle}>{formatDate(competition.end_at)}</td>
-            <td style={centeredCellStyle}>
-              {competition.regulation && (
-                <Button
-                  style={buttonStyle2}
-                  onClick={() => handleDownloadFile(competition.regulation.id)}
-                >
-                  <img src={require('../images/download.png')} alt="Pobierz regulamin" style={iconButtonStyle} />
-                  Regulamin
-                </Button>
-              )}
-            </td>
-            <td style={centeredCellStyle}>
-              {competition.poster && (
-                <Button
-                  style={buttonStyle2}
-                  onClick={() => handleDownloadFile(competition.poster.id)}
-                >
-                  <img src={require('../images/download.png')} alt="Pobierz plakat" style={iconButtonStyle} />
-                  Plakat
-                </Button>
-              )}
-            </td>
-            <td style={centeredCellStyle}>
-              {title === "Aktualne konkursy" && sessionStorage.getItem('role') === 'user' ? (
-                <Button
-                  style={buttonStyle1}
-                  onClick={() => handleShowAddParticipantModal(competition.id)}
-                >
-                  <img src={require('../images/add.png')} alt="Dodaj" style={iconButtonStyleAdd} />
-                </Button>
-              ) : null}
-              {sessionStorage.getItem('role') === 'admin' ? (
-                <td style={centeredCellStyle}>
-                  <button
-                    style={buttonStyleEdit}
-                    onClick={handleModalClose}
-                  >
-                    Edytuj
-                  </button>
-                </td>
-              ) : null}
-            </td>
-            <EditCompetitionModal show={showEditCompetitionModal} handleClose={handleModalClose} competition={competition} />
-          </tr>
+    <tr key={competition.id}>
+      <td>
+        <h4>{competition.title}</h4>
+        <p>{competition.description}</p>
+      </td>
+      <td
+        style={centeredCellStyle}>{formatDate(competition.start_at)}</td>
+      <td style={centeredCellStyle}>{formatDate(competition.end_at)}</td>
+      <td style={centeredCellStyle}>
+        {competition.regulation && (
+          <Button
+            style={buttonStyle2}
+            onClick={() => handleDownloadFile(competition.regulation.id)}
+          >
+            <img src={require('../images/download.png')} alt="Pobierz regulamin"
+                 style={iconButtonStyle}/>
+            Regulamin
+          </Button>
+        )}
+      </td>
+      <td style={centeredCellStyle}>
+        {competition.poster && (
+          <Button
+            style={buttonStyle2}
+            onClick={() => handleDownloadFile(competition.poster.id)}
+          >
+            <img src={require('../images/download.png')} alt="Pobierz plakat"
+                 style={iconButtonStyle}/>
+            Plakat
+          </Button>
+        )}
+      </td>
+      <td style={centeredCellStyle}>
+        {title === "Aktualne konkursy" && sessionStorage.getItem('role') === 'user' ? (
+          <Button
+            style={buttonStyle1}
+            onClick={() => handleShowAddParticipantModal(competition.id)}
+          >
+            <img src={require('../images/add.png')} alt="Dodaj"
+                 style={iconButtonStyleAdd}/>
+          </Button>
+        ) : null}
+        {sessionStorage.getItem('role') === 'admin' ? (
+          <td style={centeredCellStyle}>
+            <button
+              style={buttonStyleDelete}
+              onClick={handleModalClose}
+            >
+              Usuń
+            </button>
+          </td>
+        ) : null}
+      </td>
+      {/*<EditCompetitionModal show={showEditCompetitionModal}*/}
+      {/*                      handleClose={handleModalClose}*/}
+      {/*                      competition={competition}/>*/}
+    </tr>
   )
 }
 
@@ -95,8 +139,10 @@ const CompetitionsTable = ({
         <th>
           <h1 style={titled}>{title}</h1>
         </th>
-        <th style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
-        <th style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
+        <th
+          style={centeredCellStyle}>{expanded ? "Data rozpoczęcia konkursu" : ""}</th>
+        <th
+          style={centeredCellStyle}>{expanded ? "Data zakończenia konkursu" : ""}</th>
         <th colSpan="3" style={headerShowStyle}>
           <button style={buttonStyledShow}
                   onClick={() => setExpanded(!expanded)}>{expanded ? "Ukryj" : "Pokaż"}</button>
@@ -106,7 +152,9 @@ const CompetitionsTable = ({
       {expanded ? (
         <tbody>
         {competitions.map((competition, index) => (
-          <CompetitionDataRow title={title} competition={competition} handleAddParticipantModal={handleShowAddParticipantModal} handleDownloadFile={handleDownloadFile}/>
+          <CompetitionDataRow title={title} competition={competition}
+                              handleShowAddParticipantModal={handleShowAddParticipantModal}
+                              handleDownloadFile={handleDownloadFile}/>
         ))}
         </tbody>) : null}
     </Table>

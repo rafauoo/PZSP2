@@ -68,11 +68,12 @@ export const editCompetition = async (competitionID, competitionData) => {
 
 export const deleteCompetitionByID = async (competitionID) => {
   try {
+    await refreshAccessToken()
     const accessToken = sessionStorage.getItem('access');
     return await apiRequest(`${competitionsUrl}${competitionID}/`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
       },
     });
