@@ -18,7 +18,8 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
     end_at: new Date(competition.end_at),
     type: competition.type,
     description: competition.description,
-    attachment: null,
+    poster: null,
+    regulation: null
   });
 
   const handleInputChange = (event) => {
@@ -43,16 +44,25 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
     }));
   };
 
-  const handleFileChange = (event) => {
-    setNewCompetitionData({ attachment: event.target.files[0] })
+  const handleFileChangePoster = (event) => {
+    setNewCompetitionData({ poster: event.target.files[0] })
+  };
+  const handleFileChangeRegulation = (event) => {
+    setNewCompetitionData({ regulation: event.target.files[0] })
   };
 
   const handleEditCompetition = async () => {
+
+    console.log(newCompetitionData)
     const modifiedData = {
       ...newCompetitionData,
       start_at: newCompetitionData.start_at.toISOString(),
       end_at: newCompetitionData.end_at.toISOString(),
     };
+    if (modifiedData.poster === null)
+      delete modifiedData.poster;
+    if (modifiedData.regulation === null)
+      delete modifiedData.regulation;
     const response = await editCompetition(competition.id, modifiedData);
     window.location.reload();
     handleClose();
@@ -161,13 +171,26 @@ const EditCompetitionModal = ({ show, handleClose, competition }) => {
 
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Załącznik:
+              Plakat:
             </label>
             <br></br>
             <input
               type="file"
-              name="attachment"
-              onChange={handleFileChange}
+              name="poster"
+              onChange={handleFileChangePoster}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">
+              Regulamin:
+            </label>
+            <br></br>
+            <input
+              type="file"
+              name="regulation"
+              onChange={handleFileChangeRegulation}
               required
             />
           </div>
