@@ -53,36 +53,38 @@ class CompetitionSerializer(serializers.ModelSerializer):
 
         # TODO zrobić z tego funkcje
         poster_data = validated_data.get('poster', {})
-        if not poster_data or not poster_data.get('path'):
-            if instance.poster:
-                instance.poster.delete()
-                instance.poster = None
-        else:
-            poster_serializer = FileSerializer(instance.poster,
-                                               data=poster_data,
-                                               allow_null=True,
-                                               required=False)
-            if poster_serializer.is_valid():
+        if poster_data:
+            if not poster_data or not poster_data.get('path'):
                 if instance.poster:
                     instance.poster.delete()
-                poster_serializer.save()
-                instance.poster = poster_serializer.instance
+                    instance.poster = None
+            else:
+                poster_serializer = FileSerializer(instance.poster,
+                                                   data=poster_data,
+                                                   allow_null=True,
+                                                   required=False)
+                if poster_serializer.is_valid():
+                    if instance.poster:
+                        instance.poster.delete()
+                    poster_serializer.save()
+                    instance.poster = poster_serializer.instance
 
         # TODO zrobić z tego funkcje
         regulation_data = validated_data.get('regulation', {})
-        if not regulation_data or not regulation_data.get('path'):
-            if instance.regulation:
-                instance.regulation.delete()
-                instance.regulation = None
-        else:
-            regulation_serializer = FileSerializer(instance.regulation,
-                                                   data=regulation_data,
-                                                   allow_null=True,
-                                                   required=False)
-            if regulation_serializer.is_valid():
+        if regulation_data:
+            if not regulation_data or not regulation_data.get('path'):
                 if instance.regulation:
                     instance.regulation.delete()
-                regulation_serializer.save()
-                instance.regulation = regulation_serializer.instance
+                    instance.regulation = None
+            else:
+                regulation_serializer = FileSerializer(instance.regulation,
+                                                       data=regulation_data,
+                                                       allow_null=True,
+                                                       required=False)
+                if regulation_serializer.is_valid():
+                    if instance.regulation:
+                        instance.regulation.delete()
+                    regulation_serializer.save()
+                    instance.regulation = regulation_serializer.instance
         instance.save()
         return instance
