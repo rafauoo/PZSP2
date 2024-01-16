@@ -3,14 +3,14 @@ import Table from "react-bootstrap/Table";
 import { approvePendingApproval, rejectPendingApproval } from '../../../api/requests/pendingApproval';
 import { buttonStyle, buttonStyleAttach, buttonStyleDelete, innerTable } from '../../../styles/styles';
 
-const PendingApprovalItem = ({approval}) => {
+const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  const onAccept = async () => {
+  const onApprove = async () => {
     await approvePendingApproval(approval.id)
     .then(_ => {
       window.alert("Wniosek został zaakceptowany.");
@@ -18,10 +18,12 @@ const PendingApprovalItem = ({approval}) => {
     })
     .catch(_ => {
       window.alert("Nie udało się zaakceptować wniosku.");
-    })
+    });
+
+    await onAccept();
   };
 
-  const onDeny = async () => {
+  const onReject = async () => {
     await rejectPendingApproval(approval.id)
     .then(_ => {
       window.alert("Wniosek został odrzucony.");
@@ -29,7 +31,9 @@ const PendingApprovalItem = ({approval}) => {
     })
     .catch(_ => {
       window.alert("Nie udało się odrzucić wniosku.");
-    })
+    });
+
+    await onDeny;
   };
 
   return (
@@ -94,12 +98,12 @@ const PendingApprovalItem = ({approval}) => {
         </button>
       </td>
       <td>
-        <button onClick={onAccept} style={buttonStyleAttach}>
+        <button onClick={onApprove} style={buttonStyleAttach}>
           Zaakceptuj
         </button>
       </td>
       <td>
-        <button onClick={onDeny} style={buttonStyleDelete}>
+        <button onClick={onReject} style={buttonStyleDelete}>
           Odrzuć
         </button>
       </td>

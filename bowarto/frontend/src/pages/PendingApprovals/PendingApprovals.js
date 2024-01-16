@@ -39,6 +39,10 @@ const PendingApprovals = () => {
     }
   };
 
+  const onAcceptDeny = async () => {
+    await fetchData();
+  }
+
   return (
     <>
       <div>
@@ -47,7 +51,7 @@ const PendingApprovals = () => {
         ) : (
           <>
             {pendingApprovals.length !== 0 ? (
-              <PendingApprovalsTable approvals={pendingApprovals} />
+              <PendingApprovalsTable approvals={pendingApprovals} onAccept={onAcceptDeny} onDeny={onAcceptDeny} />
             ) : (
               <>
                 <br></br>
