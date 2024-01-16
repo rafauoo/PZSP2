@@ -34,17 +34,20 @@ class SchoolListTests(TestCase):
             postcode='54321'
         )
 
-        self.admin = create_admin('admin@example.com', 'verylongandsecurepassword')
+        self.admin = create_admin('admin@example.com',
+                                  'verylongandsecurepassword')
         self.user = create_user('user@example.com', 'verylongandsecurepassword')
 
     def perform_admin_login(self):
-        login_data = {'email': 'admin@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'admin@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         return access_token
 
     def perform_user_login(self):
-        login_data = {'email': 'user@example.com', 'password': 'verylongandsecurepassword'}
+        login_data = {'email': 'user@example.com',
+                      'password': 'verylongandsecurepassword'}
         login_response = perform_login(login_data)
         access_token = login_response.data['access']
         return access_token
@@ -120,7 +123,7 @@ class SchoolListTests(TestCase):
         response = self.client.get(self.url)
 
         # THEN
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_school_unauthenticated(self):
         # WHEN

@@ -5,7 +5,8 @@ from api.models import UserType
 class UserTypeTestCase(TestCase):
     def test_user_type_choices(self):
         # GIVEN
-        expected_choices = [('admin', 'Admin'), ('user', 'User')]
+        expected_choices = [('admin', 'Admin'), ('user', 'User'),
+                            ('observer', 'Observer')]
 
         # WHEN
         actual_choices = UserType.choices

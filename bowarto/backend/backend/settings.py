@@ -20,7 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+
+DEBUG = ADMIN_ENABLED = env('DEV') == 'true'
 
 ALLOWED_HOSTS = ['20.108.53.69', '10.1.1.4']
 if env('DEV') == 'true':
@@ -147,7 +149,8 @@ STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
 MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'],
     # "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
@@ -172,9 +175,7 @@ SIMPLE_JWT = {
 }
 
 if TEST:
-    # DEFAULT_FILE_STORAGE = "tests.storage.MockAzureMediaStorage"
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase'
     }
-ADMIN_ENABLED = False

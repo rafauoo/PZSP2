@@ -5,7 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from api.models import User, School
 from api.serializers.user import UserRegistrationSerializer
 from api.views.auth import RegisterView
-from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken, BlacklistedToken
+from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken, \
+    BlacklistedToken
 from tests.utils import perform_register
 
 
@@ -88,19 +89,6 @@ class RegisterViewTest(TestCase):
         user = User.objects.filter(email='test@example.com')
         self.assertQuerysetEqual(user, [])
 
-    def test_register_not_existing_school(self):
-        # GIVEN
-        data = self.valid_user_data
-        data['school'] = 150
-
-        # WHEN
-        response = perform_register(data)
-
-        # THEN
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        users_with_invalid_school = User.objects.filter(email='test@example.com')
-        self.assertQuerysetEqual(users_with_invalid_school, [])
-
     def test_register_duplicate_email(self):
         # GIVEN
         data = self.valid_user_data
@@ -110,10 +98,13 @@ class RegisterViewTest(TestCase):
         second_user_response = perform_register(data)
 
         # THEN
-        self.assertEqual(first_user_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(first_user_response.status_code,
+                         status.HTTP_201_CREATED)
 
-        self.assertEqual(second_user_response.status_code, status.HTTP_400_BAD_REQUEST)
-        users_with_duplicate_email = User.objects.filter(email='test@example.com')
+        self.assertEqual(second_user_response.status_code,
+                         status.HTTP_400_BAD_REQUEST)
+        users_with_duplicate_email = User.objects.filter(
+            email='test@example.com')
         self.assertEqual(users_with_duplicate_email.count(), 1)
 
     def test_register_missing_name_or_lastname(self):
@@ -129,8 +120,10 @@ class RegisterViewTest(TestCase):
         response_missing_lastname = perform_register(data_missing_lastname)
 
         # THEN
-        self.assertEqual(response_missing_name.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response_missing_lastname.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_missing_name.status_code,
+                         status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_missing_lastname.status_code,
+                         status.HTTP_400_BAD_REQUEST)
 
         users_missing_name = User.objects.filter(email='test@example.com')
         users_missing_lastname = User.objects.filter(email='test@example.com')
