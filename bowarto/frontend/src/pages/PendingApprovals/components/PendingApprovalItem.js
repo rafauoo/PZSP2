@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Table from "react-bootstrap/Table";
-import { approvePendingApproval, rejectPendingApproval } from '../../../api/requests/pendingApproval';
-import { buttonStyle, buttonStyleAttach, buttonStyleDelete, innerTable } from '../../../styles/styles';
+import {
+  approvePendingApproval,
+  rejectPendingApproval
+} from '../../../api/requests/pendingApproval';
+import {
+  buttonStyle,
+  buttonStyleAttach,
+  buttonStyleDelete,
+  innerTable
+} from '../../../styles/styles';
+import refreshAccessToken from "../../../requests/refresh";
 
 const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -11,27 +20,29 @@ const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
   };
 
   const onApprove = async () => {
+    await refreshAccessToken();
     await approvePendingApproval(approval.id)
-    .then(_ => {
-      window.alert("Wniosek został zaakceptowany.");
-      window.location.reload();
-    })
-    .catch(_ => {
-      window.alert("Nie udało się zaakceptować wniosku.");
-    });
+      .then(_ => {
+        window.alert("Wniosek został zaakceptowany.");
+        window.location.reload();
+      })
+      .catch(_ => {
+        window.alert("Nie udało się zaakceptować wniosku.");
+      });
 
     await onAccept();
   };
 
   const onReject = async () => {
+    await refreshAccessToken();
     await rejectPendingApproval(approval.id)
-    .then(_ => {
-      window.alert("Wniosek został odrzucony.");
-      window.location.reload();
-    })
-    .catch(_ => {
-      window.alert("Nie udało się odrzucić wniosku.");
-    });
+      .then(_ => {
+        window.alert("Wniosek został odrzucony.");
+        window.location.reload();
+      })
+      .catch(_ => {
+        window.alert("Nie udało się odrzucić wniosku.");
+      });
 
     await onDeny;
   };
@@ -42,7 +53,7 @@ const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
         <p>{approval.user.email}</p>
         {showDetails && (
           <Table style={innerTable}>
-          <tbody>
+            <tbody>
             <tr>
               <td>Imię</td>
               <td>{approval.user.first_name}</td>
@@ -55,8 +66,8 @@ const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
               <td>typ</td>
               <td>{approval.user.user_type}</td>
             </tr>
-          </tbody>
-        </Table>
+            </tbody>
+          </Table>
         )}
       </td>
       <td>
@@ -64,30 +75,30 @@ const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
         {showDetails && (
           <Table style={innerTable}>
             <tbody>
-              <tr>
-                <td>telefon</td>
-                <td>{approval.school.phone_number}</td>
-              </tr>
-              <tr>
-                <td>fax</td>
-                <td>{approval.school.fax_number}</td>
-              </tr>
-              <tr>
-                <td>email</td>
-                <td>{approval.school.email}</td>
-              </tr>
-              <tr>
-                <td>strona</td>
-                <td>{approval.school.website}</td>
-              </tr>
-              <tr>
-                <td>numer budynku</td>
-                <td>{approval.school.building_number}</td>
-              </tr>
-              <tr>
-                <td>numer mieszkania</td>
-                <td>{approval.school.apartment_number}</td>
-              </tr>
+            <tr>
+              <td>telefon</td>
+              <td>{approval.school.phone_number}</td>
+            </tr>
+            <tr>
+              <td>fax</td>
+              <td>{approval.school.fax_number}</td>
+            </tr>
+            <tr>
+              <td>email</td>
+              <td>{approval.school.email}</td>
+            </tr>
+            <tr>
+              <td>strona</td>
+              <td>{approval.school.website}</td>
+            </tr>
+            <tr>
+              <td>numer budynku</td>
+              <td>{approval.school.building_number}</td>
+            </tr>
+            <tr>
+              <td>numer mieszkania</td>
+              <td>{approval.school.apartment_number}</td>
+            </tr>
             </tbody>
           </Table>
         )}
@@ -109,7 +120,7 @@ const PendingApprovalItem = ({approval, onAccept, onDeny}) => {
       </td>
     </tr>
   );
-  
+
 }
 
 export default PendingApprovalItem;
