@@ -42,7 +42,6 @@ const CompetitionDataRow = ({
                               handleDownloadFile,
                               handleShowAddParticipantModal
                             }) => {
-  const [showEditCompetitionModal, setShowCompetitionModal] = useState(false);
   const handleModalClose = async () => {
     try {
       await refreshAccessToken();
@@ -117,9 +116,6 @@ const CompetitionDataRow = ({
           </td>
         ) : null}
       </td>
-      {/*<EditCompetitionModal show={showEditCompetitionModal}*/}
-      {/*                      handleClose={handleModalClose}*/}
-      {/*                      competition={competition}/>*/}
     </tr>
   )
 }

@@ -227,15 +227,10 @@ export async function uploadAttachment(participantId, newAttachment) {
 
 export const downloadFile = async (attachmentId) => {
   try {
-    await refreshAccessToken();
-    const token = sessionStorage.getItem('access');
 
     // Pobierz plik z serwera
     const response = await fetch(`http://20.108.53.69/api/files/${attachmentId}/`, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       responseType: 'arraybuffer', // Set responseType here
     });
 

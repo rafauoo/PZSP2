@@ -33,76 +33,58 @@ class ApplicationSerializerTest(TestCase):
         self.assertEqual(application.user, self.user)
         self.assertEqual(application.competition, self.competition)
 
-    # def test_read_application(self):
-    #     application = Application.objects.create(user=self.user,
-    #                                              competition=self.competition)
-    #     participant1 = Participant.objects.create(first_name='Participant 1',
-    #                                               last_name='last',
-    #                                               email='email@example.com',
-    #                                               application=application)
-    #     participant2 = Participant.objects.create(first_name='Participant 2',
-    #                                               last_name='last',
-    #                                               email='email@example.com',
-    #                                               application=application)
-    #
-    #     serializer = ApplicationSerializer(application)
-    #
-    #     expected_data = {
-    #         "id": application.id,
-    #         "user": self.user.id,
-    #         "competition": OrderedDict([
-    #             ("id", self.competition.id),
-    #             ("title", self.competition.title),
-    #             ("description", ""),
-    #             ("start_at", self.competition.start_at.isoformat()),
-    #             ("end_at", self.competition.end_at.isoformat()),
-    #             ("type", "inny"),
-    #             ("poster", None),
-    #             ("regulation", None),
-    #         ]),
-    #         "participants": [
-    #             OrderedDict([
-    #                 ("id", participant1.id),
-    #                 ("first_name", participant1.first_name),
-    #                 ("last_name", participant1.last_name),
-    #                 ("email", participant1.email),
-    #                 ("application", application.id),
-    #             ]),
-    #             OrderedDict([
-    #                 ("id", participant2.id),
-    #                 ("first_name", participant2.first_name),
-    #                 ("last_name", participant2.last_name),
-    #                 ("email", participant2.email),
-    #                 ("application", application.id),
-    #             ]),
-    #         ]
-    #     }
-    #     print(serializer.data)
-    #     print(expected_data)
-    #     self.assertTrue(are_dicts_equal(serializer.data, expected_data))
+    def test_read_application(self):
+        application = Application.objects.create(user=self.user,
+                                                 competition=self.competition)
+        participant1 = Participant.objects.create(first_name='Participant 1',
+                                                  last_name='last',
+                                                  email='email@example.com',
+                                                  application=application)
+        participant2 = Participant.objects.create(first_name='Participant 2',
+                                                  last_name='last',
+                                                  email='email@example.com',
+                                                  application=application)
 
-# def are_dicts_equal(dict1, dict2):
-#     if len(dict1) != len(dict2):
-#         return False
-#
-#     for key, value1 in dict1.items():
-#         if key not in dict2:
-#             return False
-#
-#         value2 = dict2[key]
-#         if isinstance(value1, dict) and isinstance(value2, dict):
-#             if not are_dicts_equal(value1, value2):
-#                 return False
-#         elif isinstance(value1, list) and isinstance(value2, list):
-#             if len(value1) != len(value2):
-#                 return False
-#             for item1, item2 in zip(value1, value2):
-#                 if isinstance(item1, dict) and isinstance(item2, dict):
-#                     if not are_dicts_equal(item1, item2):
-#                         return False
-#                 elif item1 != item2:
-#                     return False
-#         elif value1 != value2:
-#             return False
-#
-#     return True
+        serializer = ApplicationSerializer(application)
+
+        expected_data = {
+            "id": application.id,
+            "user": self.user.id,
+            "competition": OrderedDict([
+                ("id", self.competition.id),
+                ("title", self.competition.title),
+                ("description", 'Description for Competition'),
+                ("start_at", self.competition.start_at.isoformat()),
+                ("end_at", self.competition.end_at.isoformat()),
+                ("type", self.competition.get_type_display()),
+                ("poster", None),
+                ("regulation", None),
+            ]),
+            "participants": [
+                OrderedDict([
+                    ("id", participant1.id),
+                    ("first_name", participant1.first_name),
+                    ("last_name", participant1.last_name),
+                    ("email", participant1.email),
+                    ("application", application.id),
+                ]),
+                OrderedDict([
+                    ("id", participant2.id),
+                    ("first_name", participant2.first_name),
+                    ("last_name", participant2.last_name),
+                    ("email", participant2.email),
+                    ("application", application.id),
+                ]),
+            ]
+        }
+
+        self.assertEqual(serializer.data['id'], expected_data['id'])
+        self.assertEqual(serializer.data['user'], expected_data['user'])
+        self.assertEqual(serializer.data['competition']['id'],
+                         expected_data['competition']['id'])
+        # Add similar comparisons for other attributes as needed
+        self.assertEqual(serializer.data['participants'][0]['id'],
+                         expected_data['participants'][0]['id'])
+        self.assertEqual(serializer.data['participants'][1]['id'],
+                         expected_data['participants'][1]['id'])
+        # Add similar comparisons for participant attributes as needed
