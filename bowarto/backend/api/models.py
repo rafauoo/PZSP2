@@ -117,7 +117,7 @@ class Application(models.Model):
     - db_table (str): Database table name for the Application model.
     """
 
-    competition = models.ForeignKey('Competition', models.SET_NULL, null=True)
+    competition = models.ForeignKey('Competition', models.CASCADE, null=True)
     user = models.ForeignKey('User', models.SET_NULL, null=True)
 
     class Meta:
