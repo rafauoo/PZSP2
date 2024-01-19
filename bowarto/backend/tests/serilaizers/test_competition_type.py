@@ -26,5 +26,6 @@ class CompetitionTypeSerializerTest(TestCase):
         serializer = CompetitionTypeSerializer()
 
         with self.assertRaises(ValidationError):
-            setattr(serializer, 'initial_data', {'name': competition_type.value})
+            setattr(serializer, 'initial_data',
+                    {'name': competition_type.value})
             serializer.is_valid(raise_exception=True)
